@@ -1,0 +1,23 @@
+#numbers thead > tr > th:first-of-type {
+  font-weight: 400;
+  color: grey;
+}
+
+#numbers h1 {
+	font-size: 2rem;
+	margin-bottom: 2.2rem;
+	font-weight: 300;
+	font-weight: 420;
+  color: black;
+}
+
+.float-right {
+  text-align: center;
+  float: right;
+  display: inline-block;
+  font-size: 0.8rem;
+  margin-top: 1rem;
+  margin-right: 3rem;
+  font-weight: 400;
+  color: grey;
+}

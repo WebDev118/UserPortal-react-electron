@@ -1,0 +1,48 @@
+#devices td {
+	width: 50%;
+	text-align: left;
+}
+
+#devices div {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+#devices thead > tr > th:first-of-type {
+  font-weight: 400;
+  color: grey;
+}
+
+#devices thead > tr > th:nth-of-type(2) {
+  padding-top: 1rem;
+}
+
+#devices td img {
+  margin-right: 1rem;
+  vertical-align: middle;
+  display: inline-block;
+}
+
+#devices tbody > tr > td:first-of-type {
+  font-size: 0.9rem;
+}
+
+#device-id {
+  font-size: 0.7rem;
+  color: grey;
+}
+
+#devices tbody > tr > td:last-of-type div {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+#devices tbody > tr > td:last-of-type div:nth-of-type(1) {
+	font-weight: 320;
+	font-size: 0.8rem;
+}
+
+#devices tbody > tr > td:last-of-type div:nth-of-type(2) {
+	color: grey;
+	margin-left: 0.5rem;
+}

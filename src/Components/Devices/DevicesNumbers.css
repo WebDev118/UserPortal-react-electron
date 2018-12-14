@@ -1,0 +1,78 @@
+@import "~@fortawesome/fontawesome-free/css/all.css";
+
+.grey {
+	color: grey;
+	font-size: 0.85rem;
+}
+.devices-top-wrap-red {
+	border: 1px solid #FC231C;
+}
+.content{
+	padding: 1rem;
+}
+.devices-top {
+	padding-top: 1.7rem;
+	background: #FFFFFF;
+	text-align: center;
+	line-height: 1.7rem;
+	border-radius: 0.2rem;
+  box-shadow: 0 0 10px 1px rgba(0,0,0,0.2);
+  padding-bottom: 0.5rem;
+  float: left;
+	position: relative;
+	height: 100%;
+	width:100%;
+}
+
+.devices-top h2 {
+	font-size: 2.7rem;
+}
+
+.devices-top p {
+	margin: 0;
+	margin-bottom: 0.1rem !important;
+}
+
+.donut {
+	text-align: center;
+	display: inline-block;
+	font-size: 90px !important;
+}
+
+.active_line {
+	color: #2091FF;
+	border-bottom: 2px solid #2091FF;
+	font-weight: 500;
+	padding-bottom: 0.5rem;
+}
+
+.numbers-wrap {
+	display: inline-block;
+	text-align: center;
+}
+
+.devices-name p {
+	margin-bottom: 0;
+}
+
+.devices-top p:first-of-type {
+	margin-top: 0.5rem;
+}
+
+.devices-top p {
+	margin-bottom: 0.5rem;
+
+}
+
+hr {
+	margin-top: 0px !important;
+	margin-bottom: 1rem !important;
+	border: 0 !important;
+	border-top: 2px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.corner {
+	position: absolute;
+	top: 1rem;
+	right: 1rem;
+}

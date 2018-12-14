@@ -1,0 +1,53 @@
+.Topbar {
+  margin-top: -2rem;
+  background: white;
+  position: relative;
+  border-bottom: 1px solid #BCBCC2;
+  display: grid;
+  grid-template-columns: auto 4rem 12rem;
+  padding-right: 4rem;
+  padding-top: 1rem;
+  font-weight: 300;
+  font-weight: 350;
+}
+
+#title {
+  font-size: 1rem;
+  float: left;
+  vertical-align: middle;
+  display: block;
+  padding-top: 0.7rem;
+  margin-left: 1.25rem;
+  font-size: 1.1rem;
+}
+
+.Topbar > div {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.Topbar > div:first-of-type,
+.Topbar > div:nth-of-type(2) {
+  border-right: 1px solid #BCBCC2;
+}
+
+#avatar {
+  border-radius: 50%;
+  height: 2.5rem;
+  width: 2.5rem;
+  vertical-align: middle; 
+  display: inline-block;
+}
+
+#phone-book {
+  margin-top: 0.5rem;
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+#top-name {
+  vertical-align: middle;
+  display: inline-block;
+  margin-left: 1rem;
+  white-space: nowrap;
+}
