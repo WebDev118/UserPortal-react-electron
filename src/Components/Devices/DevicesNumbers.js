@@ -1,13 +1,11 @@
-import React from 'react'
-import { Topbar } from '../Common/Topbar'
-import { connect } from 'react-redux'
-import { Devices } from './Devices'
-import { Numbers } from './Numbers'
-import './DevicesNumbers.css'
-import './circle.css'
-import { parsePhoneNumber } from 'libphonenumber-js'
-import { getalldevices } from '../../Actions/devices.action'
-import _ from 'lodash'
+import React from 'react';
+import { Topbar } from '../Common/Topbar';
+import { connect } from 'react-redux';
+import './DevicesNumbers.css';
+import './circle.css';
+import { parsePhoneNumber } from 'libphonenumber-js';
+import { getalldevices } from '../../Actions/devices.action';
+import _ from 'lodash';
 
 class DevicesNumbers extends React.Component {
   constructor(props) {
@@ -139,7 +137,7 @@ class DevicesNumbers extends React.Component {
                             </div>
                             <div className="col-sm-6 text-left">
                               <div className="donut">
-                                <div class={`c100 p${(today_count * 100)/today_total}`}>
+                                <div className={`c100 p${(today_count * 100)/today_total}`}>
                                   <div className="slice">
                                       <div className="bar"></div>
                                       <div className="fill"></div>

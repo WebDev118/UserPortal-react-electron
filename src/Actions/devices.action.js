@@ -1,8 +1,7 @@
-import axios from 'axios'
-import * as CONSTS from '../Constants'
-import CONFIG from '../Config.json'
-import {getNewAuthToken} from './auth.action'
-import _ from 'lodash'
+import axios from 'axios';
+import * as CONSTS from '../Constants';
+import CONFIG from '../Config.json';
+import _ from 'lodash';
 
 export const getalldevices = () => {
   return (dispatch) => {
@@ -28,6 +27,7 @@ export const getalldevices = () => {
 
     let lastweek_from_timestamp = (new Date(pastyear,pastmonth,past_fromdate,0,0,0,0).getTime())/1000;
     let lastweek_to_timestamp = (new Date(pastyear,pastmonth,past_todate,23,59,59,999).getTime())/1000;
+
     const URI_stamp1 = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/cdrs?created_from=${today_from_timestamp}&created_to=${today_to_timestamp}`;
     const URI_stamp2 = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}/cdrs?created_from=${today_from_timestamp}&created_to=${today_to_timestamp}`;
     const URI_stamp3 = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/cdrs?created_from=${lastweek_from_timestamp}&created_to=${lastweek_to_timestamp}`;
@@ -111,7 +111,6 @@ export const getalldevices = () => {
           dispatch({ type: CONSTS.SET_SYSTEMMESSAGE, payload: "Authentication failed."})
           dispatch({ type:CONSTS.RESET_AUTH_TOKEN})
         }
-        // dispatch({ type: CONSTS.FAIL_API_REQUEST, payload: error })
       })
   }
 }

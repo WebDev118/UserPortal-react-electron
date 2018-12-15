@@ -28,7 +28,6 @@ class VoicemailsList extends React.Component {
   }
 
 	componentDidMount() {
-		// console.log("voicemailslist-----",this.props)
 		const vmbox_id = this.props.match.params.vmbox_id;
 		const vmbox =  _.find(this.props.allmessages, message => message.vmbox.id === vmbox_id)
 		const messages = vmbox.messages

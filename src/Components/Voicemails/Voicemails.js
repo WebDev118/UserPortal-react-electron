@@ -38,7 +38,6 @@ class Voicemails extends React.Component {
   render () {
     let {allmessages} = this.props;
     if(!allmessages) {
-      // initial render to load data from API
       return (
         <div className='main'>
           <Topbar title='Voicemails' />

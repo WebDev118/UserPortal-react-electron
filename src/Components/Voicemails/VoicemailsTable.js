@@ -1,8 +1,6 @@
 import React from 'react';
-import {connect} from 'react-redux';
 import './VoicemailsTable.css';
 import Audioplayer from './Audioplayer';
-import moment from 'moment';
 import { parsePhoneNumber } from 'libphonenumber-js';
 import CONFIG from '../../Config.json';
 
@@ -82,8 +80,6 @@ function getDuration (totalSeconds) {
 function getPhoneNumber(number){
   let phoneNumber = parsePhoneNumber("+"+number).formatInternational();
   let number_arr = phoneNumber.split(" ");
-  // console.log(number_arr[0]);
-  // console.log(number_arr[3]+" "+number_arr[2])
   var number = number_arr[0]+" "+number_arr[1]+"-"+number_arr[2]+"-"+number_arr[3];
   return number
 }

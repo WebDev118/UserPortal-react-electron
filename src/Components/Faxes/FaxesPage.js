@@ -1,124 +1,235 @@
-import React from 'react'
-import { Topbar } from '../Common/Topbar'
-import './Faxes.css'
+import React from 'react';
+import { connect } from 'react-redux';
+import { Topbar } from '../Common/Topbar';
+import { getallfaxes } from '../../Actions/faxes.action';
+import DatePicker from "react-datepicker";
+import { parsePhoneNumber } from 'libphonenumber-js';
+import "react-datepicker/dist/react-datepicker.css";
+import _ from 'lodash';
+import CONFIG from '../../Config.json';
+import './Faxes.css';
 
-export class FaxesPage extends React.Component {
+class FaxesPage extends React.Component {
+  constructor(props) {
+    super(props);
+    const day = new Date();
+    this.state = {
+      title: "",
+      total: 0,
+      newcount: 0,
+      faxbox_id: "",
+      caller_name: "",
+      startDate: new Date(day.setDate(day.getUTCDate()-7)),
+      endDate: new Date(),
+      faxes: "",
+      searchKey:""
+    }
+    this.handleStartChange = this.handleStartChange.bind(this);
+    this.handleEndChange = this.handleEndChange.bind(this);
+    this.onhandleChange = this.onhandleChange.bind(this);
+  }
+
+  handleStartChange(date) {
+    this.setState({
+      startDate: date
+    });
+  }
+  handleEndChange(date) {
+    this.setState({
+      endDate: date
+    });
+  }
+  componentWillMount () {
+    this.props.getallfaxes(this.state.startDate, this.state.endDate);
+  }
+  componentDidMount () {
+    !this.props.loading ? this.props.getallfaxes(this.state.startDate, this.state.endDate) : null;
+  }
+  componentDidUpdate(preProps) {
+    const {allfaxes} = this.props;
+    if(allfaxes != preProps.allfaxes) {
+      let faxbox_title = allfaxes.faxbox.faxbox_name;
+      let faxbox_id = allfaxes.faxbox.faxbox_id;
+      let fax_count = allfaxes.faxes.length;
+      let caller_name = allfaxes.faxbox.caller_name;
+      let faxes = allfaxes.faxes;
+      this.setState({title: faxbox_title, total: fax_count, faxbox_id: faxbox_id, faxes: faxes, caller_name:caller_name })
+    }
+  }
+  getPhoneNumber = (number) => {
+    let phoneNumber = parsePhoneNumber("+"+number).formatInternational();
+    let number_arr = phoneNumber.split(" ");
+    var number = number_arr[0]+" "+number_arr[1]+"-"+number_arr[2]+"-"+number_arr[3];
+    return number
+  }
+  getDateTime = (timestamp) => {
+    let stamp = new Date(timestamp * 1000);
+    let year = stamp.getFullYear()-1970;
+    let month = stamp.getMonth()+1;
+    let date = "0"+ stamp.getDate();
+    let hours = "0" + stamp.getHours();
+    let minutes = "0" + stamp.getMinutes();
+    let seconds = "0" + stamp.getSeconds();
+    let formattedDate = month + "/" + date.substr(-2) + "/" + year;
+    let formattedTime = hours.substr(-2) + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    let dateTime = {"date": formattedDate, "time":formattedTime}
+    return dateTime;
+  }
+  onhandleChange(e){
+    var value = e.target.value;
+    this.setState({ searchKey: value });
+  }
   render () {
-    return (
-      <div className='main'>
-        <Topbar title='Faxes' />
-        <div>
-          <div className='voicemail-top-wrap'>
-            <div className='voicemails-top'>
-              <h1>0</h1>
-              New
-            </div>
-            <div className='voicemails-top'>
-              <h1>3</h1>
-              Total
-            </div>
-          </div>
-          <div className='fax-search'>
-            <div className='checkbox-wrap'>
-              <input type='checkbox' />&#9660;
-            </div>
-            <div>
-              <div>
-                <label htmlFor='start-date'>Start Date</label>
-                <input id='start-date' className='calendar' type='text' />
-              </div>
-              <div>
-                <label htmlFor='end-date'>End Date</label>
-                <input id='end-date' className='calendar' type='text' />
-              </div>
-              <button>Filter</button>
-              <input id='fax-search' type='text' placeholder='Search' />
-            </div>
-          </div>
-          <table className='voicemails table-striped'>
-            <thead>
-              <tr>
-                <th />
-                <th>STATUS</th>
-                <th>FROM</th>
-                <th>TO</th>
-                <th>DATE/TIME</th>
-                <th>PAGES</th>
-                <th />
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><input type='checkbox' /></td>
-                <td><img src='viewed.png' /></td>
-                <td>11/14/2018<br /><span className='grey'>10:40:24</span></td>
-                <td>Stella Cummings<br /><span className='grey'>+1 415-287-3493</span></td>
-                <td>+1 495-393-1933</td>
-                <td>2</td>
-                <td>
-                  <img src='download.png' />
-                </td>
-              </tr>
-              <tr>
-                <td><input type='checkbox' /></td>
-                <td><img src='viewed.png' /></td>
-                <td>11/14/2018<br /><span className='grey'>10:40:24</span></td>
-                <td>Stella Cummings<br /><span className='grey'>+1 415-287-3493</span></td>
-                <td>+1 495-393-1933</td>
-                <td>2</td>
-                <td>
-                  <img src='download.png' />
-                </td>
-              </tr>
-              <tr>
-                <td><input type='checkbox' /></td>
-                <td><img src='viewed.png' /></td>
-                <td>11/14/2018<br /><span className='grey'>10:40:24</span></td>
-                <td>Stella Cummings<br /><span className='grey'>+1 415-287-3493</span></td>
-                <td>+1 495-393-1933</td>
-                <td>2</td>
-                <td>
-                  <img src='download.png' />
-                </td>
-              </tr>
-              <tr>
-                <td><input type='checkbox' /></td>
-                <td><img src='viewed.png' /></td>
-                <td>11/14/2018<br /><span className='grey'>10:40:24</span></td>
-                <td>Stella Cummings<br /><span className='grey'>+1 415-287-3493</span></td>
-                <td>+1 495-393-1933</td>
-                <td>2</td>
-                <td>
-                  <img src='download.png' />
-                </td>
-              </tr>
-              <tr>
-                <td><input type='checkbox' /></td>
-                <td><img src='viewed.png' /></td>
-                <td>11/14/2018<br /><span className='grey'>10:40:24</span></td>
-                <td>Stella Cummings<br /><span className='grey'>+1 415-287-3493</span></td>
-                <td>+1 495-393-1933</td>
-                <td>2</td>
-                <td>
-                  <img src='download.png' />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <nav className='bottom-nav'>
-            <select id='view-per-page'>
-              <option>View 10 per page</option>
-            </select>
-            <span id='page-num'>1-10 of 18</span>
-            <button>First</button>
-            <button>&#60;</button>
-            <button>1</button>
-            <button>2</button>
-            <button>&#62;</button>
-            <button>Last</button>
-          </nav>
+    let { allfaxes } = this.props;
+    let faxes = this.state.faxes;
+    let auth_token = this.props.auth_token;
+    if(!allfaxes) {
+      return (
+        <div className='main'>
+          <Topbar title='Faxes' />
         </div>
-      </div>
-    )
+      )
+    }
+    else{
+      return (
+        <div className='main'>
+          <Topbar title='Faxes' />
+          <div className="fax-content">
+          <div className="text-left"><h3>{this.state.title}</h3></div>
+            <div className='voicemail-top-wrap'>
+              <div className='voicemails-top'>
+                <h1>0</h1>
+                New
+              </div>
+              <div className='voicemails-top'>
+                <h1>{this.state.total}</h1>
+                Total
+              </div>
+            </div>
+            <div className='fax-search mt-5'>
+              <div className="row text-left">
+                <div className="col-md-2 startdate-col">
+                  <label htmlFor='start-date'>START DATE</label>
+                  <DatePicker className="calendar1 form-control"
+                    selected={this.state.startDate}
+                    onChange={this.handleStartChange}
+                    maxDate ={new Date()}
+                  />
+                </div>
+                <div className="col-md-2 enddate-col">
+                  <label htmlFor='end-date'>END DATE</label>
+                  <DatePicker className="calendar1 form-control"
+                    minDate ={this.state.startDate}
+                    maxDate ={new Date()}
+                    selected={this.state.endDate}
+                    onChange={this.handleEndChange}
+                  />
+                </div>
+                <div className="col-md-1">
+                  <button className="btn btn-outline-secondary" onClick={() => this.props.getallfaxes(this.state.startDate, this.state.endDate)}>Apply</button>
+                </div>
+                <div className="col-md-7 text-right">
+                  <input className='fax-search-text form-control' type='text' placeholder='Search' onChange={this.onhandleChange}/>
+                </div>
+              </div>
+            </div>
+
+            <div className="row text-left mt-5">
+              <div className='faxtable'>
+                <div className="row1">
+                  <div className="col-md-3 row">
+                    <div className="col-md-3"> </div>
+                    <div className="col-md-9">FROM</div>
+                  </div>
+                  <div className="col-md-3">TO</div>
+                  <div className="col-md-3">DATE/TIME</div>
+                  <div className="col-md-3"></div>
+                </div>
+              </div>
+            </div>
+            { faxes && faxes.map((fax, index) => {
+              let URL = `${CONFIG.API_URL}${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/faxes/inbox/mediaId/${fax.id}/attachment?auth_token=${auth_token}`;
+              let caller = this.state.caller_name.toLowerCase();
+              if(this.state.searchKey !== ""){
+                if (fax.from.includes(this.state.searchKey)||caller.includes(this.state.searchKey.toLowerCase())){
+                return(
+                  <div className = "tr-content row" key={index}>
+                    <div className="row2 text-left">
+                      <div className="col-md-3 row">
+                        <div className="col-md-3 from-call-img">
+                          <img src='incoming.png' />
+                        </div>
+                        <div className="col-md-9">
+                          {fax.from}<br/>
+                          <span className='grey'>
+                          { this.getPhoneNumber(fax.from_number)}
+                        </span>
+                        </div>
+                      </div>
+                      <div className="col-md-3">
+                        {this.state.caller_name}<br />
+                        <span className='grey'>
+                          { this.state.title}
+                        </span>
+                      </div>
+                      <div className="col-md-3">
+                        { this.getDateTime(fax.timestamp).date}<br />
+                        <span className='grey'>
+                          { this.getDateTime(fax.timestamp).time}
+                        </span>
+                      </div>
+                      <div className="col-md-3 text-right">
+                        <button className="faxdownload"><a href={URL} target="_blank"><img src='download.png' width="120%" /></a></button>
+                      </div>
+                    </div>
+                  </div>
+                  )
+                }
+              }
+              else{
+                return(
+                  <div className = "tr-content row" key={index}>
+                    <div className="row2 text-left">
+                      <div className="col-md-3 row">
+                        <div className="col-md-3 from-call-img">
+                          <img src='incoming.png' />
+                        </div>
+                        <div className="col-md-9">
+                          {fax.from}<br/>
+                          <span className='grey'>
+                          { this.getPhoneNumber(fax.from_number)}
+                        </span>
+                        </div>
+                      </div>
+                      <div className="col-md-3">
+                        {this.state.caller_name}<br />
+                        <span className='grey'>
+                          { this.state.title}
+                        </span>
+                      </div>
+                      <div className="col-md-3">
+                        { this.getDateTime(fax.timestamp).date}<br />
+                        <span className='grey'>
+                          { this.getDateTime(fax.timestamp).time}
+                        </span>
+                      </div>
+                      <div className="col-md-3 text-right">
+                        <button className="faxdownload"><a href={URL} target="_blank"><img src='download.png' width="120%" /></a></button>
+                      </div>
+                    </div>
+                  </div>
+                  )
+                }
+              })
+            }
+          </div>
+        </div>
+      )
+    }
   }
 }
+const mapStateToProps = state => state.faxreducer
+const mapDispatchToProps = (dispatch) => ({
+  getallfaxes: (from, to) => dispatch(getallfaxes(from, to))
+})
+export default connect(mapStateToProps, mapDispatchToProps)(FaxesPage)

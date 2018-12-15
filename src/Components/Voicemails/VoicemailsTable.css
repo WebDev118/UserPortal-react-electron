@@ -52,6 +52,7 @@
   font-size:  1.1rem;
 }
 .audioplay{
+  cursor: pointer;
   background: #ffffff;
   border-color: #ffffff;
 }

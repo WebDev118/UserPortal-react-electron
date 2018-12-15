@@ -13,6 +13,7 @@
     "moment": "^2.22.2",
     "monster": "^0.1.1",
     "react": "^16.4.2",
+    "react-datepicker": "^2.0.0",
     "react-dom": "^16.4.2",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",

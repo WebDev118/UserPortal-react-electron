@@ -1,3 +1,7 @@
+.fax-content{
+	padding-top: 1rem;
+	padding-left:1rem;
+}
 #faxes table {
 	padding-top: 0.8rem;
 }
@@ -6,57 +10,36 @@
 	position: relative;
 }
 
-.fax-search > div:first-of-type {
-	float: left;
-}
-
-.fax-search > div:nth-of-type(2) {
-	float: right;
-}
-
-.fax-search > div:nth-of-type(3) {
-	position: relative;
-	display: inline-block;
-	float: right;
-}
-
-.fax-search > div:nth-of-type(4) {
-	float: right;
-	margin-bottom: 1rem;
-	line-height: 0.8rem;
-}
-
-.fax-search > div > div {
-	position: relative;
-	display: inline-block;
-}
-
 .fax-search button {
-	font-size: 0.8rem;
-	padding-left: 1rem;
-	padding-right: 1rem;
-	border-radius: 0.1rem;
+	position: absolute;
+	bottom: 0px;
+	border-radius: 0.2rem;
 	color: grey;
 	background: #F7F7F7;
 	border: 1px solid #CDCDD0;
-	margin-right: 0;
-	margin-top: 1rem;
 }
+.fax-search-text{
+	position: absolute;
+	bottom: 0px;
 
-.calendar {
-	padding: 0.25rem;
-	width: 7rem;
+}
+.react-datepicker-wrapper{
+	width: 100% !important;
+}
+.calendar1 {
+	width: 100%;
 	background: url('../../assets/images/calendar.png') no-repeat scroll;
 	background-position: 95% 50%;
 	background-color: white;
 	position: relative;
 }
-
-.fax-search > input:nth-of-type(1),
-.fax-search > input:nth-of-type(2) {
-	position: relative;
+.startdate-col{
+	padding-right:0px !important;
 }
-
+.enddate-col{
+	/* padding-left:0px !important; */
+	padding-right:0px !important;
+}
 .fax-search label {
 	display: block;
 	text-align: left;
@@ -66,10 +49,65 @@
 
 }
 
-#fax-search {
-	padding: 0.25rem;
-	width: 12rem;
+.fax-search-text{
+	position: absolute;
+	bottom: 0px;
+	right:0px;
+	width: 15rem;
 	background: url('../../assets/images/magnifying-glass.png') no-repeat scroll;
 	background-position: 95% 50%;
 	background-color: white;
+	margin-right:15px;
+}
+.row1 {
+	color: grey;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+  margin-left: 16px;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.row2 {
+	color: #000000;
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: 16px;
+	width: 100%;
+	justify-content: center;
+	align-items: center;
+	font-size:  1.1rem;
+}
+.faxtable{
+  border: 0px;
+  margin: 0 15px 0 15px !important;
+  width: 100%;
+}
+.from-call-img{
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	display: flex;
+}
+.from-call-img img{
+	width:20px;
+	height: 20px;
+}
+.tr-content{
+  display: flex;
+  background-color: #ffffff !important;
+  box-shadow: 0 0 10px 2px rgba(0,0,0,0.2);
+  justify-content: center;
+  align-items: center;
+  padding: 15px 0 15px 0;
+  margin:0 0 10px 0px;
+  float: left;
+  border-radius: 4px;
+	width:100%;
+}
+.faxdownload{
+	background: #ffffff;
+	border-color: #ffffff;
 }

@@ -5,7 +5,6 @@ import CONFIG from '../Config.json'
 
 export const getNewAuthToken = () => {
   return (dispatch) => {
-    // dispatch({ type: CONSTS.SENDING_API_REQUEST })
     const URI = `${CONFIG.API_VERSION}/user_auth`
     const body = {
       'data': {

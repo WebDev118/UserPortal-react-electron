@@ -5,7 +5,7 @@ import { Home } from './Home/Home'
 import Voicemails from './Voicemails/Voicemails'
 import { History } from './CallHistory/History'
 import  DevicesNumbers  from './Devices/DevicesNumbers'
-import { FaxesPage } from './Faxes/FaxesPage'
+import  FaxesPage  from './Faxes/FaxesPage'
 import { ConferencesPage } from './Conferences/ConferencesPage'
 import { Contacts } from './Contacts/Contacts'
 import { Widgets } from './Widgets/Widgets'
@@ -58,7 +58,7 @@ class App extends Component {
         <Route path='/voicemails/list/:vmbox_id/' component={authenticate(VoicemailsList)}/>
         <Route path='/history' component={History} />
         <Route path='/devices' component={authenticate(DevicesNumbers)} />
-        <Route path='/faxes' component={FaxesPage} />
+        <Route path='/faxes' component={authenticate(FaxesPage)} />
         <Route path='/conferences' component={ConferencesPage} />
         <Route path='/contacts' component={Contacts} />
         <Route path='/widgets' component={Widgets} />
