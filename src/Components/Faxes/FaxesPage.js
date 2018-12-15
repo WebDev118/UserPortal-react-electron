@@ -150,8 +150,11 @@ class FaxesPage extends React.Component {
             { faxes && faxes.map((fax, index) => {
               let URL = `${CONFIG.API_URL}${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/faxes/inbox/mediaId/${fax.id}/attachment?auth_token=${auth_token}`;
               let caller = this.state.caller_name.toLowerCase();
+              let search_Key = this.state.searchKey.toLowerCase().trim();
+              let phoneNumber = this.getPhoneNumber(fax.from_number).trim();
+
               if(this.state.searchKey !== ""){
-                if (fax.from.includes(this.state.searchKey)||caller.includes(this.state.searchKey.toLowerCase())){
+                if (fax.from.includes(search_Key)||caller.includes(search_Key)||phoneNumber.includes(search_Key)){
                 return(
                   <div className = "tr-content row" key={index}>
                     <div className="row2 text-left">

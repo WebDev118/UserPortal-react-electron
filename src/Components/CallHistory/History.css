@@ -2,18 +2,19 @@
 	padding-top: 2rem;
 }
 
-.call-history tbody,
 .call-history thead {
 	background: #F2F2F3;
 }
 
-.call-history td {
-	border-bottom: 1px solid #ddd;
+#call-history td {
+	border-bottom: 2px solid #ddd;
+	font-size: 15px;
 }
 
 .call-history tbody {
 	line-height: 1rem;
 	font-size: 0.82rem;
+  background-color: white;
 }
 
 .call-history tbody > tr {
@@ -22,20 +23,39 @@
 	border-right: 1px solid #CFCFD6;
 }
 
-.call-history tbody > tr > td:last-of-type img {
+.call-history tbody > tr > td:first-child {
+  margin-right: 0.5rem;
+	margin-left: 2rem;
+	padding-left: 2rem;
+	background-color: aqua;
+}
+
+.first-child {
+	border-bottom: 0px !important;
+}
+
+.second-child {
+	border-left: 1px solid #eee;
+	padding-left: 0px !important;
+}
+
+.last-child {
+	border-bottom: 0px !important;
+	border-left: 1px solid #eee;
+}
+
+#call-history tbody > tr > td:last-of-type {
+	border-bottom: 0px !important;
 	margin-right: 0.5rem;
 }
 
-.voicemail tbody > tr > td:first-of-type {
-	text-align: left !important;
-}
-
-.call-history tbody > tr > td:last-of-type img {
+#call-history tbody > tr > td:last-of-type img {
 	float: right;
 }
 
 .history-search {
 	position: relative;
+  /*margin-bottom: 2rem;*/
 }
 
 .history-search > div:first-of-type {
@@ -52,10 +72,40 @@
 	float: left;
 }
 
+.history-search > div:nth-of-type(3) button {
+	cursor: pointer;
+	font-size: 0.8rem;
+	border-radius: 0.2rem;
+	color: grey;
+	background: #F7F7F7;
+	border: 1px solid #CDCDD0;
+	margin-right: 0;
+	margin-top: 1.2rem;
+	padding: 0.5rem 0.8rem 0.5rem 0.8rem;
+}
+
 .history-search > div:nth-of-type(4) {
+	display: inline-block;
+	justify-content: center;
 	float: right;
+	position: relative;
+  line-height: 0.8rem;
 	margin-bottom: 1rem;
-	line-height: 0.8rem;
+}
+
+.history-search>div:nth-of-type(4) button {
+	cursor: pointer;
+	height: 37px;
+	font-size: 0.8rem;
+	color: grey;
+	background: #F7F7F7;
+	border: 1px solid #CDCDD0;
+	margin-top: 0.9rem;
+	padding: 0.5rem 0.8rem 0.5rem 0.8rem;
+}
+
+.history-search>div:nth-of-type(4) input {
+	margin-left: 0.7rem;
 }
 
 .history-search > div > div {
@@ -63,25 +113,18 @@
 	display: inline-block;
 }
 
-.history-search button {
-	font-size: 0.8rem;
-	padding-left: 1rem;
-	padding-right: 1rem;
-	border-radius: 0.1rem;
-	color: grey;
-	background: #F7F7F7;
-	border: 1px solid #CDCDD0;
-	margin-right: 0;
-	margin-top: 1rem;
-}
-
-.calendar {
-	padding: 0.25rem;
-	width: 7rem;
+.calendar1 {
+	width: 100%;
 	background: url('../../assets/images/calendar.png') no-repeat scroll;
 	background-position: 95% 50%;
 	background-color: white;
 	position: relative;
+}
+.react-date-picker__wrapper {
+	border: 1px solid #CDCDD0;
+	background-color: white;
+	padding: 4px;
+	margin-right: 10px;
 }
 
 .history-search > input:nth-of-type(1),
@@ -92,16 +135,34 @@
 .history-search label {
 	display: block;
 	text-align: left;
-	margin-left: 0.15rem;
 	font-size: 0.8rem;
+  margin-bottom: 0.5rem;
 	color: grey;
-
 }
 
 #history-search {
-	padding: 0.25rem;
+	height: 37px;
+  font-size: 0.8rem;
 	width: 12rem;
 	background: url('../../assets/images/magnifying-glass.png') no-repeat scroll;
 	background-position: 95% 50%;
 	background-color: white;
+  margin-right: 0;
+  margin-top: 1rem;
+  padding: 0.5rem 0.3rem 0.5rem 0.3rem;
+}
+
+.bottom-nav {
+	float: right;
+	margin-bottom: 1rem;
+	margin-top: 1rem;
+	font-size: 12px;
+}
+
+.bottom-nav select {
+	width: 3rem;
+	margin-left: 0.5rem;
+}
+.bottom-nav label {
+	margin-left: 0.5rem;
 }

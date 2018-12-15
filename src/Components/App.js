@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Link, withRouter } from 'react-router-d
 import { connect } from 'react-redux'
 import { Home } from './Home/Home'
 import Voicemails from './Voicemails/Voicemails'
-import { History } from './CallHistory/History'
+import  History  from './CallHistory/History'
 import  DevicesNumbers  from './Devices/DevicesNumbers'
 import  FaxesPage  from './Faxes/FaxesPage'
 import { ConferencesPage } from './Conferences/ConferencesPage'
@@ -56,7 +56,7 @@ class App extends Component {
         <Route exact path='/' component={Home} />
         <Route path='/voicemails' exact component={authenticate(Voicemails)}/>
         <Route path='/voicemails/list/:vmbox_id/' component={authenticate(VoicemailsList)}/>
-        <Route path='/history' component={History} />
+        <Route path='/history' component={authenticate(History)} />
         <Route path='/devices' component={authenticate(DevicesNumbers)} />
         <Route path='/faxes' component={authenticate(FaxesPage)} />
         <Route path='/conferences' component={ConferencesPage} />
