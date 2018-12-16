@@ -86,7 +86,6 @@
 
 .history-search > div:nth-of-type(4) {
 	display: inline-block;
-	justify-content: center;
 	float: right;
 	position: relative;
   line-height: 0.8rem;

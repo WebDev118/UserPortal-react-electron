@@ -27,6 +27,7 @@ export const getCallFlow = (start, end) => {
     const CALL_URI = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}/cdrs?&created_from=${start_timestamp}&created_to=${end_timestamp}`;
     axios.get(CALL_URI)
       .then((res) => {
+        console.log(res.data.data)
         dispatch({ type: CONSTS.GET_ALL_CALL_FLOW_ON_AN_ACCOUNT_SUCCESS, payload: res.data.data });
       })
       .catch((error) => {

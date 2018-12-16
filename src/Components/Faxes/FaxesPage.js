@@ -148,7 +148,7 @@ class FaxesPage extends React.Component {
               </div>
             </div>
             { faxes && faxes.map((fax, index) => {
-              let URL = `${CONFIG.API_URL}${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/faxes/inbox/mediaId/${fax.id}/attachment?auth_token=${auth_token}`;
+              let URL = `${CONFIG.API_URL}${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/faxes/inbox/${fax.id}/attachment?auth_token=${auth_token}`;
               let caller = this.state.caller_name.toLowerCase();
               let search_Key = this.state.searchKey.toLowerCase().trim();
               let phoneNumber = this.getPhoneNumber(fax.from_number).trim();

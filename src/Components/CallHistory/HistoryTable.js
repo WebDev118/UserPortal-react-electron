@@ -83,6 +83,20 @@ export class HistoryTable extends React.Component {
     }
   }
 
+  getDateTime = (timestamp) => {
+    let stamp = new Date(timestamp * 1000);
+    let year = stamp.getFullYear()-1970;
+    let month = stamp.getMonth()+1;
+    let date = "0"+ stamp.getDate();
+    let hours = "0" + stamp.getHours();
+    let minutes = "0" + stamp.getMinutes();
+    let seconds = "0" + stamp.getSeconds();
+    let formattedDate = month + "/" + date.substr(-2) + "/" + year;
+    let formattedTime = hours.substr(-2) + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    let dateTime = {"date": formattedDate, "time":formattedTime}
+    return dateTime;
+  }
+
   formatDuration = (sec) => {
     var date = new Date(null);
     date.setSeconds(sec); // specify value for SECONDS here
@@ -147,7 +161,7 @@ export class HistoryTable extends React.Component {
                   this.getPhoneNumber(call.caller_id_number)
                 )}
                 </td>
-                <td><span className='date'>{call.datetime.split(' ')[0].split('-')[1]}/{call.datetime.split(' ')[0].split('-')[2]}/{call.datetime.split(' ')[0].split('-')[0]}</span><br /><span className='time'>{call.datetime.split(' ')[1]}</span></td>
+                <td><span className='date'>{this.getDateTime(call.timestamp).date}</span><br /><span className='time'>{this.getDateTime(call.timestamp).time}</span></td>
                 <td className='duration'>{this.formatDuration(call.duration_seconds)}</td>
                 <td className="last-child"></td>
               </tr>
