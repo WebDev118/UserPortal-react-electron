@@ -9,7 +9,6 @@ class VoicemailsList extends React.Component {
 	constructor(props) {
     super(props);
 
-    this.toggle = this.toggle.bind(this);
     this.state = {
 			messages: null,
 			new: 0,
@@ -17,8 +16,18 @@ class VoicemailsList extends React.Component {
 			pagecount : 10,
 			pagenum: 1,
 			dropdownOpen: false,
-			vmbox_id: ""
+			vmbox_id: "",
+			allItem: false,
+			newItem: false,
+			listenedItem: false,
+			deletedItem: false,
+			noneItem: true,
 		}
+    this.toggle = this.toggle.bind(this);
+    this.allItem = this.allItem.bind(this);
+		this.newItem = this.newItem.bind(this);
+		this.listenedItem = this.listenedItem.bind(this);
+		this.noneItem = this.noneItem.bind(this);
   }
 
 	toggle() {
@@ -26,7 +35,42 @@ class VoicemailsList extends React.Component {
       dropdownOpen: !this.state.dropdownOpen
     });
   }
-
+	allItem(){
+		this.setState({
+			allItem: true,
+			newItem: false,
+			listenedItem: false,
+			deletedItem: false,
+			noneItem: false,
+    });
+	}
+	newItem(){
+		this.setState({
+			allItem: false,
+			newItem: true,
+			listenedItem: false,
+			deletedItem: false,
+			noneItem: false,
+    });
+	}
+	listenedItem(){
+		this.setState({
+			allItem: false,
+			newItem: false,
+			listenedItem: true,
+			deletedItem: false,
+			noneItem: false,
+    });
+	}
+	noneItem(){
+		this.setState({
+			allItem: false,
+			newItem: false,
+			listenedItem: false,
+			deletedItem: false,
+			noneItem: true,
+    });
+	}
 	componentDidMount() {
 		const vmbox_id = this.props.match.params.vmbox_id;
 		const vmbox =  _.find(this.props.allmessages, message => message.vmbox.id === vmbox_id)
@@ -64,13 +108,13 @@ class VoicemailsList extends React.Component {
 										<DropdownToggle tag="div">&#9660;
 										</DropdownToggle>
 										<DropdownMenu>
-											<DropdownItem>All on Page</DropdownItem>
+											<DropdownItem onClick={this.allItem}>All on Page</DropdownItem>
 											<DropdownItem divider />
-											<DropdownItem>New</DropdownItem>
+											<DropdownItem onClick={this.newItem}>New</DropdownItem>
 											<DropdownItem divider />
-											<DropdownItem>Listened</DropdownItem>
+											<DropdownItem onClick={this.listenedItem}>Listened</DropdownItem>
 											<DropdownItem divider />
-											<DropdownItem>None</DropdownItem>
+											<DropdownItem onClick={this.noneItem}>None</DropdownItem>
 										</DropdownMenu>
 									</Dropdown>
 								</div>
@@ -82,7 +126,7 @@ class VoicemailsList extends React.Component {
 							</div>
 						</div>
 					</div>
-					<VoicemailsTable allmessages = {this.state.messages} auth_token={this.props.auth_token} vmbox_id={this.state.vmbox_id}/>
+					<VoicemailsTable allmessages = {this.state.messages} auth_token={this.props.auth_token} itemState={this.state} vmbox_id={this.state.vmbox_id}/>
 					<nav className='bottom-nav'>
 						<select id='view-per-page'>
 							<option>View 10 per page</option>

@@ -5,22 +5,24 @@ import { parsePhoneNumber } from 'libphonenumber-js';
 import CONFIG from '../../Config.json';
 
 const Message = (props) => {
+
   let from = props.from;
   let to = props.to;
   let vmbox_id = props.vmbox_id;
   let media_id = props.media_id;
+  let itemState = props.itemState;
+  console.log(props.playStatus.checkKey,"---------------", props.playStatus.checkState)
   let auth_token = props.auth_token;
   let URL = `${CONFIG.API_URL}${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/vmboxes/${vmbox_id}/messages/${media_id}/raw?auth_token=${auth_token}`
   return (
     <div className = {`tr-content row ${(props.playStatus.audioPlay && props.audioId !== props.playStatus.audioId)?'disabledbutton': ''}`}>
       <div className="col-md-2 row">
         <div className="col-md-3">
-          <input type='checkbox' className="checkbox"/>
+          { (props.playStatus.checkKey === props.audioId && props.playStatus.checkState) || itemState.allItem || ((props.folder === "new" && itemState.newItem && !itemState.listenedItem) || (props.folder !== "new" && itemState.listenedItem && !itemState.newItem)) ? <input type='checkbox' className="checkbox" onChange={()=>props.handleChange(props.audioId)} checked/>:<input type='checkbox' onChange={()=>props.handleChange(props.audioId)} className="checkbox"/>}
         </div>
         <div className="col-md-9">
           {props.folder == "new" ? <span className="newstatus">New</span> : <span className="listenedstatus">Listened</span>}
         </div>
-
       </div>
       <div className="col-md-2">{getDateTime(props.timestamp).date}<br /><span className='grey'>{getDateTime(props.timestamp).time}</span></div>
       <div className="col-md-2">{props.caller_id_name}<br/><span className='grey'>{getPhoneNumber((from).split("@")[0])}</span></div>
@@ -90,11 +92,13 @@ class VoicemailsTable extends React.Component {
     this.state = {
       allmessages: [],
       audioPlay: false,
-      audioId: ''
+      audioId: '',
+      checkKey: '',
+      checkState: false
     }
     //does whatever stuff
     this.audioPlayer = this.audioPlayer.bind(this);
-
+    this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidUpdate(preProps, preState) {
@@ -106,9 +110,14 @@ class VoicemailsTable extends React.Component {
       audioPlay: !this.state.audioPlay
     })
   }
+  handleChange(key){
+    this.setState({
+      checkKey: key,
+      checkState: !this.state.checkState
+    })
+  }
   render () {
     const {allmessages} = this.props;
-
     return (
       <div className="row text-left">
         <div className='voicemailtable'>
@@ -123,7 +132,7 @@ class VoicemailsTable extends React.Component {
             <div className="col-md-2">DURATION</div>
             <div className="col-md-2"></div>
           </div>
-          { allmessages && allmessages.length > 0 ? allmessages.map((message, index) => <Message audioPlayer={this.audioPlayer} auth_token={this.props.auth_token} vmbox_id={this.props.vmbox_id} playStatus={this.state} audioId = {index} key={index} {...message}/>) : null }
+          { allmessages && allmessages.length > 0 ? allmessages.map((message, index) => <Message audioPlayer={this.audioPlayer} auth_token={this.props.auth_token} itemState={this.props.itemState} handleChange={this.handleChange} vmbox_id={this.props.vmbox_id} playStatus={this.state} audioId = {index} key={index} {...message}/>) : null }
         </div>
       </div>
     )
