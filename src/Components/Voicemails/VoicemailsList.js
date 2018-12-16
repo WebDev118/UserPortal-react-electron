@@ -22,12 +22,15 @@ class VoicemailsList extends React.Component {
 			listenedItem: false,
 			deletedItem: false,
 			noneItem: true,
+			checkKey: '',
+			checkState: false
 		}
     this.toggle = this.toggle.bind(this);
     this.allItem = this.allItem.bind(this);
 		this.newItem = this.newItem.bind(this);
 		this.listenedItem = this.listenedItem.bind(this);
 		this.noneItem = this.noneItem.bind(this);
+		this.handleChange = this.handleChange.bind(this);
   }
 
 	toggle() {
@@ -42,6 +45,8 @@ class VoicemailsList extends React.Component {
 			listenedItem: false,
 			deletedItem: false,
 			noneItem: false,
+			checkKey: '',
+			checkState: false
     });
 	}
 	newItem(){
@@ -51,6 +56,8 @@ class VoicemailsList extends React.Component {
 			listenedItem: false,
 			deletedItem: false,
 			noneItem: false,
+			checkKey: '',
+			checkState: false
     });
 	}
 	listenedItem(){
@@ -59,6 +66,7 @@ class VoicemailsList extends React.Component {
 			newItem: false,
 			listenedItem: true,
 			deletedItem: false,
+			checkKey: '',
 			noneItem: false,
     });
 	}
@@ -69,8 +77,16 @@ class VoicemailsList extends React.Component {
 			listenedItem: false,
 			deletedItem: false,
 			noneItem: true,
+			checkKey: '',
+			checkState: false
     });
 	}
+	handleChange(key){
+    this.setState({
+      checkKey: key,
+      checkState: !this.state.checkState
+    })
+  }
 	componentDidMount() {
 		const vmbox_id = this.props.match.params.vmbox_id;
 		const vmbox =  _.find(this.props.allmessages, message => message.vmbox.id === vmbox_id)
@@ -126,7 +142,7 @@ class VoicemailsList extends React.Component {
 							</div>
 						</div>
 					</div>
-					<VoicemailsTable allmessages = {this.state.messages} auth_token={this.props.auth_token} itemState={this.state} vmbox_id={this.state.vmbox_id}/>
+					<VoicemailsTable allmessages = {this.state.messages} history={this.props.history} auth_token={this.props.auth_token} handleChange={this.handleChange} itemState={this.state} vmbox_id={this.state.vmbox_id}/>
 					<nav className='bottom-nav'>
 						<select id='view-per-page'>
 							<option>View 10 per page</option>

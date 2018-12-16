@@ -1,6 +1,7 @@
 import React from 'react';
 import './VoicemailsTable.css';
 import Audioplayer from './Audioplayer';
+import axios from 'axios';
 import { parsePhoneNumber } from 'libphonenumber-js';
 import CONFIG from '../../Config.json';
 
@@ -11,14 +12,13 @@ const Message = (props) => {
   let vmbox_id = props.vmbox_id;
   let media_id = props.media_id;
   let itemState = props.itemState;
-  console.log(props.playStatus.checkKey,"---------------", props.playStatus.checkState)
   let auth_token = props.auth_token;
   let URL = `${CONFIG.API_URL}${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/vmboxes/${vmbox_id}/messages/${media_id}/raw?auth_token=${auth_token}`
   return (
     <div className = {`tr-content row ${(props.playStatus.audioPlay && props.audioId !== props.playStatus.audioId)?'disabledbutton': ''}`}>
       <div className="col-md-2 row">
         <div className="col-md-3">
-          { (props.playStatus.checkKey === props.audioId && props.playStatus.checkState) || itemState.allItem || ((props.folder === "new" && itemState.newItem && !itemState.listenedItem) || (props.folder !== "new" && itemState.listenedItem && !itemState.newItem)) ? <input type='checkbox' className="checkbox" onChange={()=>props.handleChange(props.audioId)} checked/>:<input type='checkbox' onChange={()=>props.handleChange(props.audioId)} className="checkbox"/>}
+          { itemState.allItem || ((props.folder === "new" && itemState.newItem && !itemState.listenedItem) || (props.folder !== "new" && itemState.listenedItem && !itemState.newItem)) ? <input type='checkbox' className="checkbox" checked/>:<input type='checkbox' className="checkbox"/>}
         </div>
         <div className="col-md-9">
           {props.folder == "new" ? <span className="newstatus">New</span> : <span className="listenedstatus">Listened</span>}
@@ -31,7 +31,7 @@ const Message = (props) => {
       { (props.playStatus.audioPlay && props.audioId === props.playStatus.audioId)?
         <div className="row">
           <div className="col-md-10"><Audioplayer props={props}/></div>
-          <div className="col-md-2"><button className="audio-close" onClick={()=>props.audioPlayer(props.audioId)}>Close</button></div>
+          <div className="col-md-2"><button className="audio-close" onClick={()=>props.audioPlayerEnd(props.audioId,vmbox_id,media_id)}>Close</button></div>
         </div> :
         <div className="row">
           <div className="col-md-6">{getDuration(props.length/1000)}</div>
@@ -98,6 +98,7 @@ class VoicemailsTable extends React.Component {
     }
     //does whatever stuff
     this.audioPlayer = this.audioPlayer.bind(this);
+    this.audioPlayerEnd = this.audioPlayerEnd.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -105,6 +106,20 @@ class VoicemailsTable extends React.Component {
 
   }
   audioPlayer(key){
+    this.setState({
+      audioId: key,
+      audioPlay: !this.state.audioPlay
+    })
+  }
+  audioPlayerEnd(key,vmbox_id,media_id){
+    let url = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/vmboxes/${vmbox_id}/messages/${media_id}`;
+    axios.post(url)
+    .then((res) => {
+      this.props.history.push("/voicemails/")
+    })
+    .catch((error) => {
+      console.log(error)
+    })
     this.setState({
       audioId: key,
       audioPlay: !this.state.audioPlay
@@ -132,7 +147,7 @@ class VoicemailsTable extends React.Component {
             <div className="col-md-2">DURATION</div>
             <div className="col-md-2"></div>
           </div>
-          { allmessages && allmessages.length > 0 ? allmessages.map((message, index) => <Message audioPlayer={this.audioPlayer} auth_token={this.props.auth_token} itemState={this.props.itemState} handleChange={this.handleChange} vmbox_id={this.props.vmbox_id} playStatus={this.state} audioId = {index} key={index} {...message}/>) : null }
+          { allmessages && allmessages.length > 0 ? allmessages.map((message, index) => <Message audioPlayer={this.audioPlayer} audioPlayerEnd={this.audioPlayerEnd} auth_token={this.props.auth_token} itemState={this.props.itemState} handleChange={this.props.handleChange} vmbox_id={this.props.vmbox_id} playStatus={this.state} audioId = {index} key={index} {...message}/>) : null }
         </div>
       </div>
     )
