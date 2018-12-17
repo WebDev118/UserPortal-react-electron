@@ -11,10 +11,9 @@ class VoicemailsList extends React.Component {
 
     this.state = {
 			messages: null,
+			searchKey:"",
 			new: 0,
 			total:0,
-			pagecount : 10,
-			pagenum: 1,
 			dropdownOpen: false,
 			vmbox_id: "",
 			allItem: false,
@@ -23,20 +22,33 @@ class VoicemailsList extends React.Component {
 			deletedItem: false,
 			noneItem: true,
 			checkKey: '',
-			checkState: false
+			checkState: false,
+			view: 0,
+      perPage: 10,
+      currentPage: 0,
 		}
     this.toggle = this.toggle.bind(this);
-    this.allItem = this.allItem.bind(this);
+		this.allItem = this.allItem.bind(this);
+		this.onhandleChange = this.onhandleChange.bind(this);
 		this.newItem = this.newItem.bind(this);
 		this.listenedItem = this.listenedItem.bind(this);
 		this.noneItem = this.noneItem.bind(this);
 		this.handleChange = this.handleChange.bind(this);
+		this.selectPerPage = this.selectPerPage.bind(this);
+    this.setCountLabel = this.setCountLabel.bind(this);
+    this.prev = this.prev.bind(this);
+		this.next = this.next.bind(this);
+
   }
 
 	toggle() {
     this.setState({
       dropdownOpen: !this.state.dropdownOpen
     });
+	}
+	onhandleChange(e){
+    var value = e.target.value;
+    this.setState({ searchKey: value });
   }
 	allItem(){
 		this.setState({
@@ -94,9 +106,29 @@ class VoicemailsList extends React.Component {
 
 		this.setState({messages, new:vmbox.vmbox.newcount, total:vmbox.vmbox.messages, title: vmbox.vmbox.name, vmbox_id:vmbox_id})
 	}
+	selectPerPage = (e) => {
+    this.setState({perPage: e.target.value})
+  }
+  setCountLabel = (total) => {
+    if ((this.state.perPage * (this.state.currentPage + 1)) < total)
+      return this.state.perPage * (this.state.currentPage + 1);
+    else
+      return total;
+  }
+  prev = () => {
+    let tmp = this.state.currentPage;
+    this.setState({
+      currentPage: tmp - 1,
+    });
+  }
 
+  next = () => {
+    let tmp = this.state.currentPage;
+    this.setState({
+      currentPage: tmp + 1,
+    });
+  }
 	render() {
-		const {pagecount, pagenum, total } = this.state
 		return (
 			<div className='main'>
 				<Topbar title='Voicemails' />
@@ -138,21 +170,44 @@ class VoicemailsList extends React.Component {
 						</div>
 						<div className="col-md-6">
 							<div id='voicemail-search' className="text-right">
-								<input type="text" className="form-control" placeholder="Search"/>
+								<input className='fax-search-text form-control' type='text' placeholder='Search' onChange={this.onhandleChange}/>
 							</div>
 						</div>
 					</div>
-					<VoicemailsTable allmessages = {this.state.messages} history={this.props.history} auth_token={this.props.auth_token} handleChange={this.handleChange} itemState={this.state} vmbox_id={this.state.vmbox_id}/>
-					<nav className='bottom-nav'>
-						<select id='view-per-page'>
-							<option>View 10 per page</option>
-						</select>
-						<span id='page-num'>{(pagenum - 1 ) * pagecount + 1} - {pagecount < total ? pagecount : total} of {total}</span>
-						<button>First</button>
-						<button>&#60;</button>
-						<button>&#62;</button>
-						<button>Last</button>
-					</nav>
+					<VoicemailsTable
+						allmessages = {this.state.messages}
+						history={this.props.history}
+						auth_token={this.props.auth_token}
+						handleChange={this.handleChange}
+						itemState={this.state}
+						vmbox_id={this.state.vmbox_id}
+						perPage={this.state.perPage}
+            currentPage={this.state.currentPage}
+						searchKey={this.state.searchKey}
+					/>
+					{ this.state.view === 0 ? (
+            <nav className='bottom-nav'>
+              <label>View</label>
+              <select onChange={this.selectPerPage}>
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+              <label>per page</label>
+              <span id='page-num'>{this.state.perPage * this.state.currentPage + 1}-{this.setCountLabel(this.state.total)} of {this.state.total}</span>
+              { this.state.currentPage === 0 ? (
+                <button onClick={this.prev} className="button-disable" disabled>&#60;</button>
+                ) : (
+                <button onClick={this.prev} className="button-enable">&#60;</button>
+              )}
+              { ((this.state.currentPage + 1)* this.state.perPage >= this.state.total) ? (
+                <button onClick={this.next} className="button-disable" disabled>&#62;</button>
+              ) : (
+                <button onClick={this.next} className="button-enable">&#62;</button>
+              )}
+            </nav>
+            ) : null }
 				</div>
 			</div>
 		)

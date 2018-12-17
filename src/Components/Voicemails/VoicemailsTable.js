@@ -6,7 +6,6 @@ import { parsePhoneNumber } from 'libphonenumber-js';
 import CONFIG from '../../Config.json';
 
 const Message = (props) => {
-
   let from = props.from;
   let to = props.to;
   let vmbox_id = props.vmbox_id;
@@ -94,16 +93,50 @@ class VoicemailsTable extends React.Component {
       audioPlay: false,
       audioId: '',
       checkKey: '',
-      checkState: false
+      checkState: false,
+      messageRecords:""
     }
     //does whatever stuff
     this.audioPlayer = this.audioPlayer.bind(this);
     this.audioPlayerEnd = this.audioPlayerEnd.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.filtermailList = this.filtermailList.bind(this);
+    this.getPhoneNumber = this.getPhoneNumber.bind(this);
   }
 
-  componentDidUpdate(preProps, preState) {
-
+  componentDidUpdate(preProps) {
+    const {allmessages} = this.props;
+    if(allmessages != preProps.allmessages) {
+      let perPage = this.props.perPage;
+      let currentPage = this.props.currentPage;
+      let messageRecords = this.filtermailList(allmessages, perPage, currentPage);
+      this.setState({messageRecords: messageRecords})
+    }
+  }
+  getPhoneNumber = (number) => {
+    let phoneNumber = parsePhoneNumber("+"+number).formatInternational();
+    let number_arr = phoneNumber.split(" ");
+    var number = number_arr[0]+" "+number_arr[1]+"-"+number_arr[2]+"-"+number_arr[3];
+    return number
+  }
+  filtermailList = (messageRecords, perPage, currentPage, search) => {
+    let subMessageRecords = [];
+    if (messageRecords && messageRecords.length > 0) {
+      for (var index = perPage * currentPage; index < perPage * (currentPage + 1); index++) {
+        if (messageRecords[index]) {
+          if (!search) {
+            subMessageRecords.push(messageRecords[index]);
+          }else{
+            let searchKey = search.trim();
+            let from = this.getPhoneNumber(messageRecords[index].from.split("@")[0]);
+            let to = this.getPhoneNumber(messageRecords[index].to.split("@")[0]);
+            if(from.includes(searchKey)||to.includes(searchKey) || messageRecords[index].caller_id_name.includes(searchKey))
+              subMessageRecords.push(messageRecords[index]);
+          }
+        }
+      }
+    }
+    return subMessageRecords;
   }
   audioPlayer(key){
     this.setState({
@@ -133,6 +166,12 @@ class VoicemailsTable extends React.Component {
   }
   render () {
     const {allmessages} = this.props;
+
+    let perPage = this.props.perPage;
+    let currentPage = this.props.currentPage;
+    let searchKey = this.props.searchKey;
+    let messageRecords = this.filtermailList(allmessages, perPage, currentPage, searchKey);
+    console.log(this.props)
     return (
       <div className="row text-left">
         <div className='voicemailtable'>
@@ -147,7 +186,19 @@ class VoicemailsTable extends React.Component {
             <div className="col-md-2">DURATION</div>
             <div className="col-md-2"></div>
           </div>
-          { allmessages && allmessages.length > 0 ? allmessages.map((message, index) => <Message audioPlayer={this.audioPlayer} audioPlayerEnd={this.audioPlayerEnd} auth_token={this.props.auth_token} itemState={this.props.itemState} handleChange={this.props.handleChange} vmbox_id={this.props.vmbox_id} playStatus={this.state} audioId = {index} key={index} {...message}/>) : null }
+          { messageRecords && messageRecords.length > 0 ? messageRecords.map((message, index) =>
+              <Message audioPlayer={this.audioPlayer}
+                      audioPlayerEnd={this.audioPlayerEnd}
+                      auth_token={this.props.auth_token}
+                      itemState={this.props.itemState}
+                      handleChange={this.props.handleChange}
+                      vmbox_id={this.props.vmbox_id}
+                      playStatus={this.state}
+                      audioId = {index}
+                      key={index} {...message}
+                />
+            ): null
+            }
         </div>
       </div>
     )

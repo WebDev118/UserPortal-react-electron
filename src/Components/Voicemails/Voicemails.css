@@ -202,7 +202,12 @@ mailbox .voicemailbox-container {
 	margin-right: 0;
 	margin: 0;
 }
-
+.button-disable{
+	color: grey !important;
+}
+.button-enable{
+	color: #000 !important;
+}
 .bottom-nav button:first-of-type,
 .bottom-nav button:nth-of-type(2) {
 	color: lightgrey;

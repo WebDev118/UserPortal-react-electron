@@ -6,15 +6,26 @@ import './Voicemails.css';
 import { getallvmboxes } from '../../Actions/voicemails.action';
 import VoicemailBox from './VoicemailBox';
 class Voicemails extends React.Component {
-
-  state = {
-    allmessages: [],
-    vmboxes: null,
-    new : 0,
-    total: 0,
-    pagecount: 10,
-    pagenum: 1
+  constructor(props) {
+    super(props);
+    this.state = {
+      allmessages: [],
+      vmboxes: null,
+      new : 0,
+      total: 0,
+      view: 0,
+      perPage: 10,
+      currentPage: 0,
+      perPage: 10,
+      searchKey:""
+    }
+    this.selectPerPage = this.selectPerPage.bind(this);
+    this.setCountLabel = this.setCountLabel.bind(this);
+    this.prev = this.prev.bind(this);
+    this.next = this.next.bind(this);
+    this.onhandleChange = this.onhandleChange.bind(this);
   }
+
 
   componentWillMount () {
    this.props.getallvmboxes();
@@ -34,8 +45,35 @@ class Voicemails extends React.Component {
       this.setState({vmboxes})
     }
   }
+  onhandleChange(e){
+    var value = e.target.value;
+    this.setState({ searchKey: value });
+  }
+  selectPerPage = (e) => {
+    this.setState({perPage: e.target.value})
+  }
+  setCountLabel = (total) => {
+    if ((this.state.perPage * (this.state.currentPage + 1)) < total)
+      return this.state.perPage * (this.state.currentPage + 1);
+    else
+      return total;
+  }
+  prev = () => {
+    let tmp = this.state.currentPage;
+    this.setState({
+      currentPage: tmp - 1,
+    });
+  }
+
+  next = () => {
+    let tmp = this.state.currentPage;
+    this.setState({
+      currentPage: tmp + 1,
+    });
+  }
 
   render () {
+    let totalcount = 0;
     let {allmessages} = this.props;
     if(!allmessages) {
       return (
@@ -71,21 +109,36 @@ class Voicemails extends React.Component {
               <input type='checkbox' />  &#9660;
             </div>
             <div id='voicemail-search'>
-              <input type='text' placeholder='Search' />
+              <input className='fax-search-text form-control' type='text' placeholder='Search' onChange={this.onhandleChange}/>
             </div>
-            <VoicemailsTable allmessages = {allmessages[0].messages}/>
+            <VoicemailsTable allmessages = {allmessages[0].messages}
+                             perPage={this.state.perPage}
+                             currentPage={this.state.currentPage}
+                             searchKey={this.state.searchKey}
+            />
+            { this.state.view === 0 ? (
             <nav className='bottom-nav'>
-              <select id='view-per-page'>
-                <option>View 10 per page</option>
+              <label>View</label>
+              <select onChange={this.selectPerPage}>
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
               </select>
-              <span id='page-num'>1-10 of 18</span>
-              <button>First</button>
-              <button>&#60;</button>
-              <button>1</button>
-              <button>2</button>
-              <button>&#62;</button>
-              <button>Last</button>
+              <label>per page</label>
+              <span id='page-num'>{this.state.perPage * this.state.currentPage + 1}-{this.setCountLabel(this.state.total)} of {this.state.total}</span>
+              { this.state.currentPage === 0 ? (
+                <button onClick={this.prev} className="button-disable" disabled>&#60;</button>
+                ) : (
+                <button onClick={this.prev} className="button-enable">&#60;</button>
+              )}
+              { ((this.state.currentPage + 1)* this.state.perPage >= this.state.total) ? (
+                <button onClick={this.next} className="button-disable" disabled>&#62;</button>
+              ) : (
+                <button onClick={this.next} className="button-enable">&#62;</button>
+              )}
             </nav>
+            ) : null }
           </div>
         </div>
       )
