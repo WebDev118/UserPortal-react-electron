@@ -146,7 +146,7 @@ export class HistoryTable extends React.Component {
                     <span className='name'>{this.getName(call)}</span>
                     <br />
                     <span className='number'>
-                    {call.direction === 'inbound' ? (
+                    {call.direction === 'outbound' ? (
                       this.getPhoneNumber(call.caller_id_number)
                     ) : (
                       this.getPhoneNumber(call.callee_id_number)
