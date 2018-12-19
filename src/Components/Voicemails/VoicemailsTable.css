@@ -51,6 +51,14 @@
   padding: 4px 12px 4px 12px;
   font-size:  1.1rem;
 }
+.deletedstatus{
+  background-color: #ff3d24 !important;
+  border-color: #ff3d24 !important;
+  color: #ffffff;
+  border-radius: 3px;
+  padding: 4px 12px 4px 12px;
+  font-size:  1.1rem;
+}
 .audioplay{
   cursor: pointer;
   background: #ffffff;

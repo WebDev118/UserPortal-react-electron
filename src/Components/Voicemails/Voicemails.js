@@ -37,8 +37,6 @@ class Voicemails extends React.Component {
   componentDidUpdate(preProps) {
     const {allmessages, vmboxes} = this.props;
     if(allmessages != preProps.allmessages && allmessages.length == 1) {
-      let newmsg = allmessages[0].vmbox.newcount
-
       this.setState({new: allmessages[0].vmbox.newcount, total: allmessages[0].vmbox.messages})
     }
     if(vmboxes !== preProps.vmboxes) {
@@ -73,7 +71,6 @@ class Voicemails extends React.Component {
   }
 
   render () {
-    let totalcount = 0;
     let {allmessages} = this.props;
     if(!allmessages) {
       return (

@@ -1,7 +1,6 @@
 import axios from 'axios'
 import * as CONSTS from '../Constants'
 import CONFIG from '../Config.json'
-import {getNewAuthToken} from './auth.action'
 import _ from 'lodash'
 
 export const getallfaxes = (from, to) => {

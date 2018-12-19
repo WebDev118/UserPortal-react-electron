@@ -6,21 +6,36 @@ import { parsePhoneNumber } from 'libphonenumber-js';
 import CONFIG from '../../Config.json';
 
 const Message = (props) => {
+
+  let checkMail = props.checkVoiceMail;
+
   let from = props.from;
   let to = props.to;
   let vmbox_id = props.vmbox_id;
   let media_id = props.media_id;
-  let itemState = props.itemState;
+  let audioId = props.audioId;
   let auth_token = props.auth_token;
   let URL = `${CONFIG.API_URL}${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/vmboxes/${vmbox_id}/messages/${media_id}/raw?auth_token=${auth_token}`
   return (
     <div className = {`tr-content row ${(props.playStatus.audioPlay && props.audioId !== props.playStatus.audioId)?'disabledbutton': ''}`}>
       <div className="col-md-2 row">
         <div className="col-md-3">
-          { itemState.allItem || ((props.folder === "new" && itemState.newItem && !itemState.listenedItem) || (props.folder !== "new" && itemState.listenedItem && !itemState.newItem)) ? <input type='checkbox' className="checkbox" checked/>:<input type='checkbox' className="checkbox"/>}
+          { checkMail && checkMail.map((mail, index) => {
+              if((index === audioId) && (media_id ===mail.media_id)){
+                return(
+                  <input key={index} type='checkbox' className="checkbox" checked={mail.state} onChange={() => props.checkboxChange(media_id)}/>
+                )
+              }
+              else{
+                <input key={index} type='checkbox' className="checkbox" checked={false} onChange={() => props.checkboxChange(media_id)}/>
+              }
+            })
+          }
         </div>
         <div className="col-md-9">
-          {props.folder == "new" ? <span className="newstatus">New</span> : <span className="listenedstatus">Listened</span>}
+          {props.folder == "new" ? <span className="newstatus">New</span>
+           : (props.folder == "saved"? <span className="listenedstatus">Listened</span>
+           : (props.folder == "deleted"? <span className="deletedstatus">deleted</span>:""))}
         </div>
       </div>
       <div className="col-md-2">{getDateTime(props.timestamp).date}<br /><span className='grey'>{getDateTime(props.timestamp).time}</span></div>
@@ -47,43 +62,42 @@ const Message = (props) => {
   )
 }
 
-function getDateTime(timestamp){
+  function getDateTime(timestamp){
 
-  let stamp = new Date(timestamp * 1000);
-  let year = stamp.getFullYear()-1970;
-  let month = stamp.getMonth()+1;
-  let date = "0"+ stamp.getDate();
-  let hours = "0" + stamp.getHours();
-  let minutes = "0" + stamp.getMinutes();
-  let seconds = "0" + stamp.getSeconds();
-  let formattedDate = month + "/" + date.substr(-2) + "/" + year;
-  let formattedTime = hours.substr(-2) + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-  let dateTime = {"date": formattedDate, "time":formattedTime}
-  return dateTime;
-}
-// convert senconds to HH-MM-SS format - customization
-function getDuration (totalSeconds) {
-  let hours   = Math.floor(totalSeconds / 3600);
-  let minutes = Math.floor((totalSeconds - (hours * 3600)) / 60);
-  let seconds = Math.floor(totalSeconds - (hours * 3600) - (minutes * 60));
-  // round seconds
-  seconds = Math.round(seconds * 100) / 100
-
-  let result = "";
-  if(hours != 0) {  // hour is 0 then don't display hour format
-    (hours < 10 ? "0" + hours : hours) + ":";
+    let stamp = new Date(timestamp * 1000);
+    let year = stamp.getFullYear()-1970;
+    let month = stamp.getMonth()+1;
+    let date = "0"+ stamp.getDate();
+    let hours = "0" + stamp.getHours();
+    let minutes = "0" + stamp.getMinutes();
+    let seconds = "0" + stamp.getSeconds();
+    let formattedDate = month + "/" + date.substr(-2) + "/" + year;
+    let formattedTime = hours.substr(-2) + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    let dateTime = {"date": formattedDate, "time":formattedTime}
+    return dateTime;
   }
-  result += (minutes < 10 ? "0" + minutes : minutes) + ":";
-  result += (seconds  < 10 ? "0" + seconds : seconds);
 
-  return result;
-}
-function getPhoneNumber(number){
-  let phoneNumber = parsePhoneNumber("+"+number).formatInternational();
-  let number_arr = phoneNumber.split(" ");
-  var number = number_arr[0]+" "+number_arr[1]+"-"+number_arr[2]+"-"+number_arr[3];
-  return number
-}
+  function getDuration (totalSeconds) {
+    let hours   = Math.floor(totalSeconds / 3600);
+    let minutes = Math.floor((totalSeconds - (hours * 3600)) / 60);
+    let seconds = Math.floor(totalSeconds - (hours * 3600) - (minutes * 60));
+    seconds = Math.round(seconds * 100) / 100
+
+    let result = "";
+    if(hours != 0) {  // hour is 0 then don't display hour format
+      (hours < 10 ? "0" + hours : hours) + ":";
+    }
+    result += (minutes < 10 ? "0" + minutes : minutes) + ":";
+    result += (seconds  < 10 ? "0" + seconds : seconds);
+
+    return result;
+  }
+  function getPhoneNumber(number){
+    let phoneNumber = parsePhoneNumber("+"+number).formatInternational();
+    let number_arr = phoneNumber.split(" ");
+    var number = number_arr[0]+" "+number_arr[1]+"-"+number_arr[2]+"-"+number_arr[3];
+    return number
+  }
 
 class VoicemailsTable extends React.Component {
   constructor(props){
@@ -99,7 +113,6 @@ class VoicemailsTable extends React.Component {
     //does whatever stuff
     this.audioPlayer = this.audioPlayer.bind(this);
     this.audioPlayerEnd = this.audioPlayerEnd.bind(this);
-    this.handleChange = this.handleChange.bind(this);
     this.filtermailList = this.filtermailList.bind(this);
     this.getPhoneNumber = this.getPhoneNumber.bind(this);
   }
@@ -158,12 +171,6 @@ class VoicemailsTable extends React.Component {
       audioPlay: !this.state.audioPlay
     })
   }
-  handleChange(key){
-    this.setState({
-      checkKey: key,
-      checkState: !this.state.checkState
-    })
-  }
   render () {
     const {allmessages} = this.props;
 
@@ -171,6 +178,7 @@ class VoicemailsTable extends React.Component {
     let currentPage = this.props.currentPage;
     let searchKey = this.props.searchKey;
     let messageRecords = this.filtermailList(allmessages, perPage, currentPage, searchKey);
+    // let checkVoiceMail =this.props.checkVoiceMail;
     console.log(this.props)
     return (
       <div className="row text-left">
@@ -191,11 +199,12 @@ class VoicemailsTable extends React.Component {
                       audioPlayerEnd={this.audioPlayerEnd}
                       auth_token={this.props.auth_token}
                       itemState={this.props.itemState}
-                      handleChange={this.props.handleChange}
+                      checkboxChange={this.props.checkboxChange}
                       vmbox_id={this.props.vmbox_id}
                       playStatus={this.state}
                       audioId = {index}
                       key={index} {...message}
+                      checkVoiceMail = {this.props.checkVoiceMail}
                 />
             ): null
             }

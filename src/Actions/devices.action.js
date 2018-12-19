@@ -28,10 +28,10 @@ export const getalldevices = () => {
     let lastweek_from_timestamp = (new Date(pastyear,pastmonth,past_fromdate,0,0,0,0).getTime())/1000;
     let lastweek_to_timestamp = (new Date(pastyear,pastmonth,past_todate,23,59,59,999).getTime())/1000;
 
-    const URI_stamp1 = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/cdrs?created_from=${today_from_timestamp}&created_to=${today_to_timestamp}`;
-    const URI_stamp2 = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}/cdrs?created_from=${today_from_timestamp}&created_to=${today_to_timestamp}`;
-    const URI_stamp3 = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/cdrs?created_from=${lastweek_from_timestamp}&created_to=${lastweek_to_timestamp}`;
-    const URI_stamp4 = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}/cdrs?created_from=${lastweek_from_timestamp}&created_to=${lastweek_to_timestamp}`;
+    // const URI_stamp1 = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/cdrs?created_from=${today_from_timestamp}&created_to=${today_to_timestamp}`;
+    const URI_stamp1 = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}/cdrs?created_from=${today_from_timestamp}&created_to=${today_to_timestamp}`;
+    // const URI_stamp3 = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/cdrs?created_from=${lastweek_from_timestamp}&created_to=${lastweek_to_timestamp}`;
+    const URI_stamp2 = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}/cdrs?created_from=${lastweek_from_timestamp}&created_to=${lastweek_to_timestamp}`;
     const URI = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}/devices`
     const URI1 = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/callflows?filter_type=mainUserCallflow&filter_owner_id=${CONFIG.OWNER_ID}`
     const devive_state = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/devices/status`
@@ -66,43 +66,24 @@ export const getalldevices = () => {
                                 "regsiter": false });
             }
           });
-
           axios.get(URI1)
           .then((response1) => {
             axios.get(URI_stamp1)
             .then((res1) => {
-              let total_count1 = res1.data.data.length;
-
+              today_data = res1.data.data;
               axios.get(URI_stamp2)
               .then((res2) => {
-                let user_data1 = res2.data.data;
-                today_data = { total_count1, user_data1 };
-
-                axios.get(URI_stamp3)
-                .then((res3) => {
-                  let total_count2 = res3.data.data.length;
-                  let user_data2;
-                  axios.get(URI_stamp4)
-                  .then((res4) => {
-                    user_data2 = res4.data.data;
-                    pastweek_data = {total_count2, user_data2};
-
-                    total_data = {today_data, pastweek_data}
-
-                    phone_num = response1.data.data;
-                    device_nums = {alldevices, phone_num, total_data};
-                    dispatch({ type: CONSTS.GET_ALL_DEVICES_ON_AN_ACCOUNT_SUCCESS, payload: device_nums })
-
-                  })
-                  .catch((error) => {console.log(error)});
-                })
-                .catch((error) => {console.log(error)});
+                pastweek_data = res2.data.data;
+                phone_num = response1.data.data;
+                total_data={today_data, pastweek_data}
+                device_nums = {alldevices, phone_num, total_data};
+                dispatch({ type: CONSTS.GET_ALL_DEVICES_ON_AN_ACCOUNT_SUCCESS, payload: device_nums })
               })
               .catch((error) => {console.log(error)});
             })
             .catch((error) => {console.log(error)});
           })
-          .catch((error) => { console.log(error)});
+          .catch((error) => {console.log(error)});
         })
         .catch((error) => {console.log(error)});
       })

@@ -22,11 +22,19 @@ class FaxesPage extends React.Component {
       startDate: new Date(day.setDate(day.getUTCDate()-7)),
       endDate: new Date(),
       faxes: "",
-      searchKey:""
+      searchKey:"",
+      view: 0,
+      perPage: 10,
+      currentPage: 0
     }
     this.handleStartChange = this.handleStartChange.bind(this);
     this.handleEndChange = this.handleEndChange.bind(this);
     this.onhandleChange = this.onhandleChange.bind(this);
+    this.selectPerPage = this.selectPerPage.bind(this);
+    this.setCountLabel = this.setCountLabel.bind(this);
+    this.filtermailList = this.filtermailList.bind(this);
+    this.prev = this.prev.bind(this);
+		this.next = this.next.bind(this);
   }
 
   handleStartChange(date) {
@@ -79,10 +87,52 @@ class FaxesPage extends React.Component {
     var value = e.target.value;
     this.setState({ searchKey: value });
   }
+  selectPerPage = (e) => {
+    this.setState({perPage: e.target.value})
+  }
+  setCountLabel = (total) => {
+    if ((this.state.perPage * (this.state.currentPage + 1)) < total)
+      return this.state.perPage * (this.state.currentPage + 1);
+    else
+      return total;
+  }
+  prev = () => {
+    let tmp = this.state.currentPage;
+    this.setState({
+      currentPage: tmp - 1,
+    });
+  }
+
+  next = () => {
+    let tmp = this.state.currentPage;
+    this.setState({
+      currentPage: tmp + 1,
+    });
+  }
+  filtermailList = (allfaxes, perPage, currentPage, search) => {
+    let subfaxesRecords = [];
+    if (allfaxes && allfaxes.length > 0) {
+      for (var index = perPage * currentPage; index < perPage * (currentPage + 1); index++) {
+        if (allfaxes[index]) {
+          if (!search) {
+            subfaxesRecords.push(allfaxes[index]);
+          }else{
+            let search_Key = search.toLowerCase().trim();
+            var caller = this.state.caller_name.toLowerCase();
+            var phoneNumber = this.getPhoneNumber(allfaxes[index].from_number).trim();
+            if (allfaxes[index].from.includes(search_Key)||caller.includes(search_Key)||phoneNumber.includes(search_Key))
+              subfaxesRecords.push(allfaxes[index]);
+          }
+        }
+      }
+    }
+    return subfaxesRecords;
+  }
   render () {
     let { allfaxes } = this.props;
     let faxes = this.state.faxes;
     let auth_token = this.props.auth_token;
+    let faxesRecords = this.filtermailList(faxes, this.state.perPage, this.state.currentPage, this.state.searchKey);
     if(!allfaxes) {
       return (
         <div className='main'>
@@ -108,7 +158,7 @@ class FaxesPage extends React.Component {
             </div>
             <div className='fax-search mt-5'>
               <div className="row text-left">
-                <div className="col-md-2 startdate-col">
+                <div className="col-2 startdate-col">
                   <label htmlFor='start-date'>START DATE</label>
                   <DatePicker className="calendar1 form-control"
                     selected={this.state.startDate}
@@ -116,7 +166,7 @@ class FaxesPage extends React.Component {
                     maxDate ={new Date()}
                   />
                 </div>
-                <div className="col-md-2 enddate-col">
+                <div className="col-2 enddate-col">
                   <label htmlFor='end-date'>END DATE</label>
                   <DatePicker className="calendar1 form-control"
                     minDate ={this.state.startDate}
@@ -128,7 +178,7 @@ class FaxesPage extends React.Component {
                 <div className="col-md-1">
                   <button className="btn btn-outline-secondary" onClick={() => this.props.getallfaxes(this.state.startDate, this.state.endDate)}>Apply</button>
                 </div>
-                <div className="col-md-7 text-right">
+                <div className="text-right">
                   <input className='fax-search-text form-control' type='text' placeholder='Search' onChange={this.onhandleChange}/>
                 </div>
               </div>
@@ -147,84 +197,64 @@ class FaxesPage extends React.Component {
                 </div>
               </div>
             </div>
-            { faxes && faxes.map((fax, index) => {
+            { faxesRecords && faxesRecords.map((fax, index) => {
               let URL = `${CONFIG.API_URL}${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/faxes/inbox/${fax.id}/attachment?auth_token=${auth_token}`;
-              let caller = this.state.caller_name.toLowerCase();
-              let search_Key = this.state.searchKey.toLowerCase().trim();
-              let phoneNumber = this.getPhoneNumber(fax.from_number).trim();
-
-              if(this.state.searchKey !== ""){
-                if (fax.from.includes(search_Key)||caller.includes(search_Key)||phoneNumber.includes(search_Key)){
-                return(
-                  <div className = "tr-content row" key={index}>
-                    <div className="row2 text-left">
-                      <div className="col-md-3 row">
-                        <div className="col-md-3 from-call-img">
-                          <img src='incoming.png' />
-                        </div>
-                        <div className="col-md-9">
-                          {fax.from}<br/>
-                          <span className='grey'>
-                          { this.getPhoneNumber(fax.from_number)}
-                        </span>
-                        </div>
+              return(
+                <div className = "tr-content row" key={index}>
+                  <div className="row2 text-left">
+                    <div className="col-md-3 row">
+                      <div className="col-md-3 from-call-img">
+                        <img src='incoming.png' />
                       </div>
-                      <div className="col-md-3">
-                        {this.state.caller_name}<br />
+                      <div className="col-md-9">
+                        {fax.from}<br/>
                         <span className='grey'>
-                          { this.state.title}
-                        </span>
-                      </div>
-                      <div className="col-md-3">
-                        { this.getDateTime(fax.timestamp).date}<br />
-                        <span className='grey'>
-                          { this.getDateTime(fax.timestamp).time}
-                        </span>
-                      </div>
-                      <div className="col-md-3 text-right">
-                        <button className="faxdownload"><a href={URL} target="_blank"><img src='download.png' width="120%" /></a></button>
+                        { this.getPhoneNumber(fax.from_number)}
+                      </span>
                       </div>
                     </div>
-                  </div>
-                  )
-                }
-              }
-              else{
-                return(
-                  <div className = "tr-content row" key={index}>
-                    <div className="row2 text-left">
-                      <div className="col-md-3 row">
-                        <div className="col-md-3 from-call-img">
-                          <img src='incoming.png' />
-                        </div>
-                        <div className="col-md-9">
-                          {fax.from}<br/>
-                          <span className='grey'>
-                          { this.getPhoneNumber(fax.from_number)}
-                        </span>
-                        </div>
-                      </div>
-                      <div className="col-md-3">
-                        {this.state.caller_name}<br />
-                        <span className='grey'>
-                          { this.state.title}
-                        </span>
-                      </div>
-                      <div className="col-md-3">
-                        { this.getDateTime(fax.timestamp).date}<br />
-                        <span className='grey'>
-                          { this.getDateTime(fax.timestamp).time}
-                        </span>
-                      </div>
-                      <div className="col-md-3 text-right">
-                        <button className="faxdownload"><a href={URL} target="_blank"><img src='download.png' width="120%" /></a></button>
-                      </div>
+                    <div className="col-md-3">
+                      {this.state.caller_name}<br />
+                      <span className='grey'>
+                        { this.state.title}
+                      </span>
+                    </div>
+                    <div className="col-md-3">
+                      { this.getDateTime(fax.timestamp).date}<br />
+                      <span className='grey'>
+                        { this.getDateTime(fax.timestamp).time}
+                      </span>
+                    </div>
+                    <div className="col-md-3 text-right">
+                      <button className="faxdownload"><a href={URL} target="_blank"><img src='download.png' width="120%" /></a></button>
                     </div>
                   </div>
-                  )
-                }
-              })
-            }
+                </div>
+              )}
+            )}
+            { this.state.view === 0 ? (
+            <nav className='bottom-nav'>
+              <label>View</label>
+              <select onChange={this.selectPerPage}>
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+              <label>per page</label>
+              <span id='page-num'>{this.state.perPage * this.state.currentPage + 1}-{this.setCountLabel(this.state.total)} of {this.state.total}</span>
+              { this.state.currentPage === 0 ? (
+                <button onClick={this.prev} className="button-disable" disabled>&#60;</button>
+                ) : (
+                <button onClick={this.prev} className="button-enable">&#60;</button>
+              )}
+              { ((this.state.currentPage + 1)* this.state.perPage >= this.state.total) ? (
+                <button onClick={this.next} className="button-disable" disabled>&#62;</button>
+              ) : (
+                <button onClick={this.next} className="button-enable">&#62;</button>
+              )}
+            </nav>
+            ) : null }
           </div>
         </div>
       )

@@ -1,8 +1,7 @@
-import axios from 'axios'
-import * as CONSTS from '../Constants'
-import CONFIG from '../Config.json'
-import {getNewAuthToken} from './auth.action'
-import _ from 'lodash'
+import axios from 'axios';
+import * as CONSTS from '../Constants';
+import CONFIG from '../Config.json';
+import _ from 'lodash';
 
 export const getallvmboxes = () => {
   return (dispatch) => {

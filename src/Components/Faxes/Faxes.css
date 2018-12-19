@@ -80,6 +80,14 @@
 	align-items: center;
 	font-size:  1.1rem;
 }
+.col-2 {
+	flex: 0 0 10.666667%;
+	max-width: 10.666667%;
+}
+.col-8{
+	flex: 0 0 69.666667%;
+  max-width: 69.666667%;
+}
 .faxtable{
   border: 0px;
   margin: 0 15px 0 15px !important;
@@ -110,4 +118,10 @@
 .faxdownload{
 	background: #ffffff;
 	border-color: #ffffff;
+}
+.button-disable{
+	color: grey !important;
+}
+.button-enable{
+	color: #000 !important;
 }

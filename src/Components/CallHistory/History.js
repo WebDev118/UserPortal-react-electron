@@ -4,7 +4,6 @@ import { Topbar } from '../Common/Topbar';
 import { getCallFlow } from '../../Actions/callhistory.action';
 import { HistorySearch } from './HistorySearch';
 import { HistoryTable } from './HistoryTable';
-import { HistoryGraph } from './HistoryGraph';
 
 import './History.css'
 class History extends React.Component {
@@ -15,8 +14,6 @@ class History extends React.Component {
     this.endDateChange = this.endDateChange.bind(this);
     this.changeFilter = this.changeFilter.bind(this);
     this.apply = this.apply.bind(this);
-    this.listView = this.listView.bind(this);
-    this.graphicView = this.graphicView.bind(this);
     this.selectPerPage = this.selectPerPage.bind(this);
     this.setCountLabel = this.setCountLabel.bind(this);
 
@@ -33,7 +30,6 @@ class History extends React.Component {
       call_list: [],
       perPage: 10,
       currentPage: 0,
-      view: 0,
     };
   }
 
@@ -81,18 +77,6 @@ class History extends React.Component {
     this.props.getCallFlow(this.state.startDate, this.state.endDate);
   }
 
-  listView = () => {
-    this.setState({
-      view: 0
-    });
-  }
-
-  graphicView = () => {
-    this.setState({
-      view: 1
-    });
-  }
-
   selectPerPage = (e) => {
     this.setState({perPage: e.target.value})
   }
@@ -120,13 +104,9 @@ class History extends React.Component {
             startDateChange={this.startDateChange}
             endDateChange={this.endDateChange}
             changeFilter={this.changeFilter}
-            viewChange={this.viewChange}
             apply={this.apply}
-            listView={this.listView}
-            graphicView={this.graphicView}
             state={this.state}
           />
-          { this.state.view === 0 ? (
           <HistoryTable
             list={call_flow}
             perPage={this.state.perPage}
@@ -134,14 +114,6 @@ class History extends React.Component {
             totalPage={totalPage}
             filter={this.state.filter}
           />
-          ) : (
-            <HistoryGraph
-              list={call_flow}
-              startDate={this.state.startDate}
-              endDate={this.state.endDate}
-            />
-          )}
-          { this.state.view === 0 ? (
           <nav className='bottom-nav'>
             <label>View</label>
             <select onChange={this.selectPerPage}>
@@ -163,7 +135,6 @@ class History extends React.Component {
               <button onClick={this.next} enable="true">&#62;</button>
             )}
           </nav>
-          ) : null }
         </div>
       </div>
     )

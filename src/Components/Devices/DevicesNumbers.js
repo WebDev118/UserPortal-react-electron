@@ -58,7 +58,6 @@ class DevicesNumbers extends React.Component {
     let numbers = all_devices_numbers.phone_num;
     let today_data = _.defaults(all_devices_numbers.total_data).today_data;
     let pastweek_data = _.defaults(all_devices_numbers.total_data).pastweek_data;
-
     return (
       <div className="main">
         <Topbar title="Devices & Numbers" />
@@ -102,18 +101,22 @@ class DevicesNumbers extends React.Component {
               <div className="row mt-3">
                 { numbers && numbers.map((element, index) => {
                   var phoneNumber = this.getPhoneNumber(element.numbers[1]);
-                  let today_total = today_data.total_count1;
-                  let today_value = today_data.user_data1;
                   let today_count = 0;
-                  today_value && today_value.map((value, index) => {
-                    if(value.dialed_number === element.numbers[0])
+                  let today_total = today_data.length;
+                  if(today_data.length === 0){
+                    today_total = 0;
+                  }
+                  let pastweek_count = 0;
+                  let pastweek_total = pastweek_data.length;
+                  if(pastweek_data.length === 0){
+                    pastweek_total = 0;
+                  }
+                  today_data && today_data.map((value, index) => {
+                    if(value.dialed_number === element.numbers[0] || value.caller_id_number === element.numbers[0])
                       today_count++;
                   })
-                  let pastweek_total = pastweek_data.total_count2;
-                  let pastweek_value = pastweek_data.user_data2;
-                  let pastweek_count = 0;
-                  pastweek_value && pastweek_value.map((value, index) => {
-                    if(value.dialed_number === element.numbers[0])
+                  pastweek_data && pastweek_data.map((value, index) => {
+                    if(value.dialed_number === element.numbers[0] || value.caller_id_number === element.numbers[0])
                       pastweek_count++;
                   })
                   return(
