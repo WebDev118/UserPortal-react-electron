@@ -5,6 +5,8 @@ import devicereducer from './devices.reducer';
 import faxreducer from './faxes.reducer';
 import auth from './auth.reducer';
 import systemmessage from './systemmessage.reducer';
+import notification from './notification.reducer';
+import language from './language.reducer'
 
 export default combineReducers({
   vmreducer,
@@ -12,5 +14,7 @@ export default combineReducers({
   callreducer,
   faxreducer,
   auth,
-  systemmessage
+  systemmessage,
+  notification,
+  language
 })

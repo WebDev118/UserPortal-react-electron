@@ -6,6 +6,7 @@ export default (state = {loading: false}, action) => {
       return {...state, loading: true}
     case CONSTS.GET_ALL_FAXES_ON_AN_ACCOUNT_SUCCESS:
       return {...state, allfaxes: action.payload, loading:false}
+
     default:
       return state
   }

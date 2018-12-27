@@ -7,6 +7,7 @@ export default (state = defaultState, action) => {
       return { ...state, auth_token: action.payload.auth_token }
     case CONSTS.RESET_AUTH_TOKEN:
       return { ...state, auth_token: null }
+
     default:
       return state
   }
