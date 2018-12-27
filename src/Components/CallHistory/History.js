@@ -1,9 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux';
-import { Topbar } from '../Common/Topbar';
+import Topbar from '../Common/Topbar';
 import { getCallFlow } from '../../Actions/callhistory.action';
 import { HistorySearch } from './HistorySearch';
 import { HistoryTable } from './HistoryTable';
+import i18n from '../Common/i18n';
 
 import './History.css'
 class History extends React.Component {
@@ -30,6 +31,9 @@ class History extends React.Component {
       call_list: [],
       perPage: 10,
       currentPage: 0,
+      call_flow:'',
+      total: 0,
+      user_name: ''
     };
   }
 
@@ -40,7 +44,18 @@ class History extends React.Component {
   componentWillMount() {
     this.props.getCallFlow(this.state.startDate, this.state.endDate);
   }
+  componentDidUpdate(preProps) {
+    let {call_flow}  = this.props.callreducer;
+    if(call_flow !== preProps.callreducer.call_flow) {
 
+      let call_data = call_flow.call_data;
+      if (call_data.length > 0) {
+        let total = call_data.length;
+        this.setState({call_flow: call_data, total: total})
+      }
+      this.setState({user_name: call_flow.full_name})
+    }
+  }
   startDateChange = (date) => {
     this.setState({
       startDate: date,
@@ -88,31 +103,32 @@ class History extends React.Component {
       return total;
   }
 
+
   render () {
-    let { call_flow } = this.props;
-    let totalPage = 0;
-    let total = 0;
-    if (call_flow && call_flow.length) {
-      total = call_flow.length;
-      totalPage = call_flow.length / this.state.perPage;
-    }
+    let {lng} = this.props.language
     return (
       <div className='main'>
-        <Topbar title='Call History' />
-        <div className='history ml-3'>
+       { this.props.callreducer.loading &&
+          <div className="loader_container">
+            <div className="loader"></div>
+          </div>
+        }
+        <Topbar title={i18n.t('callhistory.label', { lng })} user_name={this.state.user_name}/>
+        <div className='history'>
           <HistorySearch
             startDateChange={this.startDateChange}
             endDateChange={this.endDateChange}
             changeFilter={this.changeFilter}
             apply={this.apply}
             state={this.state}
+            lng={lng}
           />
           <HistoryTable
-            list={call_flow}
+            list={this.state.call_flow}
             perPage={this.state.perPage}
             currentPage={this.state.currentPage}
-            totalPage={totalPage}
             filter={this.state.filter}
+            lng={lng}
           />
           <nav className='bottom-nav'>
             <label>View</label>
@@ -123,16 +139,16 @@ class History extends React.Component {
               <option value="100">100</option>
             </select>
             <label>per page</label>
-            <span id='page-num'>{this.state.perPage * this.state.currentPage + 1}-{this.setCountLabel(total)} of {total}</span>
+            <span id='page-num'>{this.state.perPage * this.state.currentPage + 1}-{this.setCountLabel(this.state.total)} of {this.state.total}</span>
             { this.state.currentPage === 0 ? (
-              <button onClick={this.prev} disabled>&#60;</button>
+              <button onClick={this.prev} className="button-disable" disabled>&#60;</button>
               ) : (
-              <button onClick={this.prev} enable>&#60;</button>
+              <button onClick={this.prev} className="button-enable" >&#60;</button>
             )}
-            { ((this.state.currentPage + 1)* this.state.perPage >= total) ? (
-              <button onClick={this.next} disabled>&#62;</button>
+            { ((this.state.currentPage + 1)* this.state.perPage >= this.state.total) ? (
+              <button onClick={this.next} className="button-disable" disabled>&#62;</button>
             ) : (
-              <button onClick={this.next} enable="true">&#62;</button>
+              <button onClick={this.next} className="button-enable">&#62;</button>
             )}
           </nav>
         </div>
@@ -141,9 +157,8 @@ class History extends React.Component {
   }
 }
 
-const mapStateToProps = state => state.callreducer
+const mapStateToProps = state => ({callreducer:state.callreducer, language: state.language});
 const mapDispatchToProps = (dispatch) => ({
   getCallFlow: (startDate, endDate) => dispatch(getCallFlow(startDate, endDate))
 })
-
 export default connect(mapStateToProps, mapDispatchToProps)(History)

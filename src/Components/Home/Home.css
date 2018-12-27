@@ -8,7 +8,19 @@
   min-width: 52rem;
   margin-bottom: 2rem;
 }
+.home {
+  background: #F2F2F3;
+  display: inline-block;
+  padding-top: 1rem;
+  width: 100%;
+  max-height: 98vh;
+  overflow: scroll;
+  position: relative;
+}
 
+/* .main > div:nth-of-type(2) {
+  margin: 1rem;
+} */
 #missed-calls,
 #new-voicemails,
 #new-fax,
@@ -21,7 +33,7 @@
 #new-voicemails >*,
 #new-fax >*,
 #new-messages >* {
-  margin-top: 1.3rem;
+  margin-top: 0.5rem;
   margin-right: 0.4rem;
 }
 
@@ -51,33 +63,35 @@
 .view-all {
   color: #1E81FF;
   float: right;
-  padding-right: 0.5rem;
-  padding-bottom: 0.5rem;
-  font-weight: 350;
-  position: absolute;
-  bottom: 0;
-  right: 0;
+  padding-right: 15px;
+  padding-top: 10px;
+  cursor: pointer;
 }
 
 .home-grid div > p {
   float: right;
 }
-
-#missed-calls {
-  grid-column: 1 / 2;
-  grid-row: 1 / 2;
+.common-box{
+  background: #FFFFFF;
+  width: 100%;
+  text-align: center;
+  line-height: 2rem;
+  border-radius: 0.2rem;
+  box-shadow: 0 0 10px 1px rgba(0,0,0,0.2);
+  padding: 15px 20px 20px 20px;
+  margin-right: 1px;
+  float: left;
+}
+#missed-calls{
   border-top: 2px solid #FC231C;
 }
 
 #new-voicemails {
-  grid-column: 2 / 3;
-  grid-row: 1 / 2;
+
   border-top: 2px solid #2DCB1A;
 }
 
 #new-fax {
-  grid-column: 3 / 4;
-  grid-row: 1 / 2;
   border-top: 2px solid #1B72E1;
 }
 
@@ -98,33 +112,12 @@
   float: right;
   font-weight: 300;
 }
-
-.text p {
-}
-
 .text > h1 {
   display: block;
   padding-bottom: 0;
   font-size: 1.5rem;
   font-weight: 400;
 }
-
-#call-history {
-  grid-row: 2 / 3;
-  grid-column: 1 / 4;
-  min-width: 24rem;
-}
-
-#time-weather {
-  grid-row: 2 / 3;
-  grid-column: 4 / 5;
-}
-
-#devices {
- grid-row: 3 / 4;
- grid-column: 1 / 3;
-}
-
 #devices thead,
 #numbers thead,
 #conferences thead {
@@ -136,21 +129,19 @@
 }
 
 #numbers select {
-  width: 10rem;
-  background: white;
-  border: 1px solid grey;
-  padding: 1rem 3rem 1rem 0;
+  width: 100%;
+  font-size: 1.1rem;
 }
 
 #num {
-  font-size: 1.6rem;
+  font-size: 2.5rem;
   font-weight: 400;
   color: black;
   margin-right: 0.3rem;
 }
 
 #num:nth-of-type(2) {
-  margin-left: 1rem;
+  margin-left: 1.5rem;
 }
 
 #numbers {
@@ -163,7 +154,7 @@
 }
 
 #numbers td {
-  padding-top: 2rem;
+  padding-top: 1rem;
 }
 
 #faxes {
@@ -181,8 +172,69 @@
  {
   border-bottom: 1px solid #ddd;
 }
+.call-title{
+  width: 100%;
+  padding: 10px 10px 10px 30px;
+}
+.missed-call-box{
+  background: #FFFFFF;
+  width: 100%;
+  text-align: center;
+  line-height: 2rem;
+  border-radius: 0.2rem;
+  box-shadow: 0 0 10px 1px rgba(0,0,0,0.2);
+  padding: 10px 0px 12px 0px;
+  float: left;
+}
+.calltable-thead th{
+  padding: 0px !important;
+}
 
-.time {
-  font-size: 0.63rem;
-  color: grey;
+.devices-box{
+  background: #FFFFFF;
+  width: 100%;
+  text-align: center;
+  line-height: 2rem;
+  border-radius: 0.2rem;
+  box-shadow: 0 0 10px 1px rgba(0,0,0,0.2);
+  padding: 10px 20px 20px 20px;
+  float: left;
+  height: 100%;
+}
+
+.loader_container{
+  position: fixed;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  left: 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 100vh;
+  z-index: 1048;
+  background-color: black;
+  opacity: 0.8;
+  touch-action: none;
+}
+.loader {
+  border: 10px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 10px solid #ff2300;
+  width: 120px;
+  height: 120px;
+  opacity: 1;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

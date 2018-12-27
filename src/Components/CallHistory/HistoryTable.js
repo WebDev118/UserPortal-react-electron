@@ -1,5 +1,6 @@
-import React from 'react'
-import { parsePhoneNumber } from 'libphonenumber-js'
+import React from 'react';
+import { parsePhoneNumber } from 'libphonenumber-js';
+import i18n from '../Common/i18n';
 
 export class HistoryTable extends React.Component {
 
@@ -14,7 +15,6 @@ export class HistoryTable extends React.Component {
 
   filterCallList = (callRecords, perPage, currentPage, filter) => {
     let subCallRecords = [];
-
     if (callRecords && callRecords.length > 0) {
       for (var index = perPage * currentPage; index < perPage * (currentPage + 1); index++) {
         if (callRecords[index]) {
@@ -31,7 +31,6 @@ export class HistoryTable extends React.Component {
         }
       }
     }
-
     return subCallRecords;
   }
 
@@ -50,25 +49,24 @@ export class HistoryTable extends React.Component {
         name = call.callee_id_number;
       }
     }
-
     return name;
   }
 
   getPhoneNumber = (number) => {
     let phone_number = "";
+    var phoneNumber;
     if(!number.includes( "+" )) {
-
       if (number.length === 11) {
         phone_number = parsePhoneNumber("+" + number)
         let phone_num = phone_number.formatInternational();
         let number_arr = phone_num.split(" ");
-        var phoneNumber = number_arr[0] + " " + number_arr[1] + "-" + number_arr[2] + "-" + number_arr[3];
+        phoneNumber = number_arr[0] + " " + number_arr[1] + "-" + number_arr[2] + "-" + number_arr[3];
         return phoneNumber;
       } else if (number.length === 10) {
         phone_number = parsePhoneNumber("+1" + number);
         let phone_num = phone_number.formatInternational();
         let number_arr = phone_num.split(" ");
-        var phoneNumber = number_arr[0] + " " + number_arr[1] + "-" + number_arr[2] + "-" + number_arr[3];
+        phoneNumber = number_arr[0] + " " + number_arr[1] + "-" + number_arr[2] + "-" + number_arr[3];
         return phoneNumber;
       } else {
         return number;
@@ -78,7 +76,7 @@ export class HistoryTable extends React.Component {
       phone_number = parsePhoneNumber(number)
       let phone_num = phone_number.formatInternational();
       let number_arr = phone_num.split(" ");
-      var phoneNumber = number_arr[0] + " " + number_arr[1] + "-" + number_arr[2] + "-" + number_arr[3];
+      phoneNumber = number_arr[0] + " " + number_arr[1] + "-" + number_arr[2] + "-" + number_arr[3];
       return phoneNumber;
     }
   }
@@ -111,7 +109,7 @@ export class HistoryTable extends React.Component {
     let currentPage = this.props.currentPage;
     let filter = this.props.filter;
     callRecords = this.filterCallList(callRecords, perPage, currentPage, filter);
-
+    let lng = this.props.lng;
     return (
       <div id='call-history'>
         <table>
@@ -119,10 +117,10 @@ export class HistoryTable extends React.Component {
             <tr>
               <th width="1%"></th>
               <th width="3%"></th>
-              <th width="24%">FROM</th>
-              <th width="24%">TO</th>
-              <th width="24%">DATE/TIME</th>
-              <th width="23%">DURATION</th>
+              <th width="24%">{i18n.t('from.label', { lng })}</th>
+              <th width="24%">{i18n.t('to.label', { lng })}</th>
+              <th width="24%">{i18n.t('date_time.label', { lng })}</th>
+              <th width="23%">{i18n.t('duration.label', { lng })}</th>
               <th width="1%"></th>
             </tr>
           </thead>
@@ -132,15 +130,15 @@ export class HistoryTable extends React.Component {
                 <td className="first-child"></td>
                 <td className="second-child">
                 { call.direction === 'inbound' ? (
-                    <img src='outgoing.png' />
-                  ) : (
-                    <img src='incoming.png' />
+                    <img src='outgoing.png' alt="outgoing"/>
+                  ):(call.hangup_cause === 'USER_BUSY' ?
+                    <img src='incoming.png' alt="incoming"/> :<img src='missed.png' alt="missed"/>
                   )
                 }
                 </td>
                 <td>
                   <div>
-                    <img id='avatar' src='../../avatar.png' />
+                    <img id='avatar' src='avatar.png' alt="avatar"/>
                   </div>
                   <div>
                     <span className='name'>{this.getName(call)}</span>

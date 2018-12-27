@@ -4,6 +4,7 @@ import Audioplayer from './Audioplayer';
 import axios from 'axios';
 import { parsePhoneNumber } from 'libphonenumber-js';
 import CONFIG from '../../Config.json';
+import i18n from '../Common/i18n';
 
 const Message = (props) => {
 
@@ -15,6 +16,7 @@ const Message = (props) => {
   let media_id = props.media_id;
   let audioId = props.audioId;
   let auth_token = props.auth_token;
+  let lng=props.lng;
   let URL = `${CONFIG.API_URL}${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/vmboxes/${vmbox_id}/messages/${media_id}/raw?auth_token=${auth_token}`
   return (
     <div className = {`tr-content row ${(props.playStatus.audioPlay && props.audioId !== props.playStatus.audioId)?'disabledbutton': ''}`}>
@@ -33,9 +35,9 @@ const Message = (props) => {
           }
         </div>
         <div className="col-md-9">
-          {props.folder == "new" ? <span className="newstatus">New</span>
-           : (props.folder == "saved"? <span className="listenedstatus">Listened</span>
-           : (props.folder == "deleted"? <span className="deletedstatus">deleted</span>:""))}
+          {props.folder === "new" ? <span className="newstatus">{i18n.t('new.label', { lng })}</span>
+           : (props.folder === "saved"? <span className="listenedstatus">{i18n.t('listened.label', { lng })}</span>
+           : (props.folder === "deleted"? <span className="deletedstatus">{i18n.t('deleted.label', { lng })}</span>:""))}
         </div>
       </div>
       <div className="col-md-2">{getDateTime(props.timestamp).date}<br /><span className='grey'>{getDateTime(props.timestamp).time}</span></div>
@@ -45,14 +47,14 @@ const Message = (props) => {
       { (props.playStatus.audioPlay && props.audioId === props.playStatus.audioId)?
         <div className="row">
           <div className="col-md-10"><Audioplayer props={props}/></div>
-          <div className="col-md-2"><button className="audio-close" onClick={()=>props.audioPlayerEnd(props.audioId,vmbox_id,media_id)}>Close</button></div>
+          <div className="col-md-2"><button className="audio-close" onClick={()=>props.audioPlayerEnd(props.audioId,vmbox_id,media_id, props.folder)}>{i18n.t('close.label', { lng })}</button></div>
         </div> :
         <div className="row">
           <div className="col-md-6">{getDuration(props.length/1000)}</div>
           <div className="col-md-6">
             <div className="text-right pr-2">
-              <button className="audioplay mr-3" onClick={()=>props.audioPlayer(props.audioId)}><img src='../../play.png' width="120%"/></button>
-              <button className="audiodown"><a href={URL} target="_blank"><img src='../../download.png' width="120%" /></a></button>
+              <button className="audioplay mr-3" onClick={()=>props.audioPlayer(props.audioId)}><img src='play.png' alt="play" width="120%"/></button>
+              <button className="audiodown"><a href={URL} target="_blank"><img src='download.png' alt="download" width="120%" /></a></button>
             </div>
           </div>
         </div>
@@ -84,7 +86,7 @@ const Message = (props) => {
     seconds = Math.round(seconds * 100) / 100
 
     let result = "";
-    if(hours != 0) {  // hour is 0 then don't display hour format
+    if(hours !== 0) {  // hour is 0 then don't display hour format
       (hours < 10 ? "0" + hours : hours) + ":";
     }
     result += (minutes < 10 ? "0" + minutes : minutes) + ":";
@@ -95,8 +97,8 @@ const Message = (props) => {
   function getPhoneNumber(number){
     let phoneNumber = parsePhoneNumber("+"+number).formatInternational();
     let number_arr = phoneNumber.split(" ");
-    var number = number_arr[0]+" "+number_arr[1]+"-"+number_arr[2]+"-"+number_arr[3];
-    return number
+    var finalnumber = number_arr[0]+" "+number_arr[1]+"-"+number_arr[2]+"-"+number_arr[3];
+    return finalnumber
   }
 
 class VoicemailsTable extends React.Component {
@@ -119,7 +121,7 @@ class VoicemailsTable extends React.Component {
 
   componentDidUpdate(preProps) {
     const {allmessages} = this.props;
-    if(allmessages != preProps.allmessages) {
+    if(allmessages !== preProps.allmessages) {
       let perPage = this.props.perPage;
       let currentPage = this.props.currentPage;
       let messageRecords = this.filtermailList(allmessages, perPage, currentPage);
@@ -129,8 +131,8 @@ class VoicemailsTable extends React.Component {
   getPhoneNumber = (number) => {
     let phoneNumber = parsePhoneNumber("+"+number).formatInternational();
     let number_arr = phoneNumber.split(" ");
-    var number = number_arr[0]+" "+number_arr[1]+"-"+number_arr[2]+"-"+number_arr[3];
-    return number
+    var finalnumber = number_arr[0]+" "+number_arr[1]+"-"+number_arr[2]+"-"+number_arr[3];
+    return finalnumber
   }
   filtermailList = (messageRecords, perPage, currentPage, search) => {
     let subMessageRecords = [];
@@ -157,15 +159,18 @@ class VoicemailsTable extends React.Component {
       audioPlay: !this.state.audioPlay
     })
   }
-  audioPlayerEnd(key,vmbox_id,media_id){
-    let url = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/vmboxes/${vmbox_id}/messages/${media_id}`;
-    axios.post(url)
-    .then((res) => {
-      this.props.history.push("/voicemails/")
-    })
-    .catch((error) => {
-      console.log(error)
-    })
+  audioPlayerEnd(key,vmbox_id,media_id,state){
+    if(state === "new"){
+      let url = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/vmboxes/${vmbox_id}/messages/${media_id}`;
+      axios.post(url)
+      .then((res) => {
+        this.props.getallnotification()
+        this.props.history.push("/voicemails/")
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    }
     this.setState({
       audioId: key,
       audioPlay: !this.state.audioPlay
@@ -173,38 +178,38 @@ class VoicemailsTable extends React.Component {
   }
   render () {
     const {allmessages} = this.props;
-
+    let lng = this.props.lng;
     let perPage = this.props.perPage;
     let currentPage = this.props.currentPage;
     let searchKey = this.props.searchKey;
     let messageRecords = this.filtermailList(allmessages, perPage, currentPage, searchKey);
-    // let checkVoiceMail =this.props.checkVoiceMail;
-    console.log(this.props)
     return (
       <div className="row text-left">
         <div className='voicemailtable'>
           <div className="row1">
             <div className="col-md-2 row">
               <div className="col-md-3"> </div>
-              <div className="col-md-6">STATUS</div>
+              <div className="col-md-6">{i18n.t('status.label', { lng })}</div>
             </div>
-            <div className="col-md-2">DATE/TIME</div>
-            <div className="col-md-2">FROM</div>
-            <div className="col-md-2">TO</div>
-            <div className="col-md-2">DURATION</div>
+            <div className="col-md-2">{i18n.t('date_time.label', { lng })}</div>
+            <div className="col-md-2">{i18n.t('from.label', { lng })}</div>
+            <div className="col-md-2">{i18n.t('to.label', { lng })}</div>
+            <div className="col-md-2">{i18n.t('duration.label', { lng })}</div>
             <div className="col-md-2"></div>
           </div>
           { messageRecords && messageRecords.length > 0 ? messageRecords.map((message, index) =>
-              <Message audioPlayer={this.audioPlayer}
-                      audioPlayerEnd={this.audioPlayerEnd}
-                      auth_token={this.props.auth_token}
-                      itemState={this.props.itemState}
-                      checkboxChange={this.props.checkboxChange}
-                      vmbox_id={this.props.vmbox_id}
-                      playStatus={this.state}
-                      audioId = {index}
-                      key={index} {...message}
-                      checkVoiceMail = {this.props.checkVoiceMail}
+              <Message
+                audioPlayer={this.audioPlayer}
+                audioPlayerEnd={this.audioPlayerEnd}
+                auth_token={this.props.auth_token}
+                itemState={this.props.itemState}
+                checkboxChange={this.props.checkboxChange}
+                vmbox_id={this.props.vmbox_id}
+                playStatus={this.state}
+                audioId = {index}
+                key={index} {...message}
+                checkVoiceMail = {this.props.checkVoiceMail}
+                lng={lng}
                 />
             ): null
             }

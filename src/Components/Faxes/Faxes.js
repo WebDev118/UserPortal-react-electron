@@ -1,38 +1,84 @@
 import React from 'react'
 import './Faxes.css'
-
+import CONFIG from '../../Config.json';
+import { parsePhoneNumber } from 'libphonenumber-js';
+import i18n from '../Common/i18n';
 export class Faxes extends React.Component {
+  getPhoneNumber = (number) => {
+    let phoneNumber = parsePhoneNumber("+"+number).formatInternational();
+    let number_arr = phoneNumber.split(" ");
+    var finalnumber = number_arr[0]+" "+number_arr[1]+"-"+number_arr[2]+"-"+number_arr[3];
+    return finalnumber
+  }
+  getDateTime = (timestamp) => {
+    let stamp = new Date(timestamp * 1000);
+    let year = stamp.getFullYear()-1970;
+    let month = stamp.getMonth()+1;
+    let date = "0"+ stamp.getDate();
+    let hours = "0" + stamp.getHours();
+    let minutes = "0" + stamp.getMinutes();
+    let seconds = "0" + stamp.getSeconds();
+    let formattedDate = month + "/" + date.substr(-2) + "/" + year;
+    let formattedTime = hours.substr(-2) + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    let dateTime = {"date": formattedDate, "time":formattedTime}
+    return dateTime;
+  }
   render () {
+    let lng = this.props.lng;
     return (
-      <div id='faxes'>
-        <h4>Faxes</h4>
-        <table className='table-striped'>
-          <thead>
+      <div  id ="call-history" className="text-left missed-call-box">
+        <div className="call-title">
+          <h5>{i18n.t('faxes.label', { lng })}</h5>
+        </div>
+        <table className="none-border">
+          <thead className="calltable-thead">
             <tr>
-              <th>FROM</th>
-              <th>TO</th>
-              <th>DATE/TIME</th>
+              <th width="3%"></th>
+              <th width="4%"></th>
+              <th width="24%">{i18n.t('from.label', { lng })}</th>
+              <th width="30%">{i18n.t('to.label', { lng })}</th>
+              <th width="30%">{i18n.t('date_time.label', { lng })}</th>
+              <th width="6%"></th>
+              <th width="3%"></th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td><img src='outgoing.png' /><div><span className='name'>Karl Anderson</span><br /><span className='number'>+ 1 415-287-2930</span></div></td>
-              <td>+1 415-886-7913</td>
-              <td><span className='date'>11/14/2018</span><br /><span className='time'>10:50:25</span></td>
-            </tr>
-            <tr>
-              <td><img src='outgoing.png' /><div><span className='name'>Karl Anderson</span><br /><span className='number'>+ 1 415-287-2930</span></div></td>
-              <td>+1 415-886-7913</td>
-              <td><span className='date'>11/14/2018</span><br /><span className='time'>10:50:25</span></td>
-            </tr>
-            <tr>
-              <td><img src='outgoing.png' /><div><span className='name'>Karl Anderson</span><br /><span className='number'>+ 1 415-287-2930</span></div></td>
-              <td>+1 415-886-7913</td>
-              <td><span className='date'>11/14/2018</span><br /><span className='time'>10:50:25</span></td>
-            </tr>
-          </tbody>
-        </table>
-        <a className='view-all'>View All</a>
+          {this.props.faxesdata && this.props.faxesdata.map((fax, index) => {
+            let auth_token = this.props.auth_token;
+            let URL = `${CONFIG.API_URL}${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/faxes/inbox/${fax.id}/attachment?auth_token=${auth_token}`;
+            while(index<3){
+            return(
+              <tr key={index}>
+                <td className="first-child"></td>
+                <td className="second-child ">
+                  <img src='fax-sidebar.png'  alt="icon"/>
+                </td>
+                <td>
+                  {fax.from}<br/>
+                  <span className='grey'>
+                    { this.getPhoneNumber(fax.from_number)}
+                  </span>
+                </td>
+                <td>
+                  {this.props.faxbox.faxbox_name}<br/>
+                  <span className='grey'>
+                    { this.props.faxbox.caller_name}
+                  </span>
+                </td>
+                <td>
+                  <span className='date text-left'>{this.getDateTime(fax.timestamp).date}</span>  <br />
+                  <span className='time'>{this.getDateTime(fax.timestamp).time}</span>
+                </td>
+                <td className="text-right">
+                  <button className="faxdownload"><a href={URL} target="_blank"><img src='download.png'  alt="download" width="120%" /></a></button>
+                </td>
+                <td className="last-child"></td>
+              </tr>
+            )}}
+          )}
+        </tbody>
+       </table>
+        <div className="view-all mr-2" onClick={()=>this.props.history.push("/faxes")}>{i18n.t('viewall.label', { lng })}</div>
       </div>
     )
   }

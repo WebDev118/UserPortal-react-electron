@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Topbar } from '../Common/Topbar';
+import  Topbar  from '../Common/Topbar';
 import { getallfaxes } from '../../Actions/faxes.action';
 import DatePicker from "react-datepicker";
 import { parsePhoneNumber } from 'libphonenumber-js';
 import "react-datepicker/dist/react-datepicker.css";
-import _ from 'lodash';
 import CONFIG from '../../Config.json';
+import i18n from '../Common/i18n';
 import './Faxes.css';
 
 class FaxesPage extends React.Component {
@@ -25,7 +25,8 @@ class FaxesPage extends React.Component {
       searchKey:"",
       view: 0,
       perPage: 10,
-      currentPage: 0
+      currentPage: 0,
+      user_name: ''
     }
     this.handleStartChange = this.handleStartChange.bind(this);
     this.handleEndChange = this.handleEndChange.bind(this);
@@ -54,21 +55,22 @@ class FaxesPage extends React.Component {
     !this.props.loading ? this.props.getallfaxes(this.state.startDate, this.state.endDate) : null;
   }
   componentDidUpdate(preProps) {
-    const {allfaxes} = this.props;
-    if(allfaxes != preProps.allfaxes) {
+    const {allfaxes} = this.props.faxreducer;
+    if(allfaxes !== preProps.faxreducer.allfaxes) {
       let faxbox_title = allfaxes.faxbox.faxbox_name;
       let faxbox_id = allfaxes.faxbox.faxbox_id;
       let fax_count = allfaxes.faxes.length;
       let caller_name = allfaxes.faxbox.caller_name;
       let faxes = allfaxes.faxes;
-      this.setState({title: faxbox_title, total: fax_count, faxbox_id: faxbox_id, faxes: faxes, caller_name:caller_name })
+      let user_name = allfaxes.full_name;
+      this.setState({title: faxbox_title, total: fax_count, faxbox_id: faxbox_id, faxes: faxes, caller_name:caller_name, user_name: user_name })
     }
   }
   getPhoneNumber = (number) => {
     let phoneNumber = parsePhoneNumber("+"+number).formatInternational();
     let number_arr = phoneNumber.split(" ");
-    var number = number_arr[0]+" "+number_arr[1]+"-"+number_arr[2]+"-"+number_arr[3];
-    return number
+    var fianlnumber = number_arr[0]+" "+number_arr[1]+"-"+number_arr[2]+"-"+number_arr[3];
+    return fianlnumber
   }
   getDateTime = (timestamp) => {
     let stamp = new Date(timestamp * 1000);
@@ -129,70 +131,83 @@ class FaxesPage extends React.Component {
     return subfaxesRecords;
   }
   render () {
-    let { allfaxes } = this.props;
+    let { allfaxes } = this.props.faxreducer;
     let faxes = this.state.faxes;
     let auth_token = this.props.auth_token;
+    let {lng} = this.props.language;
     let faxesRecords = this.filtermailList(faxes, this.state.perPage, this.state.currentPage, this.state.searchKey);
     if(!allfaxes) {
       return (
         <div className='main'>
-          <Topbar title='Faxes' />
+          { this.props.faxreducer.loading &&
+            <div className="loader_container">
+              <div className="loader"></div>
+            </div>
+          }
+          <Topbar title={i18n.t('faxes.label', { lng })} user_name={this.state.user_name}/>
         </div>
       )
     }
     else{
       return (
         <div className='main'>
-          <Topbar title='Faxes' />
+          { this.props.faxreducer.loading &&
+            <div className="loader_container">
+              <div className="loader"></div>
+            </div>
+          }
+          <Topbar title='Faxes' user_name={this.state.user_name}/>
           <div className="fax-content">
           <div className="text-left"><h3>{this.state.title}</h3></div>
             <div className='voicemail-top-wrap'>
               <div className='voicemails-top'>
                 <h1>0</h1>
-                New
+                {i18n.t('new.label', { lng })}
               </div>
               <div className='voicemails-top'>
                 <h1>{this.state.total}</h1>
-                Total
+                {i18n.t('total.label', { lng })}
               </div>
             </div>
             <div className='fax-search mt-5'>
               <div className="row text-left">
-                <div className="col-2 startdate-col">
-                  <label htmlFor='start-date'>START DATE</label>
+                <div className="col-sm-2 col-md-1 col-xl-1  date-margin">
+                  <label htmlFor='start-date'>{i18n.t('state_date.label', { lng })}</label>
                   <DatePicker className="calendar1 form-control"
                     selected={this.state.startDate}
                     onChange={this.handleStartChange}
                     maxDate ={new Date()}
                   />
                 </div>
-                <div className="col-2 enddate-col">
-                  <label htmlFor='end-date'>END DATE</label>
-                  <DatePicker className="calendar1 form-control"
+                <div className="col-sm-2 col-md-1 col-xl-1 date-margin">
+                  <label htmlFor='end-date'> {" "+i18n.t('end_date.label', { lng })+" "} </label>
+                  <DatePicker className="calendar1 form-control "
                     minDate ={this.state.startDate}
                     maxDate ={new Date()}
                     selected={this.state.endDate}
                     onChange={this.handleEndChange}
                   />
                 </div>
-                <div className="col-md-1">
-                  <button className="btn btn-outline-secondary" onClick={() => this.props.getallfaxes(this.state.startDate, this.state.endDate)}>Apply</button>
+                <div className="col-sm-2 col-md-1 col-xl-1 date-margin">
+                  <button className="btn btn-outline-secondary"
+                          onClick={() => this.props.getallfaxes(this.state.startDate, this.state.endDate)}>
+                  {i18n.t('apply.label', { lng })}</button>
                 </div>
                 <div className="text-right">
-                  <input className='fax-search-text form-control' type='text' placeholder='Search' onChange={this.onhandleChange}/>
+                  <input className='fax-search-text form-control' type='text' placeholder={i18n.t('search.label', { lng })} onChange={this.onhandleChange}/>
                 </div>
               </div>
             </div>
 
             <div className="row text-left mt-5">
               <div className='faxtable'>
-                <div className="row1">
+                <div className="faxesrow">
                   <div className="col-md-3 row">
                     <div className="col-md-3"> </div>
-                    <div className="col-md-9">FROM</div>
+                    <div className="col-md-9">{i18n.t('from.label', { lng })}</div>
                   </div>
-                  <div className="col-md-3">TO</div>
-                  <div className="col-md-3">DATE/TIME</div>
+                  <div className="col-md-3">{i18n.t('to.label', { lng })}</div>
+                  <div className="col-md-3">{i18n.t('date_time.label', { lng })}</div>
                   <div className="col-md-3"></div>
                 </div>
               </div>
@@ -204,7 +219,7 @@ class FaxesPage extends React.Component {
                   <div className="row2 text-left">
                     <div className="col-md-3 row">
                       <div className="col-md-3 from-call-img">
-                        <img src='incoming.png' />
+                        <img src='fax-sidebar.png' alt="fax-sidebar"/>
                       </div>
                       <div className="col-md-9">
                         {fax.from}<br/>
@@ -226,7 +241,7 @@ class FaxesPage extends React.Component {
                       </span>
                     </div>
                     <div className="col-md-3 text-right">
-                      <button className="faxdownload"><a href={URL} target="_blank"><img src='download.png' width="120%" /></a></button>
+                      <button className="faxdownload"><a href={URL} target="_blank"><img src='download.png' alt="download" width="120%" /></a></button>
                     </div>
                   </div>
                 </div>
@@ -261,7 +276,7 @@ class FaxesPage extends React.Component {
     }
   }
 }
-const mapStateToProps = state => state.faxreducer
+const mapStateToProps = state => ({faxreducer: state.faxreducer, language: state.language})
 const mapDispatchToProps = (dispatch) => ({
   getallfaxes: (from, to) => dispatch(getallfaxes(from, to))
 })

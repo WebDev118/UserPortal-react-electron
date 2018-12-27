@@ -4,13 +4,12 @@
   position: relative;
   border-bottom: 1px solid #BCBCC2;
   display: grid;
-  grid-template-columns: auto 4rem 12rem;
-  padding-right: 4rem;
+  grid-template-columns: auto 12rem 6rem;
+  padding-right: 1rem;
   padding-top: 1rem;
   font-weight: 300;
   font-weight: 350;
 }
-
 #title {
   font-size: 1rem;
   float: left;
@@ -20,34 +19,52 @@
   margin-left: 1.25rem;
   font-size: 1.1rem;
 }
-
 .Topbar > div {
   padding-top: 1rem;
   padding-bottom: 1rem;
 }
-
 .Topbar > div:first-of-type,
 .Topbar > div:nth-of-type(2) {
-  border-right: 1px solid #BCBCC2;
 }
-
 #avatar {
   border-radius: 50%;
   height: 2.5rem;
   width: 2.5rem;
-  vertical-align: middle; 
+  vertical-align: middle;
   display: inline-block;
+  box-shadow: 0 0 10px 6px rgba(0,0,0,0.2);
 }
-
 #phone-book {
   margin-top: 0.5rem;
   height: 1.5rem;
   width: 1.5rem;
 }
-
 #top-name {
   vertical-align: middle;
   display: inline-block;
   margin-left: 1rem;
   white-space: nowrap;
+}
+.avatar{
+  position: relative;
+}
+.online{
+  position: absolute;
+  bottom: 7px;
+  left :43px;
+  border-radius: 50%;
+  color: #00ff00;
+  z-index: 1000;
+  size: 8px;
+
+}
+.language{
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.language select {
+  border: 0px !important;
+  background: transparent;
 }

@@ -1,10 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Topbar } from '../Common/Topbar'
+import Topbar from '../Common/Topbar'
 import VoicemailsTable from './VoicemailsTable'
+import { getallnotification } from '../../Actions/notification.action'
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import _ from 'lodash'
 import axios from 'axios';
+import i18n from '../Common/i18n'
 import CONFIG from '../../Config.json';
 
 class VoicemailsList extends React.Component {
@@ -31,7 +33,8 @@ class VoicemailsList extends React.Component {
 			checkKey: '',
 			view: 0,
       perPage: 10,
-      currentPage: 0,
+			currentPage: 0,
+			user_name: ''
 		}
 		this.toggle1 = this.toggle1.bind(this);
 		this.toggle2 = this.toggle2.bind(this);
@@ -50,13 +53,15 @@ class VoicemailsList extends React.Component {
 		this.mailStateChange = this.mailStateChange.bind(this);
 	}
 	componentDidMount() {
+
 		const vmbox_id = this.props.match.params.vmbox_id;
-		const vmbox =  _.find(this.props.allmessages, message => message.vmbox.id === vmbox_id)
+		const vmbox =  _.find(this.props.vmreducer.allmessages.allmessages, message => message.vmbox.id === vmbox_id)
 		const messages = vmbox.messages;
 		this.setState({messages,
 									new:vmbox.vmbox.newcount,
 									total:vmbox.vmbox.messages,
 									title: vmbox.vmbox.name,
+									user_name: this.props.vmreducer.allmessages.full_name,
 									vmbox_id:vmbox_id},() => {
 										this.checkVoiceMail(this.state.messages)
 									}
@@ -190,7 +195,6 @@ class VoicemailsList extends React.Component {
 		return checkVoiceMails;
 	}
 	checkboxChange = (key) => {
-
     this.setState({
       checkKey: key
 		}, () => {
@@ -215,7 +219,8 @@ class VoicemailsList extends React.Component {
 			let data = {"data": {"folder": "new"}};
 			axios.post(URL,data)
 			.then((res) => {
-				this.props.history.push("/voicemails/")
+				this.props.getallnotification();
+				this.props.history.push("/voicemails/");
 			})
 			.catch((error) => {
 				console.log(error)
@@ -223,13 +228,14 @@ class VoicemailsList extends React.Component {
 			});
 		}
 	}
-	makelDeletedItem = () => {
+	makeDeletedItem = () => {
 		if(this.state.makeStateMail){
 			this.state.makeStateMail.map((makenew, index) => {
 			let URL = `${CONFIG.API_URL}${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/vmboxes/${this.state.vmbox_id}/messages/${makenew.media_id}`
 			let data = {"data": {"folder": "deleted"}};
 			axios.post(URL,data)
 			.then((res) => {
+				this.props.getallnotification();
 				this.props.history.push("/voicemails/")
 			})
 			.catch((error) => {
@@ -245,6 +251,7 @@ class VoicemailsList extends React.Component {
 			let data = {"data": {"folder": "saved"}};
 			axios.post(URL,data)
 			.then((res) => {
+				this.props.getallnotification();
 				this.props.history.push("/voicemails/")
 			})
 			.catch((error) => {
@@ -274,12 +281,15 @@ class VoicemailsList extends React.Component {
     this.setState({
       currentPage: tmp + 1,
     });
-  }
+	}
+	getallnotification = () => {
+		this.props.getallnotification();
+	}
 	render() {
-		console.log(this.state.makeStateMail);
+		let {lng} = this.props.language;
 		return (
 			<div className='main'>
-				<Topbar title='Voicemails' />
+			<Topbar title={i18n.t('voicemails.label', { lng })} user_name={this.state.user_name}/>
 				<div className="pl-3">
 					<div className="text-left mt-4 mb-3 grey back-box" onClick={() => this.props.history.push('/voicemails/')}>
 						<i className="fa fa-arrow-circle-left mr-1" aria-hidden="true"></i>
@@ -288,10 +298,10 @@ class VoicemailsList extends React.Component {
 					<div className="text-left"><h3>{this.state.title}</h3></div>
 					<div className='voicemail-top-wrap'>
 						<div className={`voicemails-top ${(this.state.new) > 0 ? 'voicemails-top-1' : 'voicemails-top-2'}`}>
-							<h1 className={this.state.new > 0 ? "newcount" : ""}>{this.state.new}</h1>New
+							<h1 className={this.state.new > 0 ? "newcount" : ""}>{this.state.new}</h1>{i18n.t('new.label', { lng })}
 						</div>
 						<div className='voicemails-top voicemails-top-2'>
-							<h1 className="totalcount" >{this.state.total}</h1>	Total
+							<h1 className="totalcount" >{this.state.total}</h1>	{i18n.t('total.label', { lng })}
 						</div>
 					</div>
 
@@ -304,15 +314,15 @@ class VoicemailsList extends React.Component {
 										<DropdownToggle tag="div">&#9660;
 										</DropdownToggle>
 										<DropdownMenu>
-											<DropdownItem onClick={this.allItem}>All on Page</DropdownItem>
+											<DropdownItem onClick={this.allItem}>{i18n.t('all_on_page.label', { lng })}</DropdownItem>
 											<DropdownItem divider />
-											<DropdownItem onClick={this.newItem}>New</DropdownItem>
+											<DropdownItem onClick={this.newItem}>{i18n.t('new.label', { lng })}</DropdownItem>
 											<DropdownItem divider />
-											<DropdownItem onClick={this.listenedItem}>Listened</DropdownItem>
+											<DropdownItem onClick={this.listenedItem}>{i18n.t('listened.label', { lng })}</DropdownItem>
 											<DropdownItem divider />
-											<DropdownItem onClick={this.deletedItem}>Deleted</DropdownItem>
+											<DropdownItem onClick={this.deletedItem}>{i18n.t('deleted.label', { lng })}</DropdownItem>
 											<DropdownItem divider />
-											<DropdownItem onClick={this.noneItem}>None</DropdownItem>
+											<DropdownItem onClick={this.noneItem}>{i18n.t('none.label', { lng })}</DropdownItem>
 										</DropdownMenu>
 									</Dropdown>
 								</div>
@@ -325,11 +335,11 @@ class VoicemailsList extends React.Component {
 											<DropdownToggle tag="div">&#9660;
 											</DropdownToggle>
 											<DropdownMenu>
-												<DropdownItem onClick={this.makeNewItem}>Make as New</DropdownItem>
+												<DropdownItem onClick={this.makeNewItem}>{i18n.t('make_as_new.label', { lng })}</DropdownItem>
 												<DropdownItem divider />
-												<DropdownItem onClick={this.makeListenedItem}>Make as Listened</DropdownItem>
+												<DropdownItem onClick={this.makeListenedItem}>{i18n.t('make_as_listened.label', { lng })}</DropdownItem>
 												<DropdownItem divider />
-												<DropdownItem onClick={this.makelDeletedItem}>Make as Deleted</DropdownItem>
+												<DropdownItem onClick={this.makeDeletedItem}>{i18n.t('make_as_deleted.label', { lng })}</DropdownItem>
 											</DropdownMenu>
 										</Dropdown>
 									</div>
@@ -339,7 +349,7 @@ class VoicemailsList extends React.Component {
 						</div>
 						<div className="col-md-6">
 							<div id='voicemail-search' className="text-right">
-								<input className='fax-search-text form-control' type='text' placeholder='Search' onChange={this.onhandleChange}/>
+								<input className='fax-search-text form-control' type='text' placeholder={i18n.t('search.label', { lng })} onChange={this.onhandleChange}/>
 							</div>
 						</div>
 					</div>
@@ -354,6 +364,8 @@ class VoicemailsList extends React.Component {
             currentPage={this.state.currentPage}
 						searchKey={this.state.searchKey}
 						checkVoiceMail = {this.state.checkVoiceMail}
+						lng={lng}
+						getallnotification = {this.getallnotification}
 					/>
 					{ this.state.view === 0 ? (
             <nav className='bottom-nav'>
@@ -384,7 +396,9 @@ class VoicemailsList extends React.Component {
 	}
 }
 
-const mapStateToProps = state => state.vmreducer
-
-export default connect(mapStateToProps)(VoicemailsList)
+const mapStateToProps = state => ({vmreducer:state.vmreducer, language: state.language});
+const mapDispatchToProps = (dispatch) => ({
+  getallnotification: () => dispatch(getallnotification())
+})
+export default connect(mapStateToProps,mapDispatchToProps)(VoicemailsList)
 

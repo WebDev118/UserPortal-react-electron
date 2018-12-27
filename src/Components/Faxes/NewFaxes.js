@@ -1,9 +1,16 @@
 import React from 'react';
-
+import i18n from '../Common/i18n';
 export class NewFaxes extends React.Component {
   render() {
+    let lng = this.props.lng;
     return(
-  		<div id="new-fax"><img src="fax.png"></img><span className="text"><h1>1</h1><br/><p>New Fax</p></span></div>
+  		<div id="new-fax" className="common-box">
+        <img src="fax.png" alt="fax"/>
+        <span className="text text-right">
+          <h1>{this.props.allfaxescount}</h1>
+          <p>{i18n.t('total.label', { lng })+" "+i18n.t('faxes.label', { lng })}</p>
+        </span>
+      </div>
   );}
-}  
+}
 

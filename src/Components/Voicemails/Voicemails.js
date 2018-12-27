@@ -1,23 +1,23 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Topbar } from '../Common/Topbar';
+import Topbar from '../Common/Topbar';
 import VoicemailsTable from './VoicemailsTable';
 import './Voicemails.css';
 import { getallvmboxes } from '../../Actions/voicemails.action';
 import VoicemailBox from './VoicemailBox';
+import i18n from '../Common/i18n';
 class Voicemails extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      allmessages: [],
-      vmboxes: null,
+      allmessages: '',
       new : 0,
       total: 0,
       view: 0,
       perPage: 10,
       currentPage: 0,
-      perPage: 10,
-      searchKey:""
+      searchKey:"",
+      user_name: ""
     }
     this.selectPerPage = this.selectPerPage.bind(this);
     this.setCountLabel = this.setCountLabel.bind(this);
@@ -26,21 +26,18 @@ class Voicemails extends React.Component {
     this.onhandleChange = this.onhandleChange.bind(this);
   }
 
-
   componentWillMount () {
-   this.props.getallvmboxes();
- }
+    this.props.getallvmboxes();
+  }
   componentDidMount () {
-    !this.props.loading ? this.props.getallvmboxes() : null;
+    !this.props.vmreducer.loading ? this.props.getallvmboxes() : null;
   }
 
   componentDidUpdate(preProps) {
-    const {allmessages, vmboxes} = this.props;
-    if(allmessages != preProps.allmessages && allmessages.length == 1) {
-      this.setState({new: allmessages[0].vmbox.newcount, total: allmessages[0].vmbox.messages})
-    }
-    if(vmboxes !== preProps.vmboxes) {
-      this.setState({vmboxes})
+    const {allmessages} = this.props.vmreducer;
+    if(allmessages !== preProps.vmreducer.allmessages) {
+      let voicemails = allmessages.allmessages;
+      this.setState({user_name: allmessages.full_name, allmessages: voicemails});
     }
   }
   onhandleChange(e){
@@ -71,35 +68,50 @@ class Voicemails extends React.Component {
   }
 
   render () {
-    let {allmessages} = this.props;
-    if(!allmessages) {
+    let {lng} = this.props.language;
+    if(!this.state.allmessages) {
       return (
         <div className='main'>
-          <Topbar title='Voicemails' />
+          { this.props.vmreducer.loading &&
+            <div className="loader_container">
+              <div className="loader"></div>
+            </div>
+          }
+          <Topbar title={i18n.t('voicemails.label', { lng })} user_name={this.state.user_name} />
         </div>
       )
     }
-    if(allmessages && allmessages.length > 1) {
+    if(this.state.allmessages && this.state.allmessages.length > 1) {
       return (
         <div className='main'>
-          <Topbar title='Voicemails' />
-          <VoicemailBox allmessages = {allmessages} history={this.props.history}/>
+          { this.props.vmreducer.loading &&
+            <div className="loader_container">
+              <div className="loader"></div>
+            </div>
+          }
+          <Topbar title={i18n.t('voicemails.label', { lng })}  user_name={this.state.user_name}/>
+          <VoicemailBox allmessages = {this.state.allmessages} history={this.props.history} lng={this.props.language.lng}/>
         </div>
       )
     } else {
       return (
         <div className='main'>
-          <Topbar title='Voicemails'/>
+          { this.props.vmreducer.loading &&
+            <div className="loader_container">
+              <div className="loader"></div>
+            </div>
+          }
+          <Topbar title={i18n.t('voicemails.label', { lng })}  user_name={this.state.user_name}/>
           <div>
-            <div style={{textAlign:"left"}}><h4>{allmessages[0].vmbox.name}</h4></div>
+            <div style={{textAlign:"left"}}><h4>{this.state.allmessages[0].vmbox.name}</h4></div>
             <div className='voicemail-top-wrap'>
               <div className='voicemails-top'>
-                <h1>{allmessages[0].vmbox.newcount}</h1>
-                    New
+                <h1>{this.state.allmessages[0].vmbox.newcount}</h1>
+                {i18n.t('news.label', { lng })}
               </div>
               <div className='voicemails-top'>
-                <h1>{allmessages[0].vmbox.messages}</h1>
-                    Total
+                <h1>{this.state.allmessages[0].vmbox.messages}</h1>
+                {i18n.t('total.label', { lng })}
               </div>
             </div>
             <div className='checkbox-wrap'>
@@ -108,14 +120,15 @@ class Voicemails extends React.Component {
             <div id='voicemail-search'>
               <input className='fax-search-text form-control' type='text' placeholder='Search' onChange={this.onhandleChange}/>
             </div>
-            <VoicemailsTable allmessages = {allmessages[0].messages}
-                             perPage={this.state.perPage}
-                             currentPage={this.state.currentPage}
-                             searchKey={this.state.searchKey}
+            <VoicemailsTable
+              allmessages = {this.state.allmessages[0].messages}
+              perPage={this.state.perPage}
+              currentPage={this.state.currentPage}
+              searchKey={this.state.searchKey}
             />
             { this.state.view === 0 ? (
             <nav className='bottom-nav'>
-              <label>View</label>
+              <label>view</label>
               <select onChange={this.selectPerPage}>
                 <option value="10">10</option>
                 <option value="25">25</option>
@@ -143,7 +156,7 @@ class Voicemails extends React.Component {
   }
 }
 
-const mapStateToProps = state => state.vmreducer
+const mapStateToProps = state => ({vmreducer:state.vmreducer, language: state.language})
 const mapDispatchToProps = (dispatch) => ({
   getallvmboxes: () => dispatch(getallvmboxes())
 })

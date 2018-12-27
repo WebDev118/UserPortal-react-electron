@@ -1,5 +1,5 @@
 .history {
-	padding-top: 2rem;
+	padding-top: 0rem;
 }
 
 .call-history thead {
@@ -8,12 +8,11 @@
 
 #call-history td {
 	border-bottom: 2px solid #ddd;
-	font-size: 15px;
+	font-size: 1.1rem;
 }
-
 .call-history tbody {
 	line-height: 1rem;
-	font-size: 0.82rem;
+	font-size: 1.1rem;
   background-color: white;
 }
 
@@ -35,13 +34,11 @@
 }
 
 .second-child {
-	border-left: 1px solid #eee;
 	padding-left: 0px !important;
 }
 
 .last-child {
 	border-bottom: 0px !important;
-	border-left: 1px solid #eee;
 }
 
 #call-history tbody > tr > td:last-of-type {
@@ -59,7 +56,7 @@
 }
 
 .calendar1 {
-	width: 100%;
+	width: 130px;
 	background: url('../../assets/images/calendar.png') no-repeat scroll;
 	background-position: 95% 50%;
 	background-color: white;
@@ -95,11 +92,6 @@
 .bottom-nav label {
 	margin-left: 0.5rem;
 }
-.col-8{
-	flex: 0 0 69.666667%;
-  max-width: 69.666667%;
-}
-
 .call-search-text{
 	position: absolute;
 	bottom: 0px;
@@ -118,4 +110,42 @@
 	color: grey;
 	background: #F7F7F7;
 	border: 1px solid #CDCDD0;
+}
+@media (min-width: 1100px) {
+  .date-margin {
+    margin-right: 60px;
+  }
+}
+@media (min-width: 1300px) {
+  .date-margin {
+    margin-right: 40px;
+  }
+}
+
+@media (min-width: 1500px) {
+	.date-margin {
+    margin-right: 20px;
+  }
+}
+@media (min-width: 1700px) {
+	.date-margin {
+    margin-right: 15px;
+  }
+}
+
+.name {
+  margin-bottom: 0;
+  font-size: 1.1rem;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+}
+
+.number {
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  font-weight: 300;
+  color: grey;
+  font-size: 0.85rem;
+}
+.time {
+  font-size: 0.85rem;
+  color: grey;
 }

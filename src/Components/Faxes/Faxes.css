@@ -27,18 +27,12 @@
 	width: 100% !important;
 }
 .calendar1 {
-	width: 100%;
+	width: 130px;
 	background: url('../../assets/images/calendar.png') no-repeat scroll;
 	background-position: 95% 50%;
 	background-color: white;
 	position: relative;
-}
-.startdate-col{
-	padding-right:0px !important;
-}
-.enddate-col{
-	/* padding-left:0px !important; */
-	padding-right:0px !important;
+	bottom: 0
 }
 .fax-search label {
 	display: block;
@@ -48,7 +42,6 @@
 	color: grey;
 
 }
-
 .fax-search-text{
 	position: absolute;
 	bottom: 0px;
@@ -59,14 +52,13 @@
 	background-color: white;
 	margin-right:15px;
 }
-.row1 {
+.faxesrow {
 	color: grey;
   display: flex;
   flex-wrap: wrap;
   font-size: 0.9rem;
   margin-left: 16px;
 	width: 100%;
-	display: flex;
 	justify-content: center;
 	align-items: center;
 }
@@ -79,14 +71,6 @@
 	justify-content: center;
 	align-items: center;
 	font-size:  1.1rem;
-}
-.col-2 {
-	flex: 0 0 10.666667%;
-	max-width: 10.666667%;
-}
-.col-8{
-	flex: 0 0 69.666667%;
-  max-width: 69.666667%;
 }
 .faxtable{
   border: 0px;
@@ -124,4 +108,42 @@
 }
 .button-enable{
 	color: #000 !important;
+}
+.calltable-thead th{
+	border-top: solid 1px #dddddd;
+  padding: 0px !important;
+}
+
+@media (min-width: 576px) {
+  .date-margin {
+    margin-right: 90px;
+  }
+}
+
+@media (min-width: 768px) {
+  .date-margin {
+    margin-right: 80px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .date-margin {
+    margin-right: 60px;
+  }
+}
+@media (min-width: 1300px) {
+  .date-margin {
+    margin-right: 40px;
+  }
+}
+
+@media (min-width: 1500px) {
+	.date-margin {
+    margin-right: 20px;
+  }
+}
+@media (min-width: 1700px) {
+	.date-margin {
+    margin-right: 15px;
+  }
 }

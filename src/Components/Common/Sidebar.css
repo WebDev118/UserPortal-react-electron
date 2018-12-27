@@ -4,22 +4,18 @@
 	width: 100%;
 	height: 100vh;
 	background: #222225;
-} 
-
+}
 .kazoo-logo {
 	padding-top: 1rem;
 	padding-bottom: 1rem;
 	border-bottom: 2px solid #18181E;
 }
-
 .kazoo-logo img {
 	width: 60%;
 }
-
 .Sidebar a {
 	text-decoration: none;
 }
-
 .Sidebar-Link {
 	padding-left: 1.25rem;
 	padding-bottom: 1.25rem;
@@ -30,7 +26,6 @@
 	text-align: left;
 	background: #222225;
 }
-
 .Sidebar-active > .Sidebar-Link {
 	background: #101012 !important;
 	color: #1E81FF;
@@ -39,7 +34,6 @@
 	border-radius: 0.2rem;
 	text-decoration: none;
 }
-
 .Sidebar-Link .hover {
 	padding-top: 2rem;
 	padding-bottom: 2rem;
@@ -51,8 +45,17 @@
 	background: #101012;
 	cursor: pointer;
 }
-
 .Sidebar-Link img,
 .Sidebar-Link-hover img {
 	margin-right: 1.3rem;
+}
+.notification {
+	background-color: #ff0000;
+	padding: 2px 9px 2px 8px;
+	border-radius: 50%;
+	font-size: 14px;
+	color: #ffffff;
+	right: 0;
+	position: absolute;
+  margin-right: 15px;
 }

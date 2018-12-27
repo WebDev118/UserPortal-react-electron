@@ -1,55 +1,36 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
-import './Sidebar.css'
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import i18n from '../Common/i18n'
+import './Sidebar.css';
 
 export class SidebarLink extends React.Component {
-  constructor () {
-    super()
+  constructor (props) {
+    super(props)
     this.state = { clicked: false, hover: false }
   }
-
-  handleHover (e) {
-    // this.setState({clicked: !this.state.hover});
-  }
-
-  handleClick (e) {
-    console.log(e)
-    if (this.state.clicked === true) {
-      this.setState({ clicked: false })
-    } else {
-      this.setState({ clicked: true })
-      this.props.handleClick();
-    }
-    this.setState({ clicked: !this.state.clicked })
-  }
-
   render () {
+    let lng = this.props.lng;
     return (
-      <div className='Sidebar-active'>
-        <NavLink exact to={this.props.route} activeClassName='Sidebar-active'>
+
+      <div>
+        <NavLink exact to={this.props.route} activeClassName="Sidebar-active" >
           <div className='Sidebar-Link'>
-            <img src={this.props.img} />
+            <img src={this.props.img} alt="nav-bar"/>
             {this.props.title}
+            { this.props.title === i18n.t('voicemails.label', { lng }) ? (this.props.newmails>0 &&
+              <span className="notification text-right">
+                {this.props.newmails}
+              </span>):" "
+            }
+            { this.props.title === i18n.t('callhistory.label', { lng }) ? (this.props.missedcalls>0 &&
+              <span className="notification text-right">
+                {this.props.missedcalls}
+              </span>):""
+            }
           </div>
         </NavLink>
       </div>
+
     )
   }
-
-  // if (this.state.clicked === true) {
-  // 	() => this.props.handleClick();
-  // 		return(
-  // 			<div className="Sidebar-Link Sidebar-clicked" onClick={() => this.handleClick()} onMouseOver={this.handleHover.bind(this)} onMouseOut={this.handleHover.bind(this)}>
-  // 	      <img src={this.props.image} />
-  // 	      {this.props.title}
-  // 	    </div>
-  //   	);
-  //   } else {
-  // 		return(
-  // 			<div className="Sidebar-Link" onClick={() => this.handleClick()} onMouseOver={this.handleHover.bind(this)} onMouseOut={this.handleHover.bind(this)}>
-  // 	      <img src={this.props.image} />
-  // 	      {this.props.title}
-  // 	    </div>
-  //   	);
-  // 	}
 }

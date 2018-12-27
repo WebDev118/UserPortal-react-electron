@@ -1,8 +1,7 @@
 import React from 'react';
 import './Audioplayer.css';
 import CONFIG from '../../Config.json';
-class Audioplayer extends React.Component {
-
+export default class Audioplayer extends React.Component {
   render () {
     let vmbox_id = this.props.props.vmbox_id;
     let media_id = this.props.props.media_id;
@@ -18,5 +17,3 @@ class Audioplayer extends React.Component {
     )
   }
 }
-
-export default Audioplayer

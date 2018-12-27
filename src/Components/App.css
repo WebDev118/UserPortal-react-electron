@@ -80,13 +80,6 @@ tr:active,
 .duration {
 }
 
-.view-all {
-  color: #1E81FF;
-  float: right;
-  padding-right: 0.5rem;
-  font-weight: 300;
-  font-size: 0.9rem;
-}
 
 thead tr:active {
   color: #333;
@@ -109,7 +102,9 @@ tr {
 #call-history thead {
   border-bottom: 1px solid #ddd;
 }
-
+#call-history table{
+  border: 0px;
+}
 #call-history tbody {
   background-color: white;
 }
@@ -147,17 +142,4 @@ td:last-child {
   margin-top: 0.2rem;
   vertical-align: middle;
   display: inline-block;
-}
-
-.name {
-  margin-bottom: 0;
-  font-size: 0.9rem;
-  padding: 0.5rem 1rem 0.5rem 1rem;
-}
-
-.number {
-  padding: 0.5rem 1rem 0.5rem 1rem;
-  font-weight: 300;
-  color: grey;
-  font-size: 0.9rem;
 }
