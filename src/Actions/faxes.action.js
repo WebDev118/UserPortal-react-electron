@@ -1,7 +1,6 @@
 import axios from 'axios'
 import * as CONSTS from '../Constants'
 import CONFIG from '../Config.json'
-import _ from 'lodash'
 
 export const getallfaxes = (from, to) => {
   return (dispatch) => {
@@ -19,9 +18,8 @@ export const getallfaxes = (from, to) => {
     let to_month = toDate.getUTCMonth();
     let to_date = toDate.getUTCDate();
     let to_timestamp = (new Date(to_year,to_month,to_date,23,59,59,999).getTime())/1000;
-
+    const username = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}`;
     const URI = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/faxboxes?filter_owner_id=${CONFIG.OWNER_ID}`;
-
     axios.get(URI)
       .then((res) => {
         let faxbox_id = res.data.data[0].id;
@@ -30,17 +28,19 @@ export const getallfaxes = (from, to) => {
         let faxbox = {faxbox_id, faxbox_name, caller_name};
 
         let url = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/faxes/inbox?created_from=${from_timestamp}&created_to=${to_timestamp}`;
-
-        axios.get(url)
-        .then((res1) => {
-          let faxes = res1.data.data;
-          let allfaxes = {faxbox, faxes};
-          dispatch({type: CONSTS.GET_ALL_FAXES_ON_AN_ACCOUNT_SUCCESS, payload: allfaxes});
+        axios.get(username).then((res2) => {
+          let full_name = res2.data.data.first_name +" "+ res2.data.data.last_name;
+          axios.get(url)
+          .then((res1) => {
+            let faxes = res1.data.data;
+            let allfaxes = {faxbox, faxes, full_name};
+            dispatch({type: CONSTS.GET_ALL_FAXES_ON_AN_ACCOUNT_SUCCESS, payload: allfaxes});
+          })
         })
       })
       .catch((error) => {
 
-        if(typeof error !== 'undefined' && typeof error.response !== 'undefined' && error.response.status == 401) {
+        if(typeof error !== 'undefined' && typeof error.response !== 'undefined' && error.response.status === 401) {
           dispatch({ type: CONSTS.SET_SYSTEMMESSAGE, payload: "Authentication failed."});
           dispatch({ type:CONSTS.RESET_AUTH_TOKEN});
         }

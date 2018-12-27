@@ -1,10 +1,8 @@
 import axios from 'axios'
 import * as CONSTS from '../Constants'
 import CONFIG from '../Config.json'
-import _ from 'lodash'
 
 export const getCallFlow = (start, end) => {
-
   let startDate = new Date(start);
   let endDate = new Date(end);
 
@@ -20,18 +18,23 @@ export const getCallFlow = (start, end) => {
   let end_timestamp = (new Date(end_year, end_month, end_date, 23, 59, 59, 999).getTime()) / 1000;
 
   return (dispatch) => {
-
-    dispatch({ type: CONSTS.SET_SYSTEMMESSAGE, payload: "Sending API request to get all data." })
-    dispatch({ type: CONSTS.SENDING_API_REQUEST })
+    dispatch({ type: CONSTS.SET_SYSTEMMESSAGE, payload: "Sending API request to get all data." });
+    dispatch({ type: CONSTS.SENDING_API_REQUEST });
 
     const CALL_URI = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}/cdrs?&created_from=${start_timestamp}&created_to=${end_timestamp}`;
+    const username = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}`;
     axios.get(CALL_URI)
       .then((res) => {
-        console.log(res.data.data)
-        dispatch({ type: CONSTS.GET_ALL_CALL_FLOW_ON_AN_ACCOUNT_SUCCESS, payload: res.data.data });
+        var call_data = res.data.data;
+        axios.get(username)
+        .then((res1) => {
+          let full_name = res1.data.data.first_name +" "+ res1.data.data.last_name;
+          var calldata = { call_data, full_name };
+          dispatch({ type: CONSTS.GET_ALL_CALL_FLOW_ON_AN_ACCOUNT_SUCCESS, payload: calldata });
+        })
       })
       .catch((error) => {
-        if (typeof error !== 'undefined' && typeof error.response !== 'undefined' && error.response.status == 401) {
+        if (typeof error !== 'undefined' && typeof error.response !== 'undefined' && error.response.status === 401) {
           dispatch({ type: CONSTS.SET_SYSTEMMESSAGE, payload: "Authentication failed." })
           dispatch({ type: CONSTS.RESET_AUTH_TOKEN })
         }
