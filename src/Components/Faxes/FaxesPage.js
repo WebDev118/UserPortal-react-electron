@@ -187,6 +187,7 @@ class FaxesPage extends React.Component {
                     selected={this.state.startDate}
                     onChange={this.handleStartChange}
                     maxDate ={new Date()}
+                    placeholderText="mm/dd/yyyy"
                   />
                 </div>
                 <div className="col-sm-2 col-md-1 col-xl-1 date-margin">
@@ -197,6 +198,7 @@ class FaxesPage extends React.Component {
                       maxDate ={new Date()}
                       selected={this.state.endDate}
                       onChange={this.handleEndChange}
+                      placeholderText="mm/dd/yyyy"
                     />
                   </div>
                 </div>

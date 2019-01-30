@@ -21,6 +21,7 @@ export class HistorySearch extends React.Component {
                 onChange={this.props.startDateChange}
                 maxDate={this.props.state.endDate}
                 selected={this.props.state.startDate}
+                placeholderText="mm/dd/yyyy"
               />
             </div>
             <div className="col-sm-3 col-md-1 date-margin">
@@ -31,6 +32,7 @@ export class HistorySearch extends React.Component {
                   selected={this.props.state.endDate}
                   minDate={this.props.state.startDate}
                   maxDate={new Date()}
+                  placeholderText="mm/dd/yyyy"
                 />
               </div>
 

@@ -122,9 +122,6 @@ export class HistoryTable extends React.Component {
                 }
                 </td>
                 <td>
-                  <div className="avatar">
-                    <img className='img-avatar' src='avatar.png' alt="avatar"/>
-                  </div>
                   <div>
                     <span className='name text-left'>{call.caller_id_name}</span><br />
                     <span className='number text-left'>
