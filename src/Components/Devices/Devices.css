@@ -1,9 +1,13 @@
 #devices td {
 	width: 50%;
 	text-align: left;
+	padding: 0.4rem 0 0.4rem 0 !important;
 }
 #devices div {
 	vertical-align: middle;
+}
+.divice-title{
+	padding:10px 10px 10px 8px;
 }
 #devices thead > tr > th:first-of-type {
 	font-weight: 400;

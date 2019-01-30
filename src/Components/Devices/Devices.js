@@ -49,7 +49,7 @@ export default class Devices extends React.Component {
     let lng = this.props.lng;
     return (
       <div id='devices' className="text-left devices-box">
-        <div className="call-title"><h4>{i18n.t('devices.label', { lng })}</h4></div>
+        <div className="divice-title"><h5>{i18n.t('devices.label', { lng })}</h5></div>
         <table>
           <thead>
             <tr>
@@ -87,10 +87,10 @@ export default class Devices extends React.Component {
                   <td>
                     <div className="row">
                       <div className="col-md-2 text-right">
-                        {(device.callcount*100)/device.totalcount}%
+                        {Math.round((device.callcount*100)/device.totalcount)}%
                       </div>
                        <div className="col-md-8 mt-2">
-                        <Progress value={(device.callcount*100)/device.totalcount} />
+                        <Progress value={Math.round((device.callcount*100)/device.totalcount)} />
                         <span className="grey">{device.callcount}{" "+i18n.t('callcount.label', { lng })}</span>
                       </div>
                     </div>

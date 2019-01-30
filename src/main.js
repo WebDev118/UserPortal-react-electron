@@ -1,7 +1,6 @@
 const electron = require('electron');
-const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
-const {Tray, Menu} = require('electron');
+const {app, Tray, Menu, globalShortcut} = require('electron');
 
 const path = require('path');
 
@@ -10,8 +9,8 @@ let tray = null;
 let closeWindow = false;
 var AutoLaunch = require('auto-launch');
 var kazooAutoLauncher = new AutoLaunch({
-		name: 'KAZOO',
-		path: '/Applications/KAZOO.app'
+		name: 'UserPortal',
+		path: '/Applications/UserPortal.app'
 });
 
 kazooAutoLauncher.isEnabled()
@@ -27,7 +26,7 @@ kazooAutoLauncher.isEnabled()
 
 function createWindow() {
 	mainWindow = new BrowserWindow({
-    title:'KAZOO',
+    title:'UserPortal',
     width: 1700,
     height: 950,
     minWidth: 1500,
@@ -36,19 +35,23 @@ function createWindow() {
     backgroundColor: '#171717',
   });
 	mainWindow.loadURL(`file://${path.join(__dirname, '../build/index.html')}`);
-
-	mainWindow.on('closed', function () {
-		mainWindow = null
-	})
+	mainWindow.maximize();
 }
 
 app.on('ready', () => {
 	createWindow();
-
 	tray = new Tray(path.join(__dirname, '../build/trayicon.png'));
-  const contextMenu = Menu.buildFromTemplate([
+
+	globalShortcut.register('CommandOrControl+R', () => {
+		mainWindow.loadURL(`file://${path.join(__dirname, '../build/index.html')}`);
+	});
+
+	globalShortcut.register('CommandOrControl+Q', () => {
+    app.quit();
+	});
+	const contextMenu = Menu.buildFromTemplate([
 		{
-			label: "Show Kazoo", click: (item, window, event) => {
+			label: "Show UserPortal", click: () => {
 				if(closeWindow){
 					closeWindow = false;
 					createWindow();
@@ -59,7 +62,17 @@ app.on('ready', () => {
 			}
 		},
 		{
-			label: "Quit Kazoo", click: (item, window, event) => {
+			label: "Reload",
+			accelerator: "CmdOrCtrl+R",
+			click: () => {
+				mainWindow.loadURL(`file://${path.join(__dirname, '../build/index.html')}`);
+			}
+		},
+		{ type: 'separator' },
+		{
+			label: "Quit UserPortal",
+			accelerator: "CmdOrCtrl+Q",
+			click: () => {
 				app.quit();
 			}
 		}

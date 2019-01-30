@@ -8,27 +8,25 @@ export const getalldevices = () => {
     dispatch({ type: CONSTS.SENDING_API_REQUEST})
 
     let today = new Date();
-    let year = today.getUTCFullYear() + 1970;
-    let month = today.getUTCMonth();
-    let date = today.getUTCDate();
-    let day = today.getUTCDay();
+    let year = today.getFullYear() + 1970;
+    let month = today.getMonth();
+    let date = today.getDate();
+    let day = today.getDay();
     let	countDaysFromMonday = (day || 7) - 1;
-    let today_from_timestamp = (new Date(year,month,date,0,0,0,0).getTime())/1000;
-    let today_to_timestamp = (new Date(year,month,date,23,59,59,999).getTime())/1000;
+    let today_from_timestamp = Math.round(new Date(year,month,date,0,0,0,0).getTime())/1000;
+    let today_to_timestamp = Math.round(new Date(year,month,date,23,59,59,999).getTime())/1000;
 
     let pastweek = new Date();
-    pastweek.setDate(pastweek.getUTCDate() - 7 - countDaysFromMonday);
-    let pastyear = pastweek.getUTCFullYear() + 1970;
-    let pastmonth = pastweek.getUTCMonth();
-    let past_fromdate = pastweek.getUTCDate();
-    let past_todate = pastweek.getUTCDate()+6;
+    pastweek.setDate(pastweek.getDate() - 7 - countDaysFromMonday);
+    let pastyear = pastweek.getFullYear() + 1970;
+    let pastmonth = pastweek.getMonth();
+    let past_fromdate = pastweek.getDate();
+    let past_todate = pastweek.getDate()+6;
 
-    let lastweek_from_timestamp = (new Date(pastyear,pastmonth,past_fromdate,0,0,0,0).getTime())/1000;
-    let lastweek_to_timestamp = (new Date(pastyear,pastmonth,past_todate,23,59,59,999).getTime())/1000;
+    let lastweek_from_timestamp = Math.round(new Date(pastyear,pastmonth,past_fromdate,0,0,0,0).getTime())/1000;
+    let lastweek_to_timestamp = Math.round(new Date(pastyear,pastmonth,past_todate,23,59,59,999).getTime())/1000;
 
-    // const URI_stamp1 = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/cdrs?created_from=${today_from_timestamp}&created_to=${today_to_timestamp}`;
     const URI_stamp1 = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}/cdrs?created_from=${today_from_timestamp}&created_to=${today_to_timestamp}`;
-    // const URI_stamp3 = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/cdrs?created_from=${lastweek_from_timestamp}&created_to=${lastweek_to_timestamp}`;
     const URI_stamp2 = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}/cdrs?created_from=${lastweek_from_timestamp}&created_to=${lastweek_to_timestamp}`;
     const URI = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}/devices`
     const URI1 = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/callflows?filter_type=mainUserCallflow&filter_owner_id=${CONFIG.OWNER_ID}`

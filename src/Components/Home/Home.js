@@ -4,6 +4,7 @@ import authenticate from '../Common/Authenticate'
 import Topbar from '../Common/Topbar'
 import { MissedCalls } from '../CallHistory/MissedCalls'
 import { NewVoicemails } from '../Voicemails/NewVoicemails'
+import { getallnotification } from '../../Actions/notification.action'
 import { NewFaxes } from '../Faxes/NewFaxes'
 import  CallHistory from '../CallHistory/CallHistory'
 import { TimeWeather } from '../Common/TimeWeather'
@@ -31,7 +32,12 @@ class Home extends React.Component {
       lng:'en'
     }
   }
-
+  componentWillMount () {
+    this.props.getallnotification();
+  }
+  componentDidMount () {
+    !this.props.notification.loading ? this.props.getallnotification() : null;
+  }
   componentDidUpdate(preProps) {
     let allnotifications  = this.props.notification.allnotifications;
     if(allnotifications !== preProps.notification.allnotifications) {
@@ -53,6 +59,10 @@ class Home extends React.Component {
   }
   render () {
     let {lng} = this.props.language;
+    let {systemmessage} = this.props.systemmessage;
+    if(systemmessage === 'Authentication failed.'){
+      window.location.reload();
+    }
     return (
       <div className="home">
         { this.props.notification.loading &&
@@ -82,14 +92,14 @@ class Home extends React.Component {
             </div>
           </div>
           <div className="row mt-4">
-            <div className="col-md-9">
-              <Devices alldevices  = {this.state.alldevices} calldata={this.state.calldata} history={this.props.history} lng={lng}/>
+            <div className="col-md-6">
+              <Devices alldevices  = {this.state.alldevices} calldata={this.state.today_data} history={this.props.history} lng={lng}/>
             </div>
-            <div className="col-md-3" >
+            <div className="col-md-6" >
               <Numbers phone_num = {this.state.phone_num}
                        history={this.props.history}
-                      today_data={this.state.today_data}
-                      lng={lng}/>
+                       today_data={this.state.today_data}
+                       lng={lng}/>
             </div>
           </div>
           <div className="row mt-4">
@@ -108,5 +118,8 @@ class Home extends React.Component {
     )
   }
 }
-  const mapStateToProps =  state => ({notification: state.notification, language:state.language})
-  export default connect(mapStateToProps)(authenticate(Home))
+  const mapStateToProps =  state => ({notification: state.notification, language:state.language, systemmessage: state.systemmessage})
+  const mapDispatchToProps = (dispatch) => ({
+    getallnotification: () => dispatch(getallnotification())
+  })
+  export default connect(mapStateToProps,mapDispatchToProps)(authenticate(Home))

@@ -10,22 +10,9 @@ import './History.css'
 class History extends React.Component {
   constructor(props) {
     super(props);
-
-    this.startDateChange = this.startDateChange.bind(this);
-    this.endDateChange = this.endDateChange.bind(this);
-    this.changeFilter = this.changeFilter.bind(this);
-    this.apply = this.apply.bind(this);
-    this.selectPerPage = this.selectPerPage.bind(this);
-    this.setCountLabel = this.setCountLabel.bind(this);
-
-    this.prev = this.prev.bind(this);
-    this.next = this.next.bind(this);
-
-    var tmp = new Date();
-    tmp.setDate(tmp.getDate() - 6);
-
+    const day = new Date();
     this.state = {
-      startDate: tmp,
+      startDate: new Date(day.setDate(day.getUTCDate()-7)),
       endDate: new Date(),
       filter: '',
       call_list: [],
@@ -35,6 +22,15 @@ class History extends React.Component {
       total: 0,
       user_name: ''
     };
+    this.startDateChange = this.startDateChange.bind(this);
+    this.endDateChange = this.endDateChange.bind(this);
+    this.changeFilter = this.changeFilter.bind(this);
+    this.apply = this.apply.bind(this);
+    this.selectPerPage = this.selectPerPage.bind(this);
+    this.setCountLabel = this.setCountLabel.bind(this);
+
+    this.prev = this.prev.bind(this);
+    this.next = this.next.bind(this);
   }
 
   componentDidMount () {
@@ -49,10 +45,8 @@ class History extends React.Component {
     if(call_flow !== preProps.callreducer.call_flow) {
 
       let call_data = call_flow.call_data;
-      if (call_data.length > 0) {
-        let total = call_data.length;
-        this.setState({call_flow: call_data, total: total})
-      }
+      let total = call_data.length;
+      this.setState({call_flow: call_data, total: total})
       this.setState({user_name: call_flow.full_name})
     }
   }
@@ -105,7 +99,11 @@ class History extends React.Component {
 
 
   render () {
-    let {lng} = this.props.language
+    let {lng} = this.props.language;
+    let {systemmessage} = this.props.systemmessage;
+    if(systemmessage === 'Authentication failed.'){
+      window.location.reload();
+    }
     return (
       <div className='main'>
        { this.props.callreducer.loading &&
@@ -131,14 +129,14 @@ class History extends React.Component {
             lng={lng}
           />
           <nav className='bottom-nav'>
-            <label>View</label>
+            <label>{i18n.t('view.label', { lng })}</label>
             <select onChange={this.selectPerPage}>
               <option value="10">10</option>
               <option value="25">25</option>
               <option value="50">50</option>
               <option value="100">100</option>
             </select>
-            <label>per page</label>
+            <label>{i18n.t('per_page.label', { lng })}</label>
             <span id='page-num'>{this.state.perPage * this.state.currentPage + 1}-{this.setCountLabel(this.state.total)} of {this.state.total}</span>
             { this.state.currentPage === 0 ? (
               <button onClick={this.prev} className="button-disable" disabled>&#60;</button>
@@ -157,7 +155,7 @@ class History extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({callreducer:state.callreducer, language: state.language});
+const mapStateToProps = state => ({callreducer:state.callreducer, language: state.language, systemmessage: state.systemmessage});
 const mapDispatchToProps = (dispatch) => ({
   getCallFlow: (startDate, endDate) => dispatch(getCallFlow(startDate, endDate))
 })

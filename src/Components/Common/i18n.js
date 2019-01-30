@@ -30,7 +30,6 @@ i18next
           usage: {label: "Usage"},
           today: {label: "Today"},
           callcount: {label: "calls"},
-          view: {label: "view"},
           all_on_page: {label: "All on page"},
           listened: {label: "Listened"},
           deleted: {label: "Deleted"},
@@ -42,17 +41,22 @@ i18next
           close: {label: "Close"},
           search: {label: "Search"},
           state_date: {label: "START DATE"},
-          end_date: {label: "END DATE"},
+          end_date: {label: "END  DATE"},
           apply: {label: "Apply"},
           all: {label: "All"},
-          past_week: {label: "Past Week"}
+          past_week: {label: "Past Week"},
+          vboxtext:{label:"You have multiple voicemail boxes - select one to view the voicemails it contains."},
+          view: {label: "View"},
+          per_page: {label: "per page"},
+          no: {label: "No"},
+          results: {label:"results"}
         },
       },
       fr: {
         translation: {
           home: { label: 'home', },
           voicemails: {label: 'voicemails'},
-          callhistory: { label: 'call History', },
+          callhistory: { label: 'call history', },
           devices: {label: "devices"},
           numbers: {label: "numbers"},
           faxes: {label: "faxes"}

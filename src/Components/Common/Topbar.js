@@ -16,7 +16,7 @@ class Topbar extends React.Component {
     return (
       <div className='Topbar'>
         <div><span id='title'>{this.props.title}</span></div>
-        <div className="avatar">
+        <div className="header-avatar">
           <img id='avatar' src="avatar.png" alt="avatar"/>
           <div className="online"><i className="fas fa-circle"/></div>
           <span id='top-name'>{this.props.user_name}

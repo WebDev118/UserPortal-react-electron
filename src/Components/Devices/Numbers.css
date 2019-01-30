@@ -15,6 +15,9 @@
 	font-weight: 420;
   color: black;
 }
+.number-title{
+  padding: 10px 10px 10px 8px;
+}
 .float-right {
   text-align: center;
   float: right;
@@ -33,4 +36,23 @@
     font-weight: 400;
     font-size: 1.2rem;
     color: grey;
+}
+.number-graph{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50%;
+}
+.number-title-box{
+  padding: 16px 0px 14px 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.usage-today{
+  font-size: 1.1rem;
+}
+.border-div{
+  border: 0.6px solid;
+  color: #dddddd;
 }

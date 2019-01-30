@@ -7,12 +7,11 @@
 }
 .kazoo-logo {
 	padding-top: 1rem;
-	padding-bottom: 1rem;
-	border-bottom: 2px solid #18181E;
+	padding-bottom: 0.8rem;
+	font-size: 1.8rem;
+	color:#008df1;
 }
-.kazoo-logo img {
-	width: 60%;
-}
+
 .Sidebar a {
 	text-decoration: none;
 }
@@ -54,7 +53,8 @@
 	padding: 2px 9px 2px 8px;
 	border-radius: 50%;
 	font-size: 14px;
-	color: #ffffff;
+	color: #222224;
+	font-weight: bold;
 	right: 0;
 	position: absolute;
   margin-right: 15px;

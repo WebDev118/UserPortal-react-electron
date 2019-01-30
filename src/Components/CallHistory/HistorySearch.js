@@ -15,7 +15,7 @@ export class HistorySearch extends React.Component {
       <div className='history-search'>
         <div className='history-search mt-5'>
           <div className="row text-left">
-            <div className="col-sm-2 col-md-1 col-xl-1  date-margin">
+            <div className="col-sm-3 col-md-1 date-margin">
               <label htmlFor='start-date'>{i18n.t('state_date.label', { lng })}</label>
               <DatePicker className="calendar1 form-control"
                 onChange={this.props.startDateChange}
@@ -23,16 +23,19 @@ export class HistorySearch extends React.Component {
                 selected={this.props.state.startDate}
               />
             </div>
-            <div className="col-sm-2 col-md-1 col-xl-1  date-margin">
-              <label htmlFor='end-date'>{" "+i18n.t('end_date.label', { lng })+" "}</label>
-              <DatePicker className="calendar1 form-control"
-                onChange={this.props.endDateChange}
-                selected={this.props.state.endDate}
-                minDate={this.props.state.startDate}
-                maxDate={new Date()}
-              />
+            <div className="col-sm-3 col-md-1 date-margin">
+              <label htmlFor='end-date' className="mb-2">{i18n.t('end_date.label', { lng })}</label>
+              <div className="endtime-align">
+                <DatePicker className="calendar1 form-control"
+                  onChange={this.props.endDateChange}
+                  selected={this.props.state.endDate}
+                  minDate={this.props.state.startDate}
+                  maxDate={new Date()}
+                />
+              </div>
+
             </div>
-            <div className="col-sm-2 col-md-1 col-xl-1  date-margin">
+            <div className="col-sm-2 col-md-1 date-margin">
               <button className="btn btn-outline-secondary" onClick={this.props.apply}>{i18n.t('apply.label', { lng })}</button>
             </div>
             <div className="text-right">

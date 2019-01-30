@@ -145,8 +145,7 @@
 }
 
 #numbers {
-  grid-row: 3 / 4;
-  grid-column: 3 / 5;
+  height: 100%;
 }
 
 #numbers img {
@@ -174,7 +173,7 @@
 }
 .call-title{
   width: 100%;
-  padding: 10px 10px 10px 30px;
+  padding: 10px 10px 10px 25px;
 }
 .missed-call-box{
   background: #FFFFFF;

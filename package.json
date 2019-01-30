@@ -1,5 +1,5 @@
 {
-  "name": "kazoo",
+  "name": "UserPortal",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -8,6 +8,7 @@
     "axios": "^0.18.0",
     "bootstrap": "^4.2.1",
     "concurrently": "^4.1.0",
+    "electron-reload": "^1.4.0",
     "electron-updater": "^4.0.7",
     "i18next": "^13.0.1",
     "jquery": "^3.3.1",
@@ -47,8 +48,8 @@
   "homepage": "./",
   "main": "./src/main.js",
   "build": {
-    "productName": "KAZOO",
-    "appId": "kazoo",
+    "productName": "UserPortal",
+    "appId": "userportal",
     "files": [
       "build/**/*",
       "public/**/*",

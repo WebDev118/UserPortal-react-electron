@@ -7,8 +7,38 @@
 }
 
 #call-history td {
-	border-bottom: 2px solid #ddd;
+	border-bottom: 1px solid #ddd;
 	font-size: 1.1rem;
+	padding: 0.4rem 0 0.4rem 0 !important;
+}
+#call-history table {
+  border: 0px;
+}
+
+#call-history thead {
+  border-bottom: 1px solid #ddd;
+}
+
+#call-history tbody {
+  background-color: white;
+}
+
+th,
+td {
+	padding: 1rem 0 1rem 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+th:last-child,
+td:last-child {
+  border-right: 0;
+}
+#call-history div,
+#faxes div {
+  display: inline-block;
+  vertical-align: middle;
 }
 .call-history tbody {
 	line-height: 1rem;
@@ -21,14 +51,6 @@
 	border-left: 1px solid #CFCFD6;
 	border-right: 1px solid #CFCFD6;
 }
-
-.call-history tbody > tr > td:first-child {
-  margin-right: 0.5rem;
-	margin-left: 2rem;
-	padding-left: 2rem;
-	background-color: aqua;
-}
-
 .first-child {
 	border-bottom: 0px !important;
 }
@@ -36,7 +58,10 @@
 .second-child {
 	padding-left: 0px !important;
 }
-
+.second-child img{
+	float: left;
+	width: 21px;
+}
 .last-child {
 	border-bottom: 0px !important;
 }
@@ -54,7 +79,10 @@
 	position: relative;
 	padding-bottom: 10px;
 }
-
+.endtime-align{
+	position: absolute;
+  bottom: 0;
+}
 .calendar1 {
 	width: 130px;
 	background: url('../../assets/images/calendar.png') no-repeat scroll;
@@ -62,7 +90,6 @@
 	background-color: white;
 	position: relative;
 }
-
 .react-date-picker__wrapper {
 	border: 1px solid #CDCDD0;
 	background-color: white;
@@ -118,13 +145,13 @@
 }
 @media (min-width: 1300px) {
   .date-margin {
-    margin-right: 40px;
+    margin-right: 46px;
   }
 }
 
 @media (min-width: 1500px) {
 	.date-margin {
-    margin-right: 20px;
+    margin-right: 35px;
   }
 }
 @media (min-width: 1700px) {
@@ -136,11 +163,11 @@
 .name {
   margin-bottom: 0;
   font-size: 1.1rem;
-  padding: 0.5rem 1rem 0.5rem 1rem;
+  padding: 0.5rem 1rem 0.5rem 0rem;
 }
 
 .number {
-  padding: 0.5rem 1rem 0.5rem 1rem;
+  padding: 0.5rem 1rem 0.5rem 0rem;
   font-weight: 300;
   color: grey;
   font-size: 0.85rem;
@@ -148,4 +175,14 @@
 .time {
   font-size: 0.85rem;
   color: grey;
+}
+.avatar{
+	width: 11%;
+	margin-right: 12px;
+	position: relative;
+}
+.img-avatar{
+	width: 2.5rem;
+	border-radius: 50%;
+
 }

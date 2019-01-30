@@ -69,6 +69,10 @@ class Voicemails extends React.Component {
 
   render () {
     let {lng} = this.props.language;
+    let {systemmessage} = this.props.systemmessage;
+    if(systemmessage === 'Authentication failed.'){
+      window.location.reload();
+    }
     if(!this.state.allmessages) {
       return (
         <div className='main'>
@@ -156,7 +160,7 @@ class Voicemails extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({vmreducer:state.vmreducer, language: state.language})
+const mapStateToProps = state => ({vmreducer:state.vmreducer, language: state.language, systemmessage: state.systemmessage})
 const mapDispatchToProps = (dispatch) => ({
   getallvmboxes: () => dispatch(getallvmboxes())
 })

@@ -7,6 +7,7 @@ import { parsePhoneNumber } from 'libphonenumber-js';
 import "react-datepicker/dist/react-datepicker.css";
 import CONFIG from '../../Config.json';
 import i18n from '../Common/i18n';
+import moment from 'moment';
 import './Faxes.css';
 
 class FaxesPage extends React.Component {
@@ -49,9 +50,11 @@ class FaxesPage extends React.Component {
     });
   }
   componentWillMount () {
+
     this.props.getallfaxes(this.state.startDate, this.state.endDate);
   }
   componentDidMount () {
+    console.log(this.props.systemmessage)
     !this.props.loading ? this.props.getallfaxes(this.state.startDate, this.state.endDate) : null;
   }
   componentDidUpdate(preProps) {
@@ -80,9 +83,12 @@ class FaxesPage extends React.Component {
     let hours = "0" + stamp.getHours();
     let minutes = "0" + stamp.getMinutes();
     let seconds = "0" + stamp.getSeconds();
-    let formattedDate = month + "/" + date.substr(-2) + "/" + year;
+    let formattedDate =  year + "-"+ month + "-" + date.substr(-2) ;
     let formattedTime = hours.substr(-2) + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-    let dateTime = {"date": formattedDate, "time":formattedTime}
+    let dateTime1 = formattedDate+" "+ formattedTime;
+    let gmtDateTime = moment.utc(dateTime1, "YYYY-MM-DD HH:mm:ss");
+    let local = gmtDateTime.local().format('MM/DD/YYYY HH:mm:ss');
+    let dateTime = {"date": local.split(" ")[0], "time":local.split(" ")[1]};
     return dateTime;
   }
   onhandleChange(e){
@@ -131,6 +137,10 @@ class FaxesPage extends React.Component {
     return subfaxesRecords;
   }
   render () {
+    let {systemmessage} = this.props.systemmessage;
+    if(systemmessage === 'Authentication failed.'){
+      window.location.reload();
+    }
     let { allfaxes } = this.props.faxreducer;
     let faxes = this.state.faxes;
     let auth_token = this.props.auth_token;
@@ -181,17 +191,19 @@ class FaxesPage extends React.Component {
                 </div>
                 <div className="col-sm-2 col-md-1 col-xl-1 date-margin">
                   <label htmlFor='end-date'> {" "+i18n.t('end_date.label', { lng })+" "} </label>
-                  <DatePicker className="calendar1 form-control "
-                    minDate ={this.state.startDate}
-                    maxDate ={new Date()}
-                    selected={this.state.endDate}
-                    onChange={this.handleEndChange}
-                  />
+                  <div className="endtime-align">
+                    <DatePicker className="calendar1 form-control "
+                      minDate ={this.state.startDate}
+                      maxDate ={new Date()}
+                      selected={this.state.endDate}
+                      onChange={this.handleEndChange}
+                    />
+                  </div>
                 </div>
                 <div className="col-sm-2 col-md-1 col-xl-1 date-margin">
-                  <button className="btn btn-outline-secondary"
-                          onClick={() => this.props.getallfaxes(this.state.startDate, this.state.endDate)}>
-                  {i18n.t('apply.label', { lng })}</button>
+                  <button className="btn btn-outline-secondary" onClick={() => this.props.getallfaxes(this.state.startDate, this.state.endDate)}>
+                    {i18n.t('apply.label', { lng })}
+                  </button>
                 </div>
                 <div className="text-right">
                   <input className='fax-search-text form-control' type='text' placeholder={i18n.t('search.label', { lng })} onChange={this.onhandleChange}/>
@@ -199,7 +211,7 @@ class FaxesPage extends React.Component {
               </div>
             </div>
 
-            <div className="row text-left mt-5">
+            <div className="row text-left mt-5 mb-2">
               <div className='faxtable'>
                 <div className="faxesrow">
                   <div className="col-md-3 row">
@@ -212,7 +224,7 @@ class FaxesPage extends React.Component {
                 </div>
               </div>
             </div>
-            { faxesRecords && faxesRecords.map((fax, index) => {
+            { faxesRecords && faxesRecords.length>0 ? faxesRecords.map((fax, index) => {
               let URL = `${CONFIG.API_URL}${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/faxes/inbox/${fax.id}/attachment?auth_token=${auth_token}`;
               return(
                 <div className = "tr-content row" key={index}>
@@ -246,17 +258,21 @@ class FaxesPage extends React.Component {
                   </div>
                 </div>
               )}
-            )}
+            ):
+            <div className = "tr-content row">
+              <h2>{i18n.t('no.label', { lng })+" "+i18n.t('results.label', { lng })}!</h2>
+            </div>
+            }
             { this.state.view === 0 ? (
             <nav className='bottom-nav'>
-              <label>View</label>
+              <label>{i18n.t('view.label', { lng })}</label>
               <select onChange={this.selectPerPage}>
                 <option value="10">10</option>
                 <option value="25">25</option>
                 <option value="50">50</option>
                 <option value="100">100</option>
               </select>
-              <label>per page</label>
+              <label>{i18n.t('per_page.label', { lng })}</label>
               <span id='page-num'>{this.state.perPage * this.state.currentPage + 1}-{this.setCountLabel(this.state.total)} of {this.state.total}</span>
               { this.state.currentPage === 0 ? (
                 <button onClick={this.prev} className="button-disable" disabled>&#60;</button>
@@ -276,7 +292,7 @@ class FaxesPage extends React.Component {
     }
   }
 }
-const mapStateToProps = state => ({faxreducer: state.faxreducer, language: state.language})
+const mapStateToProps = state => ({faxreducer: state.faxreducer, language: state.language, systemmessage: state.systemmessage})
 const mapDispatchToProps = (dispatch) => ({
   getallfaxes: (from, to) => dispatch(getallfaxes(from, to))
 })

@@ -5,6 +5,7 @@ import axios from 'axios';
 import { parsePhoneNumber } from 'libphonenumber-js';
 import CONFIG from '../../Config.json';
 import i18n from '../Common/i18n';
+import moment from 'moment';
 
 const Message = (props) => {
 
@@ -65,7 +66,6 @@ const Message = (props) => {
 }
 
   function getDateTime(timestamp){
-
     let stamp = new Date(timestamp * 1000);
     let year = stamp.getFullYear()-1970;
     let month = stamp.getMonth()+1;
@@ -73,9 +73,12 @@ const Message = (props) => {
     let hours = "0" + stamp.getHours();
     let minutes = "0" + stamp.getMinutes();
     let seconds = "0" + stamp.getSeconds();
-    let formattedDate = month + "/" + date.substr(-2) + "/" + year;
+    let formattedDate =  year + "-"+ month + "-" + date.substr(-2) ;
     let formattedTime = hours.substr(-2) + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-    let dateTime = {"date": formattedDate, "time":formattedTime}
+    let dateTime1 = formattedDate+" "+ formattedTime;
+    let gmtDateTime = moment.utc(dateTime1, "YYYY-MM-DD HH:mm:ss");
+    let local = gmtDateTime.local().format('MM/DD/YYYY HH:mm:ss');
+    let dateTime = {"date": local.split(" ")[0], "time":local.split(" ")[1]};
     return dateTime;
   }
 
@@ -165,7 +168,6 @@ class VoicemailsTable extends React.Component {
       axios.post(url)
       .then((res) => {
         this.props.getallnotification()
-        this.props.history.push("/voicemails/")
       })
       .catch((error) => {
         console.log(error)
@@ -186,7 +188,7 @@ class VoicemailsTable extends React.Component {
     return (
       <div className="row text-left">
         <div className='voicemailtable'>
-          <div className="row1">
+          <div className="row1 mb-2">
             <div className="col-md-2 row">
               <div className="col-md-3"> </div>
               <div className="col-md-6">{i18n.t('status.label', { lng })}</div>

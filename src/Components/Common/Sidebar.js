@@ -6,6 +6,7 @@ import { SidebarLink } from './SidebarLink'
 import { withRouter } from 'react-router-dom'
 import './Sidebar.css'
 import authenticate from './Authenticate'
+import CONFIG from '../../Config.json'
 class Sidebar extends React.Component {
   constructor(props) {
     super(props);
@@ -31,7 +32,7 @@ class Sidebar extends React.Component {
     let {lng} = this.props.language;
     return (
       <div className='Sidebar'>
-        <div className='kazoo-logo'><img src='Logo.png' alt="logo"/></div>
+        <div className='kazoo-logo'>{CONFIG.BUSINESS_NAME}</div>
         <nav className='sidebar-nav'>
           <SidebarLink route='/' img='home.png' title={i18n.t('home.label', { lng })} history={this.props.history} lng={lng}/>
           <SidebarLink route='/voicemails' img='tape.png' title={i18n.t('voicemails.label', { lng })} newmails={newmailscount} history={this.props.history} lng={lng}/>

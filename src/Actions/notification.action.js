@@ -9,20 +9,26 @@ export const getallnotification = () => {
 
     let today = new Date();
     let notifications;
-    let year = today.getUTCFullYear() + 1970;
-    let month = today.getUTCMonth();
-    let date = today.getUTCDate();
+    let year = today.getFullYear() + 1970;
+    let month = today.getMonth();
+    let date = today.getDate();
 
-    let today_from_timestamp = (new Date(year,month,date,0,0,0,0).getTime())/1000;
-    let today_to_timestamp = (new Date(year,month,date,23,59,59,999).getTime())/1000;
+    let startDate = new Date(today.setDate(today.getDate()-7))
+    let start_year = startDate.getFullYear() + 1970;
+    let start_month = startDate.getMonth();
+    let start_date = startDate.getDate();
+
+    let start_timestamp = Math.round(new Date(start_year, start_month, start_date, 0, 0, 0, 0).getTime()) / 1000;
+
+    let today_from_timestamp = Math.round(new Date(year,month,date,0,0,0,0).getTime())/1000;
+    let today_to_timestamp = Math.round(new Date(year,month,date,23,59,59,999).getTime())/1000;
 
     const URI_stamp1 = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}/cdrs?created_from=${today_from_timestamp}&created_to=${today_to_timestamp}`;
     const devices = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}/devices`
     const device_num = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/callflows?filter_type=mainUserCallflow&filter_owner_id=${CONFIG.OWNER_ID}`
     const devive_state = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/devices/status`
-
     const missedcall = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}/cdrs`;
-    const faxes =`${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/faxes/inbox`;
+    const faxes = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/faxes/inbox`;
     const faxesbox = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/faxboxes?filter_owner_id=${CONFIG.OWNER_ID}`;
     const vmbox = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/vmboxes?filter_owner_id=${CONFIG.OWNER_ID}`;
     const username = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}`;
@@ -108,13 +114,12 @@ export const getallnotification = () => {
                       });
                       axios.get(device_num)
                       .then((response1) => {
-
                         phone_num = response1.data.data[0].numbers;
                         axios.get(URI_stamp1)
                         .then((res7) => {
                           today_data = res7.data.data;
                           notifications = {missedcount, allfaxescount, faxesdata, faxbox, newmailscount, full_name, calldata, userdata, alldevices, phone_num, today_data};
-                          dispatch({type: CONSTS.GET_ALL_NOTIFICATION, payload: notifications})
+                          dispatch({type: CONSTS.GET_ALL_NOTIFICATION, payload: notifications});
                         })
                         .catch((error) => {console.log(error)});
                       })

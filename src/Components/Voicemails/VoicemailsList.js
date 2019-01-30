@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import Topbar from '../Common/Topbar'
 import VoicemailsTable from './VoicemailsTable'
 import { getallnotification } from '../../Actions/notification.action'
+import { getallvmboxes } from '../../Actions/voicemails.action';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import _ from 'lodash'
 import axios from 'axios';
@@ -12,7 +13,6 @@ import CONFIG from '../../Config.json';
 class VoicemailsList extends React.Component {
 	constructor(props) {
     super(props);
-
     this.state = {
 			messages: null,
 			checkVoiceMail: null,
@@ -53,19 +53,20 @@ class VoicemailsList extends React.Component {
 		this.mailStateChange = this.mailStateChange.bind(this);
 	}
 	componentDidMount() {
-
 		const vmbox_id = this.props.match.params.vmbox_id;
 		const vmbox =  _.find(this.props.vmreducer.allmessages.allmessages, message => message.vmbox.id === vmbox_id)
 		const messages = vmbox.messages;
-		this.setState({messages,
-									new:vmbox.vmbox.newcount,
-									total:vmbox.vmbox.messages,
-									title: vmbox.vmbox.name,
-									user_name: this.props.vmreducer.allmessages.full_name,
-									vmbox_id:vmbox_id},() => {
-										this.checkVoiceMail(this.state.messages)
-									}
-			)
+		this.setState({
+			messages,
+			new:vmbox.vmbox.newcount,
+			total:vmbox.vmbox.messages,
+			title: vmbox.vmbox.name,
+			user_name: this.props.vmreducer.allmessages.full_name,
+			vmbox_id:vmbox_id
+		},() => {
+				this.checkVoiceMail(this.state.messages)
+			}
+		)
 	}
 	toggle1() {
     this.setState({
@@ -220,7 +221,10 @@ class VoicemailsList extends React.Component {
 			axios.post(URL,data)
 			.then((res) => {
 				this.props.getallnotification();
-				this.props.history.push("/voicemails/");
+				this.props.getallvmboxes();
+				setTimeout(() => {
+					this.props.history.push('/voicemails/list/' + this.state.vmbox_id);
+				}, 4000);
 			})
 			.catch((error) => {
 				console.log(error)
@@ -236,7 +240,10 @@ class VoicemailsList extends React.Component {
 			axios.post(URL,data)
 			.then((res) => {
 				this.props.getallnotification();
-				this.props.history.push("/voicemails/")
+				this.props.getallvmboxes();
+				setTimeout(() => {
+					this.props.history.push('/voicemails/list/' + this.state.vmbox_id);
+				}, 4000);
 			})
 			.catch((error) => {
 				console.log(error)
@@ -251,8 +258,12 @@ class VoicemailsList extends React.Component {
 			let data = {"data": {"folder": "saved"}};
 			axios.post(URL,data)
 			.then((res) => {
+
+				this.props.getallvmboxes();
 				this.props.getallnotification();
-				this.props.history.push("/voicemails/")
+				setTimeout(() => {
+					this.props.history.push('/voicemails/list/' + this.state.vmbox_id);
+				}, 4000);
 			})
 			.catch((error) => {
 				console.log(error)
@@ -283,14 +294,18 @@ class VoicemailsList extends React.Component {
     });
 	}
 	getallnotification = () => {
+		this.props.getallvmboxes();
 		this.props.getallnotification();
+		setTimeout(() => {
+			this.props.history.push('/voicemails/list/' + this.state.vmbox_id);
+		}, 4000);
 	}
 	render() {
 		let {lng} = this.props.language;
 		return (
 			<div className='main'>
 			<Topbar title={i18n.t('voicemails.label', { lng })} user_name={this.state.user_name}/>
-				<div className="pl-3">
+				<div className="pl-1">
 					<div className="text-left mt-4 mb-3 grey back-box" onClick={() => this.props.history.push('/voicemails/')}>
 						<i className="fa fa-arrow-circle-left mr-1" aria-hidden="true"></i>
 						Back to voicemail list
@@ -369,14 +384,14 @@ class VoicemailsList extends React.Component {
 					/>
 					{ this.state.view === 0 ? (
             <nav className='bottom-nav'>
-              <label>View</label>
+              <label>{i18n.t('view.label', { lng })}</label>
               <select onChange={this.selectPerPage}>
                 <option value="10">10</option>
                 <option value="25">25</option>
                 <option value="50">50</option>
                 <option value="100">100</option>
               </select>
-              <label>per page</label>
+              <label>{i18n.t('per_page.label', { lng })}</label>
               <span id='page-num'>{this.state.perPage * this.state.currentPage + 1}-{this.setCountLabel(this.state.total)} of {this.state.total}</span>
               { this.state.currentPage === 0 ? (
                 <button onClick={this.prev} className="button-disable" disabled>&#60;</button>
@@ -398,7 +413,8 @@ class VoicemailsList extends React.Component {
 
 const mapStateToProps = state => ({vmreducer:state.vmreducer, language: state.language});
 const mapDispatchToProps = (dispatch) => ({
-  getallnotification: () => dispatch(getallnotification())
+	getallnotification: () => dispatch(getallnotification()),
+	getallvmboxes:() => dispatch(getallvmboxes())
 })
 export default connect(mapStateToProps,mapDispatchToProps)(VoicemailsList)
 

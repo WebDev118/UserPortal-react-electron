@@ -36,48 +36,50 @@ class DevicesNumbers extends React.Component {
       let callState = [];
       let phoneNumber, today_count, today_total, pastweek_count, pastweek_total;
       numbers && numbers.map((element, index) => {
+        if(element.length>4){
+          phoneNumber = this.getPhoneNumber(element)? this.getPhoneNumber(element):element;
+          today_count = 0;
+          today_total = today_data.length;
+          if(today_data.length === 0){
+            today_total = 1;
+          }
+          pastweek_count = 0;
+          pastweek_total = pastweek_data.length;
 
-        phoneNumber = this.getPhoneNumber(element)? this.getPhoneNumber(element):element;
-        today_count = 0;
-        today_total = today_data.length;
-        if(today_data.length === 0){
-          today_total = 1;
+          if(pastweek_data.length === 0){
+            pastweek_total = 1;
+          }
+          console.log("element",element);
+          today_data && today_data.map((value, index) => {
+            if(element.includes(value.callee_id_number) || element.includes(value.caller_id_number))
+              today_count++;
+          })
+          pastweek_data && pastweek_data.map((value, index) => {
+            console.log("value",value);
+            if(element.includes(value.callee_id_number) || element.includes(value.caller_id_number))
+              pastweek_count++;
+              console.log("pastweek_count",pastweek_count);
+          })
+
+          callData.push({ phoneNumber, today_count, today_total, pastweek_count, pastweek_total})
+          callState.push({phone: phoneNumber, today:true, week:false})
+          this.setState({callData:callData});
+          this.setState({callState:callState});
+          this.setState({user_name: user_name});
         }
-        pastweek_count = 0;
-        pastweek_total = pastweek_data.length;
-
-        if(pastweek_data.length === 0){
-          pastweek_total = 1;
-        }
-        today_data && today_data.map((value, index) => {
-          if(value.dialed_number === element || value.caller_id_number === element)
-            today_count++;
-        })
-        pastweek_data && pastweek_data.map((value, index) => {
-          if(value.dialed_number === element || value.caller_id_number === element)
-            pastweek_count++;
-        })
-
-        callData.push({ phoneNumber, today_count, today_total, pastweek_count, pastweek_total})
-        callState.push({phone: phoneNumber, today:true, week:false})
-        this.setState({callData:callData});
-        this.setState({callState:callState});
-        this.setState({user_name: user_name})
       })
     }
   }
   getPhoneNumber = (number) =>{
     let phone_number = "";
     if(!number.includes("+")) {
-      return phone_number;
+      phone_number = "+"+phoneNumber;
     }
-    else{
-      phone_number = parsePhoneNumber(number)
-      let phone_num = phone_number.formatInternational();
-      let number_arr = phone_num.split(" ");
-      var phoneNumber = number_arr[0]+" "+number_arr[1]+"-"+number_arr[2]+"-"+number_arr[3];
-      return phoneNumber;
-    }
+    phone_number = parsePhoneNumber(number)
+    let phone_num = phone_number.formatInternational();
+    let number_arr = phone_num.split(" ");
+    var phoneNumber = number_arr[0]+" "+number_arr[1]+"-"+number_arr[2]+"-"+number_arr[3];
+    return phoneNumber;
   }
   viewToday = (value) => {
     if(this.state.callState){
@@ -111,6 +113,10 @@ class DevicesNumbers extends React.Component {
     let all_devices_numbers  = _.defaults(this.props.devicereducer.all_devices_numbers);
     let devices = all_devices_numbers.alldevices;
     let {lng} = this.props.language;
+    let {systemmessage} = this.props.systemmessage;
+    if(systemmessage === 'Authentication failed.'){
+      window.location.reload();
+    }
     return (
       <div className="main">
         { this.props.devicereducer.loading &&
@@ -177,7 +183,7 @@ class DevicesNumbers extends React.Component {
                           <div className="row">
                             <div className="col-md-6 text-right">
                               <div className="numbers-wrap">
-                                <h2 className="grey mt-3">{(element.today_count * 100)/element.today_total}%</h2>
+                                <h2 className="grey mt-3">{Math.round((element.today_count * 100)/element.today_total)}%</h2>
                                 <span className="grey mb-5">
                                   {i18n.t('all.label', { lng })+" "+i18n.t('callcount.label', { lng })}
                                 </span>
@@ -185,7 +191,7 @@ class DevicesNumbers extends React.Component {
                             </div>
                             <div className="col-md-6 text-left">
                               <div className="donut">
-                                <div className={`c100 p${(element.today_count * 100)/element.today_total}`}>
+                                <div className={`c100 p${Math.round((element.today_count * 100)/element.today_total)}`}>
                                   <div className="slice">
                                       <div className="bar"></div>
                                       <div className="fill"></div>
@@ -198,7 +204,7 @@ class DevicesNumbers extends React.Component {
                             <div className="row">
                               <div className="col-md-6 text-right">
                                 <div className="numbers-wrap">
-                                  <h2 className="grey mt-3">{(element.pastweek_count * 100)/element.pastweek_total}%</h2>
+                                  <h2 className="grey mt-3">{Math.round((element.pastweek_count * 100)/element.pastweek_total)}%</h2>
                                   <span className="grey mb-5">
                                     {i18n.t('all.label', { lng })+" "+i18n.t('callcount.label', { lng })}
                                   </span>
@@ -206,7 +212,7 @@ class DevicesNumbers extends React.Component {
                               </div>
                               <div className="col-md-6 text-left">
                                 <div className="donut">
-                                  <div className={`c100 p${(element.pastweek_count * 100)/element.pastweek_total}`}>
+                                  <div className={`c100 p${Math.round((element.pastweek_count * 100)/element.pastweek_total)}`}>
                                     <div className="slice">
                                         <div className="bar"></div>
                                         <div className="fill"></div>
@@ -231,7 +237,7 @@ class DevicesNumbers extends React.Component {
     )
   }
 }
-const mapStateToProps = state => ({devicereducer: state.devicereducer, language: state.language})
+const mapStateToProps = state => ({devicereducer: state.devicereducer, language: state.language, systemmessage: state.systemmessage})
 const mapDispatchToProps = (dispatch) => ({
   getalldevices: () => dispatch(getalldevices())
 })

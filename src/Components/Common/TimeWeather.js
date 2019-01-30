@@ -7,22 +7,20 @@ export class TimeWeather extends React.Component {
     super(props);
     this.state = {
       currentTime: "",
-      temperature: undefined,
-      pressure: undefined,
-      humidity: undefined,
-      description: undefined,
-      rain:undefined,
-      icon:undefined,
+      temperature: "",
+      icon:"",
     };
+  }
+  componentWillMount(){
     this.getCurrentTime();
     this.getWeather();
   }
   getWeather = () => {
     let API_KEY = "4c071ffecc48accd95567e6d8c2d20a3";
     const city = "Los Angeles,US";
+    axios.defaults.headers.get['Content-Type'] = 'application/json'
     axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`)
     .then((res) => {
-      console.log(res.data);
       let data = res.data;
       this.setState({
         temperature: data.main.temp,
@@ -58,19 +56,24 @@ export class TimeWeather extends React.Component {
     return (
       <div id='time-weather' className="common-box">
         <div>
-          <div id='long-date'>
-            <h2>{this.state.currentTime.day}</h2><br/>
-            <h6>{this.state.currentTime.month +" " + this.state.currentTime.date}</h6>
+          <div id='long-date' className="text-left">
+            <div><h5>{this.state.currentTime.day}</h5></div>
+            <div><h6>{this.state.currentTime.month +" " + this.state.currentTime.date}</h6></div>
           </div>
           <div className='center'>
-          <img src ={`http://openweathermap.org/img/w/${this.state.icon}.png`} alt="wthr img" />
-            <br />
+            <img src ={`http://openweathermap.org/img/w/${this.state.icon}.png`} alt="wthr img" />
             <div>
               <h2>{this.state.currentTime.time}<span id='am-pm'>{this.state.currentTime.ampm}</span></h2>
             </div>
           </div>
-          <div className='city'><h6>{this.props.userdata.timezone}</h6></div>
-          <div className='temperature'>{this.state.temperature}&deg;</div>
+          <div className="row">
+            <div className="col-md-6 text-left">
+              <div className="city">{this.props.userdata.timezone}</div>
+            </div>
+            <div className="col-md-6 text-right">
+              <div className="temperature">{Math.round(this.state.temperature*9/5+32)}&deg;F</div>
+            </div>
+          </div>
         </div>
       </div>
     )
