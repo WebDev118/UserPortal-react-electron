@@ -53,7 +53,14 @@ class VoicemailsList extends React.Component {
 		this.mailStateChange = this.mailStateChange.bind(this);
 	}
 	componentDidMount() {
-		const vmbox_id = this.props.match.params.vmbox_id;
+		let vmbox_id;
+		if(!this.props.vmboxID){
+			vmbox_id = this.props.match.params.vmbox_id;
+		}
+		else{
+			vmbox_id = this.props.vmboxID;
+		}
+
 		const vmbox =  _.find(this.props.vmreducer.allmessages.allmessages, message => message.vmbox.id === vmbox_id)
 		const messages = vmbox.messages;
 		this.setState({
@@ -224,7 +231,7 @@ class VoicemailsList extends React.Component {
 				this.props.getallvmboxes();
 				setTimeout(() => {
 					this.props.history.push('/voicemails/list/' + this.state.vmbox_id);
-				}, 4000);
+				}, 3000);
 			})
 			.catch((error) => {
 				console.log(error)
@@ -303,23 +310,26 @@ class VoicemailsList extends React.Component {
 	render() {
 		let {lng} = this.props.language;
 		return (
-			<div className='main'>
+			<div className='voicemails'>
 			<Topbar title={i18n.t('voicemails.label', { lng })} user_name={this.state.user_name}/>
-				<div className="pl-1">
-					<div className="text-left mt-4 mb-3 grey back-box" onClick={() => this.props.history.push('/voicemails/')}>
-						<i className="fa fa-arrow-circle-left mr-1" aria-hidden="true"></i>
-						Back to voicemail list
-					</div>
-					<div className="text-left"><h3>{this.state.title}</h3></div>
-					<div className='voicemail-top-wrap'>
-						<div className={`voicemails-top ${(this.state.new) > 0 ? 'voicemails-top-1' : 'voicemails-top-2'}`}>
-							<h1 className={this.state.new > 0 ? "newcount" : ""}>{this.state.new}</h1>{i18n.t('new.label', { lng })}
+				<div className="main-container text-left">
+					{!this.props.vmboxID &&
+						<div className="back-box" onClick={() => this.props.history.push('/voicemails/')}>
+							<i className="fa fa-arrow-circle-left mr-1" aria-hidden="true"></i>
+							Back to voicemail list
 						</div>
-						<div className='voicemails-top voicemails-top-2'>
-							<h1 className="totalcount" >{this.state.total}</h1>	{i18n.t('total.label', { lng })}
+					}
+					<div className="text-left vmbox-title">{this.state.title}</div>
+					<div className="row">
+						<div className="voicemail-top-wrap col-md-12">
+							<div className={`voicemails-top ${(this.state.new) > 0 ? 'voicemails-top-1' : 'voicemails-top-2'}`}>
+								<h1 className={this.state.new > 0 ? "newcount" : ""}>{this.state.new}</h1><span className="num-title">{i18n.t('new.label', { lng })}</span>
+							</div>
+							<div className='voicemails-top voicemails-top-2'>
+								<h1 className="totalcount" >{this.state.total}</h1><span className="num-title">{i18n.t('total.label', { lng })}</span>
+							</div>
 						</div>
 					</div>
-
 					<div className="row">
 						<div className="col-md-6">
 							<div className='checkbox-wrap' onClick={this.toggle1}>

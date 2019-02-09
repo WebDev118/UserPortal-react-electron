@@ -5,10 +5,14 @@ export class NewFaxes extends React.Component {
     let lng = this.props.lng;
     return(
   		<div id="new-fax" className="common-box">
-        <img src="fax.png" alt="fax"/>
+        <span className="total-fax-content">
+          <svg className="fax-icon">
+            <use href="telicon-2.1.0.svg#device-fax"/>
+          </svg>
+        </span>
         <span className="text text-right">
-          <h1>{this.props.allfaxescount}</h1>
-          <p>{i18n.t('total.label', { lng })+" "+i18n.t('faxes.label', { lng })}</p>
+          <div className="text-count">{this.props.allfaxescount}</div>
+          <div className="text-value">{i18n.t('total.label', { lng })+" "+i18n.t('faxes.label', { lng })}</div>
         </span>
       </div>
   );}

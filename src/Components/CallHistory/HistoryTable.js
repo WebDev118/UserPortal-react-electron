@@ -96,60 +96,59 @@ export class HistoryTable extends React.Component {
     callRecords = this.filterCallList(callRecords, perPage, currentPage, filter);
     let lng = this.props.lng;
     return (
-      <div id='call-history'>
-        <table>
-          <thead>
-            <tr>
-              <th width="1%"></th>
-              <th width="3%"></th>
-              <th width="24%">{i18n.t('from.label', { lng })}</th>
-              <th width="24%">{i18n.t('to.label', { lng })}</th>
-              <th width="24%">{i18n.t('date_time.label', { lng })}</th>
-              <th width="23%">{i18n.t('duration.label', { lng })}</th>
-              <th width="1%"></th>
-            </tr>
-          </thead>
-          <tbody>
-            { callRecords && callRecords.length > 0 ? callRecords.map((call, index) =>
-              <tr key={index}>
-                <td className="first-child"></td>
-                <td className="second-child">
+      <div className="call-history-table">
+        <div className="row history-table-title">
+          <div className="col-md-3">{i18n.t('from.label', { lng })}</div>
+          <div className="col-md-3">{i18n.t('to.label', { lng })}</div>
+          <div className="col-md-3">{i18n.t('date_time.label', { lng })}</div>
+          <div className="col-md-3">{i18n.t('duration.label', { lng })}</div>
+        </div>
+        { callRecords && callRecords.length > 0 ? callRecords.map((call, index) =>
+          <div key={index} className="call-history-row">
+            <div className="col-md-3 history-from">
+              <div className="call-icon mr-3">
                 { call.direction === 'inbound' ? (
-                    <img src='outgoing.png' alt="outgoing"/>
+                  <svg className="calls-icon">
+                    <use href="telicon-2.1.0.svg#phone-outbound"/>
+                  </svg>
                   ):(call.hangup_cause === 'USER_BUSY' ?
-                    <img src='incoming.png' alt="incoming"/> :<img src='missed.png' alt="missed"/>
+                  <svg className="calls-icon">
+                    <use href="telicon-2.1.0.svg#phone-inbound"/>
+                  </svg>
+                  : <svg className="missed-icon">
+                      <use href="telicon-2.1.0.svg#phone-missed"/>
+                    </svg>
                   )
                 }
-                </td>
-                <td>
-                  <div>
-                    <span className='name text-left'>{call.caller_id_name}</span><br />
-                    <span className='number text-left'>
-                      {this.getPhoneNumber(call.caller_id_number)}
-                    </span>
-                  </div>
-                </td>
-                <td>
-                  <span className='name text-left'>
-                    {this.getPhoneNumber(call.callee_id_number)}
-                  </span>
-                </td>
-                <td>
-                  <span className='date'>{this.getDateTime(call.timestamp).date}</span><br />
-                  <span className='time'>{this.getDateTime(call.timestamp).time}</span>
-                </td>
-                <td className='duration'>{this.formatDuration(call.duration_seconds)}</td>
-                <td className="last-child"></td>
-              </tr>
-            )
-              :<tr className="text-center">
-                <td colSpan="7">
-                  <h2>{i18n.t('no.label', { lng })+" "+i18n.t('results.label', { lng })}!</h2>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
+              </div>
+              <div>
+                <div className='name text-left'>{call.caller_id_name}</div>
+                <div className='number text-left'>
+                  {this.getPhoneNumber(call.caller_id_number)}
+                </div>
+              </div>
+            </div>
+            <div className="col-md-3">
+              <div className='name text-left'>{call.callee_id_name}</div>
+              <div className='number text-left'>
+                {this.getPhoneNumber(call.callee_id_number)}
+              </div>
+            </div>
+            <div className="col-md-3">
+              <div className='name text-left'>{this.getDateTime(call.timestamp).date}</div>
+              <div className='number text-left'>
+                {this.getDateTime(call.timestamp).time}
+              </div>
+            </div>
+            <div className="col-md-3">
+              {this.formatDuration(call.duration_seconds)}
+            </div>
+          </div>
+        ):(
+          <div className="col-md-12 text-center">
+            <h2>{i18n.t('no.label', { lng })+" "+i18n.t('results.label', { lng })}!</h2>
+          </div>
+        )}
       </div>
     )
   }

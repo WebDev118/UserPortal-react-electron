@@ -54,7 +54,6 @@ class FaxesPage extends React.Component {
     this.props.getallfaxes(this.state.startDate, this.state.endDate);
   }
   componentDidMount () {
-    console.log(this.props.systemmessage)
     !this.props.loading ? this.props.getallfaxes(this.state.startDate, this.state.endDate) : null;
   }
   componentDidUpdate(preProps) {
@@ -249,9 +248,9 @@ class FaxesPage extends React.Component {
                       </span>
                     </div>
                     <div className="col-md-3">
-                      { this.getDateTime(fax.timestamp).date}<br />
+                      { this.getDateTime(fax.created).date}<br />
                       <span className='grey'>
-                        { this.getDateTime(fax.timestamp).time}
+                        { this.getDateTime(fax.created).time}
                       </span>
                     </div>
                     <div className="col-md-3 text-right">

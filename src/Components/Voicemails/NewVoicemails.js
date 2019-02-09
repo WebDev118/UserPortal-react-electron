@@ -3,12 +3,22 @@ import i18n from '../Common/i18n';
 export class NewVoicemails extends React.Component {
   render () {
     let lng = this.props.lng;
+    let newmailscount = 0;
+    if(this.props.newvoicemails && this.props.newvoicemails.length>0){
+      this.props.newvoicemails .map((message, index)=>{
+        newmailscount+= message.newmessagecount;
+      })
+    }
     return (
       <div id='new-voicemails' className="common-box">
-        <img src='voicemail.png' alt="voicemail"/>
+        <span className="voicemail-content">
+          <svg className="voicemail-icon">
+            <use href="telicon-2.1.0.svg#voicemail"/>
+          </svg>
+        </span>
         <span className='text text-right'>
-          <h1>{this.props.newmailscount}</h1>
-          <p>{i18n.t('new.label', { lng })+" "+i18n.t('voicemails.label', { lng })}</p>
+          <div className="text-count">{newmailscount}</div>
+          <div className="text-value">{i18n.t('new.label', { lng })+" "+i18n.t('voicemails.label', { lng })}</div>
         </span>
       </div>
     )

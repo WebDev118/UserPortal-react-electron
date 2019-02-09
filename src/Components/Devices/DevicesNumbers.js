@@ -49,16 +49,13 @@ class DevicesNumbers extends React.Component {
           if(pastweek_data.length === 0){
             pastweek_total = 1;
           }
-          console.log("element",element);
           today_data && today_data.map((value, index) => {
             if(element.includes(value.callee_id_number) || element.includes(value.caller_id_number))
               today_count++;
           })
           pastweek_data && pastweek_data.map((value, index) => {
-            console.log("value",value);
             if(element.includes(value.callee_id_number) || element.includes(value.caller_id_number))
               pastweek_count++;
-              console.log("pastweek_count",pastweek_count);
           })
 
           callData.push({ phoneNumber, today_count, today_total, pastweek_count, pastweek_total})
@@ -118,39 +115,48 @@ class DevicesNumbers extends React.Component {
       window.location.reload();
     }
     return (
-      <div className="main">
+      <div className="num_device">
         { this.props.devicereducer.loading &&
           <div className="loader_container">
             <div className="loader"></div>
           </div>
         }
         <Topbar title={i18n.t('devices.label', { lng })+" "+i18n.t('numbers.label', { lng })} user_name={this.state.user_name} />
-        <div className="content">
+        <div className="main-container">
           <div className="row">
             <div className="col-md-12 text-left">
-              <span className="mt-4">{i18n.t('devices.label', { lng })}</span>
-              <div className="row mt-3">
+              <div className="content">{i18n.t('devices.label', { lng })}</div>
+              <div className="row">
                 { devices && devices.map((device,index) => {
                   return (
                     <div className="col-md-3" key={index}>
-                      <div className={`devices-top ${!device.regsiter?"devices-top-wrap-red":""}`} >
-                        { device.device_type === "sip_device" && <div>
-                            <img className="corner" src={device.regsiter ? "desk-avatar.png":"desk-avatar-red.png"} alt="device"/>
+                      <div className={`device-box ${!device.regsiter?"devices-top-wrap-red":""}`} key={index}>
+                        { device.device_type === "sip_device" &&
+                          <div>
+                            <svg className={`corner corner-icon ${device.regsiter?"color-green":"color-red"}`}>
+                              <use href="telicon-2.1.0.svg#device-voip-phone"/>
+                            </svg>
                             <img src="desk.png" alt="device"/>
                           </div>
                         }
-                        { device.device_type === "cellphone" && <div>
-                            <img className="corner" src={device.regsiter ? "iphone.png":"iphone-red.png" } alt="device"/>
+                        { device.device_type === "cellphone" &&
+                          <div>
+                            <svg className={`corner corner-icon ${device.regsiter?"color-green":"color-red"}`}>
+                              <use href="telicon-2.1.0.svg#device-mobile"/>
+                            </svg>
                             <img src="cell.png" alt="device"/>
                           </div>
                         }
-                        {device.device_type === "softphone" && <div>
-                            <img className="corner" src={device.regsiter ? "soft.png":"soft-red.png"} alt="device"/>
+                        { device.device_type === "softphone" &&
+                          <div>
+                            <svg className={`corner corner-icon ${device.regsiter?"color-green":"color-red"}`}>
+                              <use href="telicon-2.1.0.svg#device-soft-phone"/>
+                            </svg>
                             <img src="device-soft.png" alt="device"/>
                           </div>
                         }
-                        <p>{device.name}</p>
-                        <span className="grey">{device.mac_address}</span>
+                        <div className="mt-2 name">{device.name}</div>
+                        <div className="number">{device.mac_address}</div>
                       </div>
                     </div>
                   );
@@ -159,16 +165,16 @@ class DevicesNumbers extends React.Component {
               </div>
             </div>
           </div>
-          <div className="row mt-5">
+          <div className="row">
             <div className="col-md-12 text-left">
-              <span className="mt-4">{i18n.t('numbers.label', { lng })}</span>
-              <div className="row mt-3">
+              <div className="content">{i18n.t('numbers.label', { lng })}</div>
+              <div className="row">
                 { this.state.callData && this.state.callData.map((element, index) => {
                   return(
                     <div className="col-md-3" key={index}>
                       <div className="devices-top">
                         { element.phoneNumber } <img src="usa.png" className="ml-1" alt="flag"/>
-                        <p className="mt-3 grey">
+                        <p className="mt-3 num-title">
                           { element.phoneNumber === this.state.callState[index].phone && this.state.callState[index].today ?
                             <span className="mr-3 active_line" onClick={() => this.viewToday(index)}>{i18n.t('today.label', { lng })}</span>
                             :<span className="mr-3" onClick={() => this.viewToday(element.phoneNumber)}>{i18n.t('today.label', { lng })}</span>
@@ -183,8 +189,8 @@ class DevicesNumbers extends React.Component {
                           <div className="row">
                             <div className="col-md-6 text-right">
                               <div className="numbers-wrap">
-                                <h2 className="grey mt-3">{Math.round((element.today_count * 100)/element.today_total)}%</h2>
-                                <span className="grey mb-5">
+                                <h2 className="mt-3">{Math.round((element.today_count * 100)/element.today_total)}%</h2>
+                                <span className="number mb-5">
                                   {i18n.t('all.label', { lng })+" "+i18n.t('callcount.label', { lng })}
                                 </span>
                               </div>
@@ -193,8 +199,8 @@ class DevicesNumbers extends React.Component {
                               <div className="donut">
                                 <div className={`c100 p${Math.round((element.today_count * 100)/element.today_total)}`}>
                                   <div className="slice">
-                                      <div className="bar"></div>
-                                      <div className="fill"></div>
+                                    <div className="bar"></div>
+                                    <div className="fill"></div>
                                   </div>
                                 </div>
                               </div>
@@ -204,8 +210,8 @@ class DevicesNumbers extends React.Component {
                             <div className="row">
                               <div className="col-md-6 text-right">
                                 <div className="numbers-wrap">
-                                  <h2 className="grey mt-3">{Math.round((element.pastweek_count * 100)/element.pastweek_total)}%</h2>
-                                  <span className="grey mb-5">
+                                  <h2 className="mt-3">{Math.round((element.pastweek_count * 100)/element.pastweek_total)}%</h2>
+                                  <span className="number mb-5">
                                     {i18n.t('all.label', { lng })+" "+i18n.t('callcount.label', { lng })}
                                   </span>
                                 </div>

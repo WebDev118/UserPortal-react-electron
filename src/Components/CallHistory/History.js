@@ -12,7 +12,7 @@ class History extends React.Component {
     super(props);
     const day = new Date();
     this.state = {
-      startDate: new Date(day.setDate(day.getUTCDate()-7)),
+      startDate: new Date(day.setDate(day.getDate()-7)),
       endDate: new Date(),
       filter: '',
       call_list: [],
@@ -34,7 +34,7 @@ class History extends React.Component {
   }
 
   componentDidMount () {
-    !this.props.loading ? this.props.getCallFlow(this.state.startDate, this.state.endDate) : null;
+    !this.props.callreducer.loading ? this.props.getCallFlow(this.state.startDate, this.state.endDate) : null;
   }
 
   componentWillMount() {
@@ -53,12 +53,27 @@ class History extends React.Component {
   startDateChange = (date) => {
     this.setState({
       startDate: date,
+    }, ()=>{
+      var dateDiff = parseInt((this.state.endDate.getTime()-this.state.startDate.getTime())/(24*3600*1000));
+      if(dateDiff>31){
+        this.setState({
+          endDate: new Date(this.state.startDate.getTime()+30*24*3600*1000)
+        });
+      }
     });
+
   }
 
   endDateChange = (date) => {
     this.setState({
       endDate: date,
+    }, ()=>{
+      var dateDiff = parseInt((this.state.endDate.getTime()-this.state.startDate.getTime())/(24*3600*1000));
+      if(dateDiff>31){
+        this.setState({
+          startDate: new Date(this.state.endDate.getTime()-30*24*3600*1000)
+        });
+      }
     });
   }
 
@@ -105,14 +120,14 @@ class History extends React.Component {
       window.location.reload();
     }
     return (
-      <div className='main'>
+      <div className='history'>
        { this.props.callreducer.loading &&
           <div className="loader_container">
             <div className="loader"></div>
           </div>
         }
         <Topbar title={i18n.t('callhistory.label', { lng })} user_name={this.state.user_name}/>
-        <div className='history'>
+        <div className='main-container'>
           <HistorySearch
             startDateChange={this.startDateChange}
             endDateChange={this.endDateChange}

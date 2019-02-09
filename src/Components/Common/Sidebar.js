@@ -17,28 +17,39 @@ class Sidebar extends React.Component {
     }
   }
   componentWillMount () {
-    this.props.getallnotification();
+    // this.props.getallnotification();
   }
   componentDidMount () {
-    !this.props.notification.loading ? this.props.getallnotification() : null;
+  // !this.props.notification.loading ? this.props.getallnotification() : null;
   }
   render () {
     let {allnotifications}  = this.props.notification;
-    let newmailscount,missedcount
+    let newmailscount = 0;
+    let missedcount = 0;
     if(allnotifications) {
-      newmailscount = allnotifications.newmailscount;
-      missedcount = allnotifications.missedcount;
+      if(allnotifications.calldata){
+        allnotifications.calldata.map((call, index) => {
+          if(call.direction === 'outbound' && call.hangup_cause !== 'USER_BUSY'){
+            missedcount ++;
+          }
+        });
+      }
+      if(allnotifications.newvoicemails && allnotifications.newvoicemails.length>0){
+        allnotifications.newvoicemails .map((message, index)=>{
+          newmailscount+= message.newmessagecount;
+        })
+      }
     }
     let {lng} = this.props.language;
     return (
       <div className='Sidebar'>
         <div className='kazoo-logo'>{CONFIG.BUSINESS_NAME}</div>
         <nav className='sidebar-nav'>
-          <SidebarLink route='/' img='home.png' title={i18n.t('home.label', { lng })} history={this.props.history} lng={lng}/>
-          <SidebarLink route='/voicemails' img='tape.png' title={i18n.t('voicemails.label', { lng })} newmails={newmailscount} history={this.props.history} lng={lng}/>
-          <SidebarLink route='/history' img='list.png' title={i18n.t('callhistory.label', { lng })} missedcalls={missedcount} history={this.props.history} lng={lng}/>
-          <SidebarLink route='/devices' img='landline.png' title={i18n.t('devices.label', { lng })+" & "+i18n.t('numbers.label', { lng })} history={this.props.history} lng={lng}/>
-          <SidebarLink route='/faxes' img='fax-sidebar.png' title={i18n.t('faxes.label', { lng })} history={this.props.history} lng={lng}/>
+          <SidebarLink route='/' img='home' title={i18n.t('home.label', { lng })} history={this.props.history} lng={lng}/>
+          <SidebarLink route='/voicemails' img='voicemail' title={i18n.t('voicemails.label', { lng })} newmails={newmailscount} history={this.props.history} lng={lng}/>
+          <SidebarLink route='/history' img='list' title={i18n.t('callhistory.label', { lng })} missedcalls={missedcount} history={this.props.history} lng={lng}/>
+          <SidebarLink route='/devices' img='device-voip-phone' title={i18n.t('devices.label', { lng })+" & "+i18n.t('numbers.label', { lng })} history={this.props.history} lng={lng}/>
+          <SidebarLink route='/faxes' img='device-fax' title={i18n.t('faxes.label', { lng })} history={this.props.history} lng={lng}/>
         </nav>
       </div>
     )

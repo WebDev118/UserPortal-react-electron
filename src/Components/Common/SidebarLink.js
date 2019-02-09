@@ -11,11 +11,12 @@ export class SidebarLink extends React.Component {
   render () {
     let lng = this.props.lng;
     return (
-
       <div>
         <NavLink exact to={this.props.route} activeClassName="Sidebar-active" >
           <div className='Sidebar-Link'>
-            <img src={this.props.img} alt="nav-bar"/>
+            <svg className="sidebar-icon">
+              <use href={`telicon-2.1.0.svg#${this.props.img}`}/>
+            </svg>
             {this.props.title}
             { this.props.title === i18n.t('voicemails.label', { lng }) ? (this.props.newmails>0 &&
               <span className="notification text-right">

@@ -2,106 +2,88 @@ import React from 'react';
 import i18n from '../Common/i18n';
 import './Devices.css';
 import { Progress } from 'reactstrap';
+import $ from 'jquery';
 export default class Devices extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      deviceData: []
+      deviceData: [],
+      unregsiter: 0
     }
+    this.scroll = this.scroll.bind(this)
+  }
+  scroll(direction){
+    let far = $( '.device-container' ).width()/2*direction;
+    let pos = $('.device-container').scrollLeft() + far;
+    $('.device-container').animate( { scrollLeft: pos }, 1000)
   }
   componentDidUpdate(preProps) {
-    let calldata  = this.props.calldata;
     let devices = this.props.alldevices;
-    let deviceData = [];
-    if(calldata !== preProps.calldata || devices !== preProps.alldevices) {
-      let totalcount = calldata.length>0 ? calldata.length : 1;
-      let devicecall;
-      devices.map((device, index)=>{
-        devicecall = 0;
-        calldata.map((data, index)=>{
-          if(device.id === data.authorizing_id){
-            devicecall ++;
-          }
-        })
-        deviceData.push({
-          id:device.id,
-          name: device.name,
-          device_type:device.device_type,
-          mac_address: device.mac_address,
-          regsiter: device.regsiter,
-          callcount: devicecall,
-          totalcount: totalcount
-        });
+    let unregsiter = 0;
+    if(devices !== preProps.alldevices) {
+      this.setState({deviceData:devices});
+      devices.map((device,index) => {
+        if(!device.regsiter)
+          unregsiter ++;
       })
-      this.setState({deviceData:deviceData});
+      this.setState({unregsiter: unregsiter})
     }
   }
   render () {
     let devices = this.props.alldevices;
     let total = devices.length;
-    let regsiter = 0;
-    if(devices){
-      devices.map((device,index) => {
-        if(device.regsiter)
-          regsiter ++;
-      })
-    }
     let lng = this.props.lng;
     return (
       <div id='devices' className="text-left devices-box">
-        <div className="divice-title"><h5>{i18n.t('devices.label', { lng })}</h5></div>
-        <table>
-          <thead>
-            <tr>
-              <th>
-                <span id='num'>{total}</span>{i18n.t('total.label', { lng })}
-                <span id='num'>{regsiter}</span>{i18n.t('registered.label', { lng })}
-              </th>
-              <th>{i18n.t('usage.label', { lng })+" "+i18n.t('today.label', { lng })}</th>
-            </tr>
-          </thead>
-          <tbody>
+        <div className="divice-title">
+          {i18n.t('devices.label', { lng })}
+        </div>
+        <div>
+          <span id='num'>{total}</span><span className="num-title mr-4">{i18n.t('total.label', { lng })}</span>
+          <span id='num' className="color-red">{this.state.unregsiter}</span><span className="num-title">{i18n.t('unregistered.label', { lng })}</span>
+        </div>
+        <div className="device-scroll" >
+          <a className="prev" onClick={this.scroll.bind(null,-1)}>&#10094;</a>
+          <div className="device-container">
             { this.state.deviceData && this.state.deviceData.map((device,index) => {
               return (
-                <tr key={index}>
-                  <td>
-                    <div className="row">
-                      <div className="col-md-2 text-right">
-                        { device.device_type === "sip_device" &&
-                          <img src={device.regsiter ? "desk-avatar.png":"desk-avatar-red.png"} alt="icon" />
-                        }
-                        { device.device_type === "cellphone" &&
-                            <img src={device.regsiter ? "iphone.png":"iphone-red.png" } alt="icon"/>
-                        }
-                        { device.device_type === "softphone" &&
-                          <img  src={device.regsiter ? "soft.png":"soft-red.png"} alt="icon"/>
-                        }
+                  <div className={`devices ${!device.regsiter?"devices-top-wrap-red":""}`} key={index}>
+                    { device.device_type === "sip_device" &&
+                      <div>
+                        <svg className={`corner corner-icon ${device.regsiter?"color-green":"color-red"}`}>
+                          <use href="telicon-2.1.0.svg#device-voip-phone"/>
+                        </svg>
+                        <img src="desk.png" alt="device"/>
                       </div>
-                      <div className="col-md-10">
-                        <div>{device.name}<br />
-                          <span id='device-id'>{device.mac_address}</span>
-                        </div>
+                    }
+                    { device.device_type === "cellphone" &&
+                      <div>
+                        <svg className={`corner corner-icon ${device.regsiter?"color-green":"color-red"}`}>
+                          <use href="telicon-2.1.0.svg#device-mobile"/>
+                        </svg>
+                        <img src="cell.png" alt="device"/>
                       </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="row">
-                      <div className="col-md-2 text-right">
-                        {Math.round((device.callcount*100)/device.totalcount)}%
+                    }
+                    { device.device_type === "softphone" &&
+                      <div>
+                        <svg className={`corner corner-icon ${device.regsiter?"color-green":"color-red"}`}>
+                          <use href="telicon-2.1.0.svg#device-soft-phone"/>
+                        </svg>
+                        <img src="device-soft.png" alt="device"/>
                       </div>
-                       <div className="col-md-8 mt-2">
-                        <Progress value={Math.round((device.callcount*100)/device.totalcount)} />
-                        <span className="grey">{device.callcount}{" "+i18n.t('callcount.label', { lng })}</span>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
+                    }
+                    <div className="mt-2 name">{device.name}</div>
+                    <div className="number">{device.mac_address}</div>
+                  </div>
                 );
               })
             }
-          </tbody>
-        </table>
-        <div className="view-all" onClick={()=>this.props.history.push("/devices")}>{i18n.t('viewall.label', { lng })}</div>
+          </div>
+
+          <a className="next" onClick={this.scroll.bind(null,1)}>&#10095;</a>
+        </div>
+
+        {/* <div className="view-all" onClick={()=>this.props.history.push("/devices")}>{i18n.t('viewall.label', { lng })}</div> */}
       </div>
     )
   }

@@ -58,7 +58,7 @@ export default class CallHistory extends React.Component {
 
   formatDuration = (sec) => {
     var date = new Date(null);
-    date.setSeconds(sec); // specify value for SECONDS here
+    date.setSeconds(sec);
     var timeString = date.toISOString().substr(11, 8);
     timeString = timeString.split(':')[1] + ":" + timeString.split(':')[2];
     return timeString;
@@ -69,68 +69,74 @@ export default class CallHistory extends React.Component {
     return (
       <div id='call-history' className="text-left missed-call-box">
         <div className="call-title">
-          <h5>{i18n.t('callhistory.label', { lng })}</h5>
+          <span className="call-view-all" onClick={()=>this.props.history.push("/history")}>
+            {i18n.t('recent.label', { lng })} {i18n.t('calls.label', { lng })}
+          </span>
         </div>
-        <table className="none-border">
-          <thead className="calltable-thead">
-            <tr>
-              <th width="2%"></th>
-              <th width="4%"></th>
-              <th width="23%">{i18n.t('from.label', { lng })}</th>
-              <th width="23%">{i18n.t('to.label', { lng })}</th>
-              <th width="23%">{i18n.t('date_time.label', { lng })}</th>
-              <th width="23%" className="text-right">{i18n.t('duration.label', { lng })}</th>
-              <th width="2%"></th>
-            </tr>
-          </thead>
-          <tbody>
-            { this.props.calldata && this.props.calldata.length > 0 ? this.props.calldata.map((call, index) => {
-              while(index<3){
-                return(
-                  <tr key={index}>
-                    <td className="first-child"></td>
-                    <td className="second-child ">
-                    { call.direction === 'inbound' ? (
-                        <img src='outgoing.png' className="ml-1" alt="outgoing"/>
-                      ):(call.hangup_cause === 'USER_BUSY' ?
-                        <img src='incoming.png' className="ml-1" alt="incoming"/> :<img src='missed.png' className="ml-1" alt="missed"/>
-                      )
-                    }
-                    </td>
-                    <td>
-                      <div>
-                        <span className='name text-left'>{call.caller_id_name}</span>
-                        <br />
-                        <span className='number text-left'>
-                          {this.getPhoneNumber(call.caller_id_number)}
-                        </span>
-                      </div>
-                    </td>
-                    <td>
-                      <div>
-                        <span className='name text-left'>{call.callee_id_name}</span>
-                        <br />
-                        <span className='number text-left'>
-                          {this.getPhoneNumber(call.callee_id_number)}
-                        </span>
-                      </div>
-                    </td>
-                    <td><span className='date text-left'>{this.getDateTime(call.timestamp).date} - {this.getDateTime(call.timestamp).time}</span></td>
-                    <td className='duration text-right'>{this.formatDuration(call.duration_seconds)}</td>
-                    <td className="last-child"></td>
-                  </tr>
-                )
-              }
-            })
-            : <tr className="text-center">
-                <td colSpan="7">
-                  <h2>{i18n.t('no.label', { lng })+" "+i18n.t('results.label', { lng })}!</h2>
-                </td>
+        <div className="recent-calls">
+          <table className="none-border table-striped">
+            <thead className="calltable-thead pb-2">
+              <tr>
+                <th width="30%" className="pl-2">{i18n.t('from.label', { lng })}</th>
+                <th width="27%">{i18n.t('to.label', { lng })}</th>
+                <th width="27%">{i18n.t('date_time.label', { lng })}</th>
+                <th width="20%" className="text-right">{i18n.t('duration.label', { lng })}</th>
               </tr>
-            }
-          </tbody>
-        </table>
-        <div className="view-all mr-2" onClick={()=>this.props.history.push("/history")}>{i18n.t('viewall.label', { lng })}</div>
+            </thead>
+            <tbody>
+              { this.props.calldata && this.props.calldata.length > 0 ? this.props.calldata.map((call, index) => {
+                while(index<10){
+                  return(
+                    <tr key={index}>
+                      <td className="first-child">
+                        <div className="call-icon ml-2">
+                          { call.direction === 'inbound' ? (
+                            <svg className="calls-icon">
+                              <use href="telicon-2.1.0.svg#phone-outbound"/>
+                            </svg>
+                          ):(call.hangup_cause === 'USER_BUSY' ?
+                            <svg className="calls-icon">
+                              <use href="telicon-2.1.0.svg#phone-inbound"/>
+                            </svg>
+                            : <svg className="missed-icon">
+                                <use href="telicon-2.1.0.svg#phone-missed"/>
+                              </svg>
+                          )
+                          }
+                        </div>
+                        <div className="ml-3">
+                          <div className='name text-left'>{call.caller_id_name}</div>
+                          <div className='number text-left'>
+                            {this.getPhoneNumber(call.caller_id_number)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className='name text-left'>{call.callee_id_name}</div>
+                        <div className='number text-left'>
+                          {this.getPhoneNumber(call.callee_id_number)}
+                        </div>
+                      </td>
+                      <td>
+                        <div className='name text-left'>{this.getDateTime(call.timestamp).date}</div>
+                        <div className='number text-left'>
+                          {this.getDateTime(call.timestamp).time}
+                        </div>
+                      </td>
+                      <td className='duration text-right pl-2'>{this.formatDuration(call.duration_seconds)}</td>
+                    </tr>
+                  )
+                }
+              })
+              : <tr className="text-center">
+                  <td colSpan="7">
+                    <h2>{i18n.t('no.label', { lng })+" "+i18n.t('results.label', { lng })}!</h2>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
       </div>
     )
   }

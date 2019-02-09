@@ -4,9 +4,11 @@ import CONFIG from '../../Config.json';
 import { parsePhoneNumber } from 'libphonenumber-js';
 import i18n from '../Common/i18n';
 import moment from 'moment';
+import _ from 'lodash';
 export class Faxes extends React.Component {
   getPhoneNumber = (number) => {
-    let phoneNumber = parsePhoneNumber("+"+number).formatInternational();
+    if(!number.includes( "+" )) number = "+"+number;
+    let phoneNumber = parsePhoneNumber(number).formatInternational();
     let number_arr = phoneNumber.split(" ");
     var finalnumber = number_arr[0]+" "+number_arr[1]+"-"+number_arr[2]+"-"+number_arr[3];
     return finalnumber
@@ -29,70 +31,109 @@ export class Faxes extends React.Component {
   }
   render () {
     let lng = this.props.lng;
+    let faxesdata= _.orderBy([...this.props.faxes_inbox_data, ...this.props.faxes_outbox_data],'created', 'desc');
     return (
-      <div  id ="call-history" className="text-left missed-call-box">
-        <div className="call-title">
-          <h5>{i18n.t('faxes.label', { lng })}</h5>
+      <div  id ="call-history" className="text-left faxes-box">
+        <div className="fax-title">
+          {i18n.t('faxes.label', { lng })}
+          {/* <div className="faxes-view-all" onClick={()=>this.props.history.push("/faxes")}>{i18n.t('viewall.label', { lng })}</div> */}
         </div>
-        <table className="none-border">
-          <thead className="calltable-thead">
-            <tr>
-              <th width="2%"></th>
-              <th width="4%"></th>
-              <th width="25%">{i18n.t('from.label', { lng })}</th>
-              <th width="30%">{i18n.t('to.label', { lng })}</th>
-              <th width="30%">{i18n.t('date_time.label', { lng })}</th>
-              <th width="7%"></th>
-              <th width="2%"></th>
-            </tr>
-          </thead>
-          <tbody>
-          { this.props.faxesdata && this.props.faxesdata.map((fax, index) => {
-            let URL = `${CONFIG.API_URL}${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/faxes/inbox/${fax.id}/attachment?auth_token=${this.props.auth_token}`;
-            while(index<3){
-              return(
-                <tr key={index}>
-                  <td className="first-child"></td>
-                  <td className="second-child ">
-                    <img src='fax-sidebar.png'  alt="icon"/>
+        <div className="rencent-faxes">
+          <table className="none-border table-striped">
+            <thead className="calltable-thead">
+              <tr>
+                <th width="37%">{i18n.t('from.label', { lng })}</th>
+                <th width="33%">{i18n.t('to.label', { lng })}</th>
+                <th width="26%" >{i18n.t('date_time.label', { lng })}</th>
+                <th width="4%" className="text-right"></th>
+              </tr>
+            </thead>
+            <tbody>
+              { faxesdata && faxesdata.map((fax, index) => {
+                let URL = `${CONFIG.API_URL}${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/faxes/inbox/${fax.id}/attachment?auth_token=${this.props.auth_token}`
+                if(fax.folder === "inbox"){
+                  return(
+                    <tr key={index}>
+                      <td className="first-child ml-3">
+                        <svg className="fax-icon">
+                          <use href="telicon-2.1.0.svg#download"/>
+                        </svg>
+                        <div className="ml-3">
+                          <div className='name text-left'>{fax.from}</div>
+                          <div className='number text-left'>
+                            {this.getPhoneNumber(fax.from_number)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className='name text-left'>{ this.props.faxbox.caller_name}</div>
+                        <div className='number text-left'>
+                          {this.props.faxbox.faxbox_name}
+                        </div>
+                      </td>
+                      <td >
+                        <div className='name text-left'>{this.getDateTime(fax.created).date}</div>
+                        <div className='number text-left'>
+                          {this.getDateTime(fax.created).time}
+                        </div>
+                      </td>
+                      <td className="text-right">
+                        <a href={URL} target="_blank">
+                          <svg className="fax-icon">
+                            <use href="telicon-2.1.0.svg#download-cloud"/>
+                          </svg>
+                        </a>
+                      </td>
+                    </tr>
+                  )
+                }
+                if(fax.folder === "outbox"){
+                  return(
+                    <tr key={index}>
+                      <td className="first-child ml-3">
+                        <svg className="fax-icon">
+                          <use href="telicon-2.1.0.svg#upload"/>
+                        </svg>
+                        <div className="ml-3">
+                          <div className='name text-left'>{fax.from_name}</div>
+                          <div className='number text-left'>
+                            {this.props.faxbox.faxbox_name}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className='name text-left'>{fax.to_name}</div>
+                        <div className='number text-left'>
+                          {this.getPhoneNumber(fax.to_number)}
+                        </div>
+                      </td>
+                      <td >
+                        <div className='name text-left'>{this.getDateTime(fax.created).date}</div>
+                        <div className='number text-left'>
+                          {this.getDateTime(fax.created).time}
+                        </div>
+                      </td>
+                      <td className="text-right">
+                        <a href={URL} target="_blank">
+                          <svg className="fax-icon">
+                            <use href="telicon-2.1.0.svg#download-cloud"/>
+                          </svg>
+                        </a>
+                      </td>
+                    </tr>
+                  )
+                }
+              })}
+              { faxesdata.length<1 &&
+                <tr className="text-center">
+                  <td colSpan="7">
+                    <h2>{i18n.t('no.label', { lng })+" "+i18n.t('results.label', { lng })}!</h2>
                   </td>
-                  <td>
-                    {fax.from}<br/>
-                    <span className='grey'>
-                      { this.getPhoneNumber(fax.from_number)}
-                    </span>
-                  </td>
-                  <td>
-                    {this.props.faxbox.faxbox_name}<br/>
-                    <span className='grey'>
-                      { this.props.faxbox.caller_name}
-                    </span>
-                  </td>
-                  <td>
-                    <span className='date text-left'>{this.getDateTime(fax.timestamp).date}</span> - {this.getDateTime(fax.timestamp).time}
-                  </td>
-                  <td className="text-right">
-                    <button className="faxdownload">
-                      <a href={URL} target="_blank">
-                        <img src='download.png'  alt="download" width="120%" />
-                      </a>
-                    </button>
-                  </td>
-                  <td className="last-child"></td>
                 </tr>
-              )}
-            }
-          )}
-          { !this.props.faxesdata &&
-            <tr className="text-center">
-              <td colSpan="7">
-                <h2>{i18n.t('no.label', { lng })+" "+i18n.t('results.label', { lng })}!</h2>
-              </td>
-            </tr>
-          }
-        </tbody>
-       </table>
-        <div className="view-all mr-2" onClick={()=>this.props.history.push("/faxes")}>{i18n.t('viewall.label', { lng })}</div>
+              }
+            </tbody>
+          </table>
+        </div>
       </div>
     )
   }

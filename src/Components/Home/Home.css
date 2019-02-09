@@ -11,13 +11,11 @@
 .home {
   background: #F2F2F3;
   display: inline-block;
-  padding-top: 1rem;
+  padding-top: 16px;
   width: 100%;
-  max-height: 98vh;
   overflow: scroll;
   position: relative;
 }
-
 /* .main > div:nth-of-type(2) {
   margin: 1rem;
 } */
@@ -92,7 +90,7 @@
 }
 
 #new-fax {
-  border-top: 2px solid #1B72E1;
+  border-top: 2px solid #F4F4F5;
 }
 
 #new-messages {
@@ -100,9 +98,9 @@
   grid-row: 1 / 2;
 }
 
-#missed-calls img,
-#new-voicemails img,
-#new-fax img,
+#missed-calls .missed-content,
+#new-voicemails .voicemail-content,
+#new-fax .total-fax-content,
 #new-messages img {
   float: left;
   margin-left: 1rem;
@@ -112,11 +110,15 @@
   float: right;
   font-weight: 300;
 }
-.text > h1 {
+.text .text-count {
   display: block;
   padding-bottom: 0;
-  font-size: 1.5rem;
-  font-weight: 400;
+  font-size: 32px;
+  font-weight: normal;
+}
+.text .text-value {
+  font-size: 14px;
+  font-weight: normal;
 }
 #devices thead,
 #numbers thead,
@@ -134,10 +136,14 @@
 }
 
 #num {
-  font-size: 2.5rem;
+  font-size: 32px;
   font-weight: 400;
   color: black;
   margin-right: 0.3rem;
+}
+#num .num-title{
+  font-size: 14px;
+  color: gray;
 }
 
 #num:nth-of-type(2) {
@@ -146,10 +152,6 @@
 
 #numbers {
   height: 100%;
-}
-
-#numbers img {
-  width: 5rem;
 }
 
 #numbers td {
@@ -173,20 +175,21 @@
 }
 .call-title{
   width: 100%;
-  padding: 10px 10px 10px 25px;
+  padding: 10px 10px 15px 5px;
+  display: flex;
 }
 .missed-call-box{
   background: #FFFFFF;
   width: 100%;
   text-align: center;
-  line-height: 2rem;
   border-radius: 0.2rem;
   box-shadow: 0 0 10px 1px rgba(0,0,0,0.2);
-  padding: 10px 0px 12px 0px;
+  padding: 10px 15px 12px 15px;
   float: left;
+  height: 370px;
 }
 .calltable-thead th{
-  padding: 0px !important;
+  padding-bottom: 10px !important;
 }
 
 .devices-box{
@@ -198,7 +201,7 @@
   box-shadow: 0 0 10px 1px rgba(0,0,0,0.2);
   padding: 10px 20px 20px 20px;
   float: left;
-  height: 100%;
+  height: 350px;
 }
 
 .loader_container{

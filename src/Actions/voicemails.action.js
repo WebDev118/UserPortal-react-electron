@@ -10,9 +10,13 @@ export const getallvmboxes = () => {
 
     const URI = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/vmboxes?filter_owner_id=${CONFIG.OWNER_ID}`;
     const username = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}`;
+    axios.all([
+      axios.get(URI),
+      axios.get(username),
+    ])
+    .then(axios.spread((res, username ) => {
+      let full_name = username.data.data.first_name +" "+ username.data.data.last_name;
 
-    axios.get(URI)
-    .then((res) => {
       let promises = []
       const vmboxes = res.data.data
 
@@ -36,14 +40,11 @@ export const getallvmboxes = () => {
         if(vmboxes.length === 0) {
           allmessages.push({vmbox: {newcount:0, messages:0}, messages: []})
         }
-        axios.get(username).then((res5) => {
-          let full_name = res5.data.data.first_name +" "+ res5.data.data.last_name;
-          let allmailsdata = {allmessages, full_name}
-          dispatch({type: CONSTS.GET_ALL_MESSAGES_ON_AN_ACCOUNT_SUCCESS, payload: allmailsdata})
 
-        })
+        let allmailsdata = {allmessages, full_name}
+        dispatch({type: CONSTS.GET_ALL_MESSAGES_ON_AN_ACCOUNT_SUCCESS, payload: allmailsdata})
       })
-    })
+    }))
     .catch((error) => {
       if(typeof error !== 'undefined' && typeof error.response !== 'undefined' && error.response.status === 401) {
         dispatch({ type: CONSTS.SET_SYSTEMMESSAGE, payload: "Authentication failed."})

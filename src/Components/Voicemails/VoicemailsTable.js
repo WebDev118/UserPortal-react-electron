@@ -10,7 +10,6 @@ import moment from 'moment';
 const Message = (props) => {
 
   let checkMail = props.checkVoiceMail;
-
   let from = props.from;
   let to = props.to;
   let vmbox_id = props.vmbox_id;
@@ -20,11 +19,14 @@ const Message = (props) => {
   let lng=props.lng;
   let URL = `${CONFIG.API_URL}${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/vmboxes/${vmbox_id}/messages/${media_id}/raw?auth_token=${auth_token}`
   return (
-    <div className = {`tr-content row ${(props.playStatus.audioPlay && props.audioId !== props.playStatus.audioId)?'disabledbutton': ''}`}>
+    <div className = {`voicemail-row
+                      ${(props.playStatus.audioPlay && props.audioId !== props.playStatus.audioId)?'disabledbutton': ''}
+                      ${(props.playStatus.audioPlay && props.audioId === props.playStatus.audioId)?'voicemail-row-active': ''}`}
+    >
       <div className="col-md-2 row">
         <div className="col-md-3">
           { checkMail && checkMail.map((mail, index) => {
-              if((index === audioId) && (media_id ===mail.media_id)){
+              if(media_id === mail.media_id){
                 return(
                   <input key={index} type='checkbox' className="checkbox" checked={mail.state} onChange={() => props.checkboxChange(media_id)}/>
                 )
@@ -41,9 +43,21 @@ const Message = (props) => {
            : (props.folder === "deleted"? <span className="deletedstatus">{i18n.t('deleted.label', { lng })}</span>:""))}
         </div>
       </div>
-      <div className="col-md-2">{getDateTime(props.timestamp).date}<br /><span className='grey'>{getDateTime(props.timestamp).time}</span></div>
-      <div className="col-md-2">{props.caller_id_name}<br/><span className='grey'>{getPhoneNumber((from).split("@")[0])}</span></div>
-      <div className="col-md-2">{getPhoneNumber((to).split("@")[0])}</div>
+      <div className="col-md-2">
+        <div className='name text-left'>{getDateTime(props.timestamp).date}</div>
+        <div className='number text-left'>
+          {getDateTime(props.timestamp).time}
+        </div>
+      </div>
+      <div className="col-md-2">
+        <div className='name text-left'>{props.caller_id_name}</div>
+        <div className='number text-left'>
+          {getPhoneNumber((from).split("@")[0])}
+        </div>
+      </div>
+      <div className="col-md-2">
+        <div className='name text-left'> {getPhoneNumber((to).split("@")[0])}</div>
+      </div>
       <div className="col-md-4">
       { (props.playStatus.audioPlay && props.audioId === props.playStatus.audioId)?
         <div className="row">
@@ -51,11 +65,19 @@ const Message = (props) => {
           <div className="col-md-2"><button className="audio-close" onClick={()=>props.audioPlayerEnd(props.audioId,vmbox_id,media_id, props.folder)}>{i18n.t('close.label', { lng })}</button></div>
         </div> :
         <div className="row">
-          <div className="col-md-6">{getDuration(props.length/1000)}</div>
+          <div className="col-md-6">
+            <div className='name text-left'> {getDuration(props.length/1000)}</div>
+          </div>
           <div className="col-md-6">
             <div className="text-right pr-2">
-              <button className="audioplay mr-3" onClick={()=>props.audioPlayer(props.audioId)}><img src='play.png' alt="play" width="120%"/></button>
-              <button className="audiodown"><a href={URL} target="_blank"><img src='download.png' alt="download" width="120%" /></a></button>
+              <svg className="fax-icon audioplay mr-3" onClick={()=>props.audioPlayer(props.audioId)}>
+                <use href="telicon-2.1.0.svg#play--circle"/>
+              </svg>
+              <a href={URL} target="_blank">
+                <svg className="fax-icon">
+                  <use href="telicon-2.1.0.svg#download-cloud"/>
+                </svg>
+              </a>
             </div>
           </div>
         </div>
@@ -89,7 +111,7 @@ const Message = (props) => {
     seconds = Math.round(seconds * 100) / 100
 
     let result = "";
-    if(hours !== 0) {  // hour is 0 then don't display hour format
+    if(hours !== 0) {
       (hours < 10 ? "0" + hours : hours) + ":";
     }
     result += (minutes < 10 ? "0" + minutes : minutes) + ":";
@@ -115,7 +137,6 @@ class VoicemailsTable extends React.Component {
       checkState: false,
       messageRecords:""
     }
-    //does whatever stuff
     this.audioPlayer = this.audioPlayer.bind(this);
     this.audioPlayerEnd = this.audioPlayerEnd.bind(this);
     this.filtermailList = this.filtermailList.bind(this);
@@ -167,7 +188,7 @@ class VoicemailsTable extends React.Component {
       let url = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/vmboxes/${vmbox_id}/messages/${media_id}`;
       axios.post(url)
       .then((res) => {
-        this.props.getallnotification()
+        this.props.getallnotification();
       })
       .catch((error) => {
         console.log(error)
@@ -178,6 +199,7 @@ class VoicemailsTable extends React.Component {
       audioPlay: !this.state.audioPlay
     })
   }
+
   render () {
     const {allmessages} = this.props;
     let lng = this.props.lng;
@@ -208,13 +230,18 @@ class VoicemailsTable extends React.Component {
                 checkboxChange={this.props.checkboxChange}
                 vmbox_id={this.props.vmbox_id}
                 playStatus={this.state}
-                audioId = {index}
-                key={index} {...message}
+                audioId = {message.media_id}
+                key={index}
+                {...message}
                 checkVoiceMail = {this.props.checkVoiceMail}
                 lng={lng}
                 />
-            ): null
-            }
+            ):(
+              <div className="col-md-12 text-center">
+                <h2>{i18n.t('no.label', { lng })+" "+i18n.t('results.label', { lng })}!</h2>
+              </div>
+            )
+          }
         </div>
       </div>
     )

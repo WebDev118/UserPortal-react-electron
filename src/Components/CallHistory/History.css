@@ -1,5 +1,10 @@
 .history {
-	padding-top: 0rem;
+	background: #F2F2F3;
+	display: inline-block;
+	padding-top: 16px;
+	width: 100%;
+	overflow: scroll;
+	position: relative;
 }
 
 .call-history thead {
@@ -7,16 +12,11 @@
 }
 
 #call-history td {
-	border-bottom: 1px solid #ddd;
-	font-size: 1.1rem;
-	padding: 0.4rem 0 0.4rem 0 !important;
+	font-size: 16px;
+	padding: 0.6rem 0 0.6rem 0 !important;
 }
 #call-history table {
   border: 0px;
-}
-
-#call-history thead {
-  border-bottom: 1px solid #ddd;
 }
 
 #call-history tbody {
@@ -37,7 +37,6 @@ td:last-child {
 }
 #call-history div,
 #faxes div {
-  display: inline-block;
   vertical-align: middle;
 }
 .call-history tbody {
@@ -45,30 +44,39 @@ td:last-child {
 	font-size: 1.1rem;
   background-color: white;
 }
-
+.recent-calls{
+	height: 290px;
+	overflow: auto;
+}
 .call-history tbody > tr {
 	border-bottom: 1px solid #CFCFD6;
 	border-left: 1px solid #CFCFD6;
 	border-right: 1px solid #CFCFD6;
 }
 .first-child {
-	border-bottom: 0px !important;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
 }
 
 .second-child {
 	padding-left: 0px !important;
 }
-.second-child img{
+.call-icon{
 	float: left;
-	width: 21px;
 }
 .last-child {
 	border-bottom: 0px !important;
 }
-
+#call-history thead > tr > th:first-of-type {
+	padding-left: 13px !important;
+}
+#call-history thead > tr > th:last-of-type {
+	padding-right: 10px !important;
+}
 #call-history tbody > tr > td:last-of-type {
 	border-bottom: 0px !important;
-	margin-right: 0.5rem;
+	padding-right:10px !important;
 }
 
 #call-history tbody > tr > td:last-of-type img {
@@ -77,18 +85,24 @@ td:last-child {
 
 .history-search {
 	position: relative;
-	padding-bottom: 10px;
+	margin-top: 32px;
+	display: flex;
+	justify-content: flex-start;
+	margin-bottom: 26px;
 }
-.endtime-align{
-	position: absolute;
-  bottom: 0;
-}
+
 .calendar1 {
 	width: 130px;
 	background: url('../../assets/images/calendar.png') no-repeat scroll;
 	background-position: 95% 50%;
 	background-color: white;
 	position: relative;
+}
+.state-date{
+	margin-right: 8px;
+}
+.end-date{
+	margin-right: 8px;
 }
 .react-date-picker__wrapper {
 	border: 1px solid #CDCDD0;
@@ -100,8 +114,7 @@ td:last-child {
 .history-search label {
 	display: block;
 	text-align: left;
-	font-size: 0.8rem;
-  margin-bottom: 0.5rem;
+	font-size: 14px;
 	color: grey;
 }
 
@@ -122,14 +135,17 @@ td:last-child {
 .call-search-text{
 	position: absolute;
 	bottom: 0px;
-	margin-bottom: 10px;
 	right:0px;
 	width: 15rem;
 	background: url('../../assets/images/magnifying-glass.png') no-repeat scroll;
 	background-position: 95% 50%;
 	background-color: white;
 }
-
+.history-from{
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+}
 .history-search button {
 	position: absolute;
 	bottom: 0px;
@@ -138,43 +154,30 @@ td:last-child {
 	background: #F7F7F7;
 	border: 1px solid #CDCDD0;
 }
-@media (min-width: 1100px) {
-  .date-margin {
-    margin-right: 60px;
-  }
+.call-history-table{
+  border: 0px;
+	width: 100%;
 }
-@media (min-width: 1300px) {
-  .date-margin {
-    margin-right: 46px;
-  }
+.history-table-title{
+	font-size: 12px;
+	color: grey;
+	margin: 0px 0px 15px 0px;
 }
-
-@media (min-width: 1500px) {
-	.date-margin {
-    margin-right: 35px;
-  }
+.call-history-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 0px;
+  margin-top: -1px;
+  float: left;
+  width:100%;
+  border-top: solid 1px #BCBCC2;
+  border-bottom: solid 1px #BCBCC2;
 }
-@media (min-width: 1700px) {
-	.date-margin {
-    margin-right: 15px;
-  }
-}
-
-.name {
-  margin-bottom: 0;
-  font-size: 1.1rem;
-  padding: 0.5rem 1rem 0.5rem 0rem;
-}
-
-.number {
-  padding: 0.5rem 1rem 0.5rem 0rem;
-  font-weight: 300;
-  color: grey;
-  font-size: 0.85rem;
-}
-.time {
-  font-size: 0.85rem;
-  color: grey;
+.call-history-row:hover, .call-history-row-active {
+  box-shadow: 0 0 10px 1px rgba(0,0,0,0.2);
+	background-color: #ffffff;
+	border-radius: 3px;
 }
 .avatar{
 	width: 11%;
@@ -185,4 +188,45 @@ td:last-child {
 	width: 2.5rem;
 	border-radius: 50%;
 
+}
+.call-view-all {
+  color: #1E81FF;
+	cursor: pointer;
+	font-size: 16px;
+}
+.call-view-all :hover {
+	text-decoration: underline;
+	color: #1E81FF;
+}
+.missed-content{
+	background-color: #FF3D24;
+	padding: 4px 11px;
+	border-radius: 50%;
+	color: #222224;
+	font-weight: bold;
+	text-align: center;
+}
+.missed-call-icon{
+	width: 16px;
+	height: 16px;
+	fill: currentColor;
+	line-height: inherit;
+	vertical-align: middle;
+	color: #ffffff;
+}
+.calls-icon{
+	width: 16px;
+	height: 16px;
+	fill: currentColor;
+	line-height: inherit;
+	vertical-align: middle;
+	color: gray;
+}
+.missed-icon{
+	width: 16px;
+	height: 16px;
+	fill: currentColor;
+	line-height: inherit;
+	vertical-align: middle;
+	color: #FF3D24;
 }

@@ -49,7 +49,9 @@ i18next
           view: {label: "View"},
           per_page: {label: "per page"},
           no: {label: "No"},
-          results: {label:"results"}
+          results: {label:"results"},
+          recent: {label:"Recent"},
+          unregistered: {label: "Unregistered"}
         },
       },
       fr: {
