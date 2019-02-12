@@ -20,7 +20,7 @@ export const getCallFlow = (start, end) => {
     dispatch({ type: CONSTS.SET_SYSTEMMESSAGE, payload: "Sending API request to get all data." });
     dispatch({ type: CONSTS.SENDING_API_REQUEST });
 
-    const CALL_URI = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}/cdrs?&created_from=${start_timestamp}&created_to=${end_timestamp}`;
+    const CALL_URI = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}/cdrs?created_from=${start_timestamp}&created_to=${end_timestamp}&paginate=false`;
     const username = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}`;
     axios.get(CALL_URI)
       .then((res) => {

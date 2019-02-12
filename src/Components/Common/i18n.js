@@ -51,7 +51,11 @@ i18next
           no: {label: "No"},
           results: {label:"results"},
           recent: {label:"Recent"},
-          unregistered: {label: "Unregistered"}
+          unregistered: {label: "Unregistered"},
+          pages: {label: "PAGES"},
+          success: {label: "Success"},
+          failed: {label: "Failed"},
+          viewed: {label: "Viewed"}
         },
       },
       fr: {

@@ -34,7 +34,7 @@ class History extends React.Component {
   }
 
   componentDidMount () {
-    !this.props.callreducer.loading ? this.props.getCallFlow(this.state.startDate, this.state.endDate) : null;
+
   }
 
   componentWillMount() {
@@ -55,7 +55,7 @@ class History extends React.Component {
       startDate: date,
     }, ()=>{
       var dateDiff = parseInt((this.state.endDate.getTime()-this.state.startDate.getTime())/(24*3600*1000));
-      if(dateDiff>31){
+      if(dateDiff>30){
         this.setState({
           endDate: new Date(this.state.startDate.getTime()+30*24*3600*1000)
         });
@@ -69,7 +69,7 @@ class History extends React.Component {
       endDate: date,
     }, ()=>{
       var dateDiff = parseInt((this.state.endDate.getTime()-this.state.startDate.getTime())/(24*3600*1000));
-      if(dateDiff>31){
+      if(dateDiff>30){
         this.setState({
           startDate: new Date(this.state.endDate.getTime()-30*24*3600*1000)
         });

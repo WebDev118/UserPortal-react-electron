@@ -32,12 +32,10 @@ class Home extends React.Component {
     }
   }
   componentWillMount () {
-    // this.props.getallnotification();
     axios.defaults.headers.common['X-AUTH-TOKEN'] = this.props.auth.auth_token;
     this.props.getallnotification();
   }
   componentDidMount () {
-    // !this.props.notification.loading ? this.props.getallnotification() : null;
   }
   componentDidUpdate(preProps) {
     let allnotifications  = this.props.notification.allnotifications;
@@ -54,7 +52,8 @@ class Home extends React.Component {
         faxbox: allnotifications.faxbox,
         loading_state: allnotifications.faxbox,
         faxes_outbox_data: allnotifications.faxes_outbox_data,
-        faxes_inbox_data: allnotifications.faxes_inbox_data
+        faxes_inbox_data: allnotifications.faxes_inbox_data,
+        user_photo: allnotifications.user_photo
       })
     }
   }

@@ -45,7 +45,7 @@ export class TimeWeather extends React.Component {
     let minutes = myDate.getMinutes();
     let ampm = hours >= 12 ? 'pm' : 'am';
     hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
+    hours = hours ? hours : 12;
     minutes = minutes < 10 ? '0'+minutes : minutes;
     let strTime = hours + ':' + minutes;
     let currentTime = {month:month, day:day,date:date, time:strTime,ampm:ampm}

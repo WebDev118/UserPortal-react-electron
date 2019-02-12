@@ -36,7 +36,7 @@ export class HistorySearch extends React.Component {
           </div>
         </div>
         <div>
-          <button className="btn" onClick={this.props.apply}>{i18n.t('apply.label', { lng })}</button>
+          <button className="btn history-search-button" onClick={this.props.apply}>{i18n.t('apply.label', { lng })}</button>
         </div>
         <div className="text-right">
           <input className='call-search-text form-control' type='text' placeholder={i18n.t('search.label', { lng })} onChange={this.onChange}/>

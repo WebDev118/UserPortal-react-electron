@@ -7,11 +7,32 @@ import moment from 'moment';
 import _ from 'lodash';
 export class Faxes extends React.Component {
   getPhoneNumber = (number) => {
-    if(!number.includes( "+" )) number = "+"+number;
-    let phoneNumber = parsePhoneNumber(number).formatInternational();
-    let number_arr = phoneNumber.split(" ");
-    var finalnumber = number_arr[0]+" "+number_arr[1]+"-"+number_arr[2]+"-"+number_arr[3];
-    return finalnumber
+    let phone_number = "";
+    var phoneNumber;
+    if(!number.includes( "+" )) {
+      if (number.length === 11) {
+        phone_number = parsePhoneNumber("+" + number)
+        let phone_num = phone_number.formatInternational();
+        let number_arr = phone_num.split(" ");
+        phoneNumber = number_arr[0] + " " + number_arr[1] + "-" + number_arr[2] + "-" + number_arr[3];
+        return phoneNumber;
+      } else if (number.length === 10) {
+        phone_number = parsePhoneNumber("+1" + number);
+        let phone_num = phone_number.formatInternational();
+        let number_arr = phone_num.split(" ");
+        phoneNumber = number_arr[0] + " " + number_arr[1] + "-" + number_arr[2] + "-" + number_arr[3];
+        return phoneNumber;
+      } else {
+        return number;
+      }
+    }
+    else{
+      phone_number = parsePhoneNumber(number)
+      let phone_num = phone_number.formatInternational();
+      let number_arr = phone_num.split(" ");
+      phoneNumber = number_arr[0] + " " + number_arr[1] + "-" + number_arr[2] + "-" + number_arr[3];
+      return phoneNumber;
+    }
   }
   getDateTime = (timestamp) => {
     let stamp = new Date(timestamp * 1000);
@@ -33,10 +54,9 @@ export class Faxes extends React.Component {
     let lng = this.props.lng;
     let faxesdata= _.orderBy([...this.props.faxes_inbox_data, ...this.props.faxes_outbox_data],'created', 'desc');
     return (
-      <div  id ="call-history" className="text-left faxes-box">
+      <div id ="call-history" className="text-left faxes-box">
         <div className="fax-title">
           {i18n.t('faxes.label', { lng })}
-          {/* <div className="faxes-view-all" onClick={()=>this.props.history.push("/faxes")}>{i18n.t('viewall.label', { lng })}</div> */}
         </div>
         <div className="rencent-faxes">
           <table className="none-border table-striped">
@@ -95,7 +115,7 @@ export class Faxes extends React.Component {
                           <use href="telicon-2.1.0.svg#upload"/>
                         </svg>
                         <div className="ml-3">
-                          <div className='name text-left'>{fax.from_name}</div>
+                          <div className='name text-left'>{ this.props.faxbox.caller_name}</div>
                           <div className='number text-left'>
                             {this.props.faxbox.faxbox_name}
                           </div>

@@ -1,6 +1,15 @@
-.fax-content{
-	padding-top: 1rem;
-	padding-left:0.2rem;
+.faxes {
+	background: #F2F2F3;
+	display: inline-block;
+	padding-top: 16px;
+	width: 100%;
+	overflow: scroll;
+	position: relative;
+}
+
+.fax-container{
+	margin: 32px 24px 0px 24px;
+  text-align: left;
 }
 #faxes table {
 	padding-top: 0.8rem;
@@ -8,15 +17,17 @@
 
 .fax-search {
 	position: relative;
+	display: flex;
+	justify-content: flex-end;
 }
 
-.fax-search button {
-	position: absolute;
-	bottom: 0px;
+.fax-search-button {
+	margin-top: 27px;
 	border-radius: 0.2rem;
 	color: grey;
 	background: #F7F7F7;
 	border: 1px solid #CDCDD0;
+	padding: 6px 13px;
 }
 .react-datepicker-wrapper{
 	width: 100% !important;
@@ -35,75 +46,100 @@
 	margin-left: 0.15rem;
 	font-size: 0.8rem;
 	color: grey;
-
 }
 .fax-search-text{
+	margin-top: 27px;
 	width: 15rem;
 	background: url('../../assets/images/magnifying-glass.png') no-repeat scroll;
 	background-position: 95% 50%;
 	background-color: white;
 }
-.faxesrow {
-	color: grey;
-  display: flex;
-  flex-wrap: wrap;
-  font-size: 0.9rem;
-  margin-left: 16px;
-	width: 100%;
-	justify-content: center;
-	align-items: center;
+.fax-checkbox-wrap {
+	padding: 7px 15px;
+	border: solid 1px #BCBCC2;
+	border-radius: 2px;
+  font-weight: 300;
+  background: #F9F9F9;
+  float: left;
+	display: block;
+	margin-top: 27px;
 }
-.row2 {
-	color: #000000;
-  display: flex;
-  flex-wrap: wrap;
+.fax-checkbox-trash {
+	padding: 7px 10px;
+	border: solid 1px #BCBCC2;
+	border-radius: 2px;
+  font-weight: 300;
+  background: #F9F9F9;
   margin-left: 16px;
-	width: 100%;
-	justify-content: center;
-	align-items: center;
-	font-size:  1.1rem;
+  float: left;
+	display: block;
+	margin-top: 27px;
+}
+.fax-checkbox-wrap > input[type="checkbox"] {
+	margin-right: 0.5rem;
+	margin-left: 0.5rem;
+}
+
+.completedstatus{
+  background-color: #33db24 !important;
+  border-color: #33db24 !important;
+  color: #071F05;
+  border-radius: 15px;
+  padding: 4px 12px 4px 12px;
+  font-size:  12px;
+}
+.viewedstatus{
+  background-color: #d0d0d9 !important;
+  border-color: #d0d0d9 !important;
+  color: #071F05;
+  border-radius: 15px;
+  padding: 4px 12px 4px 12px;
+  font-size:  12px;
+}
+.failedstatus{
+  background-color: #ff3d24 !important;
+  border-color: #ff3d24 !important;
+  color: #ffffff;
+  border-radius: 15px;
+  padding: 4px 12px 4px 12px;
+  font-size:  12px;
 }
 .faxtable{
   border: 0px;
-  margin: 0 15px 0 15px !important;
+  margin-top: 24px !important;
   width: 100%;
 }
-.from-call-img{
-	flex-wrap: wrap;
-	justify-content: center;
-	align-items: center;
+.table-th {
 	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	color: grey;
+	font-size: 12px;
+	margin-bottom: 10px;
+	padding: 0 15px;
 }
-.from-call-img img{
-	width:20px;
-	height: 20px;
-}
-.faxes-box{
-	background: #FFFFFF;
-  width: 100%;
-  text-align: center;
-  border-radius: 0.2rem;
-  box-shadow: 0 0 10px 1px rgba(0,0,0,0.2);
-  padding: 10px 15px 12px 15px;
-  float: left;
-  height: 350px;
-}
-.tr-content{
+.fax-row {
   display: flex;
-  background-color: #ffffff !important;
-  box-shadow: 0 0 10px 2px rgba(0,0,0,0.2);
   justify-content: center;
   align-items: center;
-  padding: 15px 0 15px 0;
-  margin:0 0 10px 0px;
+  padding: 15px;
+  margin-top: -1px;
   float: left;
-  border-radius: 4px;
-	width:100%;
+  width:100%;
+  border-top: solid 1px #BCBCC2;
+  border-bottom: solid 1px #BCBCC2;
 }
-.faxdownload{
-	background: #ffffff;
-	border-color: #ffffff;
+.fax-row:hover, .fax-row-active {
+  box-shadow: 0 0 10px 1px rgba(0,0,0,0.2);
+	background-color: #ffffff;
+	border-radius: 3px;
 }
+.table-td{
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+}
+
 .button-disable{
 	color: grey !important;
 }
@@ -114,28 +150,6 @@
 	padding: 0px !important;
 	color: grey;
 	font-weight: bold;
-}
-
-@media (min-width: 1100px) {
-  .date-margin {
-    margin-right: 60px;
-  }
-}
-@media (min-width: 1300px) {
-  .date-margin {
-    margin-right: 46px;
-  }
-}
-
-@media (min-width: 1500px) {
-	.date-margin {
-    margin-right: 35px;
-  }
-}
-@media (min-width: 1700px) {
-	.date-margin {
-    margin-right: 15px;
-  }
 }
 
 .faxes-view-all {
@@ -170,4 +184,17 @@
 	padding:10px 10px 15px 5px;
 	font-size: 16px;
 	font-weight: 400;
+}
+
+.faxes-box {
+	background: #FFFFFF;
+	width: 100%;
+	text-align: center;
+	line-height: 2rem;
+	border-radius: 0.2rem;
+	-webkit-box-shadow: 0 0 10px 1px rgba(0,0,0,0.2);
+	box-shadow: 0 0 10px 1px rgba(0,0,0,0.2);
+	padding: 10px 20px 20px 20px;
+	float: left;
+	height: 350px;
 }

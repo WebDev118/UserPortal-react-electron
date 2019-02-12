@@ -5,7 +5,7 @@ export class NewVoicemails extends React.Component {
     let lng = this.props.lng;
     let newmailscount = 0;
     if(this.props.newvoicemails && this.props.newvoicemails.length>0){
-      this.props.newvoicemails .map((message, index)=>{
+      this.props.newvoicemails .map( message => {
         newmailscount+= message.newmessagecount;
       })
     }

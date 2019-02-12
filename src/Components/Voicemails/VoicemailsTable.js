@@ -14,7 +14,6 @@ const Message = (props) => {
   let to = props.to;
   let vmbox_id = props.vmbox_id;
   let media_id = props.media_id;
-  let audioId = props.audioId;
   let auth_token = props.auth_token;
   let lng=props.lng;
   let URL = `${CONFIG.API_URL}${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/vmboxes/${vmbox_id}/messages/${media_id}/raw?auth_token=${auth_token}`
@@ -32,7 +31,7 @@ const Message = (props) => {
                 )
               }
               else{
-                <input key={index} type='checkbox' className="checkbox" checked={false} onChange={() => props.checkboxChange(media_id)}/>
+                  <input key={index} type='checkbox' className="checkbox" checked={false} onChange={() => props.checkboxChange(media_id)}/>
               }
             })
           }
@@ -120,10 +119,32 @@ const Message = (props) => {
     return result;
   }
   function getPhoneNumber(number){
-    let phoneNumber = parsePhoneNumber("+"+number).formatInternational();
-    let number_arr = phoneNumber.split(" ");
-    var finalnumber = number_arr[0]+" "+number_arr[1]+"-"+number_arr[2]+"-"+number_arr[3];
-    return finalnumber
+    let phone_number = "";
+    var phoneNumber;
+    if(!number.includes( "+" )) {
+      if (number.length === 11) {
+        phone_number = parsePhoneNumber("+" + number)
+        let phone_num = phone_number.formatInternational();
+        let number_arr = phone_num.split(" ");
+        phoneNumber = number_arr[0] + " " + number_arr[1] + "-" + number_arr[2] + "-" + number_arr[3];
+        return phoneNumber;
+      } else if (number.length === 10) {
+        phone_number = parsePhoneNumber("+1" + number);
+        let phone_num = phone_number.formatInternational();
+        let number_arr = phone_num.split(" ");
+        phoneNumber = number_arr[0] + " " + number_arr[1] + "-" + number_arr[2] + "-" + number_arr[3];
+        return phoneNumber;
+      } else {
+        return number;
+      }
+    }
+    else{
+      phone_number = parsePhoneNumber(number)
+      let phone_num = phone_number.formatInternational();
+      let number_arr = phone_num.split(" ");
+      phoneNumber = number_arr[0] + " " + number_arr[1] + "-" + number_arr[2] + "-" + number_arr[3];
+      return phoneNumber;
+    }
   }
 
 class VoicemailsTable extends React.Component {
@@ -153,10 +174,32 @@ class VoicemailsTable extends React.Component {
     }
   }
   getPhoneNumber = (number) => {
-    let phoneNumber = parsePhoneNumber("+"+number).formatInternational();
-    let number_arr = phoneNumber.split(" ");
-    var finalnumber = number_arr[0]+" "+number_arr[1]+"-"+number_arr[2]+"-"+number_arr[3];
-    return finalnumber
+    let phone_number = "";
+    var phoneNumber;
+    if(!number.includes( "+" )) {
+      if (number.length === 11) {
+        phone_number = parsePhoneNumber("+" + number)
+        let phone_num = phone_number.formatInternational();
+        let number_arr = phone_num.split(" ");
+        phoneNumber = number_arr[0] + " " + number_arr[1] + "-" + number_arr[2] + "-" + number_arr[3];
+        return phoneNumber;
+      } else if (number.length === 10) {
+        phone_number = parsePhoneNumber("+1" + number);
+        let phone_num = phone_number.formatInternational();
+        let number_arr = phone_num.split(" ");
+        phoneNumber = number_arr[0] + " " + number_arr[1] + "-" + number_arr[2] + "-" + number_arr[3];
+        return phoneNumber;
+      } else {
+        return number;
+      }
+    }
+    else{
+      phone_number = parsePhoneNumber(number)
+      let phone_num = phone_number.formatInternational();
+      let number_arr = phone_num.split(" ");
+      phoneNumber = number_arr[0] + " " + number_arr[1] + "-" + number_arr[2] + "-" + number_arr[3];
+      return phoneNumber;
+    }
   }
   filtermailList = (messageRecords, perPage, currentPage, search) => {
     let subMessageRecords = [];

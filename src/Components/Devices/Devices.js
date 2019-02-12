@@ -1,7 +1,6 @@
 import React from 'react';
 import i18n from '../Common/i18n';
 import './Devices.css';
-import { Progress } from 'reactstrap';
 import $ from 'jquery';
 export default class Devices extends React.Component {
   constructor(props) {

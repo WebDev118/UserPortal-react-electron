@@ -220,6 +220,7 @@ class VoicemailsList extends React.Component {
 		})
 		this.setState({makeStateMail: makeStateMail,itemView: (makeStateMail.length>0? true:false)})
 	}
+
 	makeNewItem = () => {
 		if(this.state.makeStateMail){
 			this.state.makeStateMail.map((makenew, index) => {
@@ -227,11 +228,11 @@ class VoicemailsList extends React.Component {
 			let data = {"data": {"folder": "new"}};
 			axios.post(URL,data)
 			.then((res) => {
-				this.props.getallnotification();
 				this.props.getallvmboxes();
+				this.props.getallnotification();
 				setTimeout(() => {
 					this.props.history.push('/voicemails/list/' + this.state.vmbox_id);
-				}, 3000);
+				}, 4000);
 			})
 			.catch((error) => {
 				console.log(error)
@@ -246,8 +247,8 @@ class VoicemailsList extends React.Component {
 			let data = {"data": {"folder": "deleted"}};
 			axios.post(URL,data)
 			.then((res) => {
-				this.props.getallnotification();
 				this.props.getallvmboxes();
+				this.props.getallnotification();
 				setTimeout(() => {
 					this.props.history.push('/voicemails/list/' + this.state.vmbox_id);
 				}, 4000);
@@ -265,7 +266,6 @@ class VoicemailsList extends React.Component {
 			let data = {"data": {"folder": "saved"}};
 			axios.post(URL,data)
 			.then((res) => {
-
 				this.props.getallvmboxes();
 				this.props.getallnotification();
 				setTimeout(() => {

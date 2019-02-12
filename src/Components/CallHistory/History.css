@@ -146,13 +146,14 @@ td:last-child {
 	justify-content: flex-start;
 	align-items: center;
 }
-.history-search button {
+.history-search-button {
 	position: absolute;
 	bottom: 0px;
 	border-radius: 0.2rem;
 	color: grey;
 	background: #F7F7F7;
 	border: 1px solid #CDCDD0;
+	padding: 6px 13px;
 }
 .call-history-table{
   border: 0px;

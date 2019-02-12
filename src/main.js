@@ -29,8 +29,6 @@ function createWindow() {
     title:'UserPortal',
     width: 1700,
     height: 950,
-    minWidth: 1500,
-		minHeight: 800,
 		center: true,
     backgroundColor: '#171717',
   });

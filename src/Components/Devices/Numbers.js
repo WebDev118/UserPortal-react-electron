@@ -40,15 +40,33 @@ export class Numbers extends React.Component {
   }
   getPhoneNumber = (number) => {
     let phone_number = "";
-    if(!number.includes("+")) {
-      phone_number = "+" + phoneNumber;
+    var phoneNumber;
+    if(!number.includes( "+" )) {
+      if (number.length === 11) {
+        phone_number = parsePhoneNumber("+" + number)
+        let phone_num = phone_number.formatInternational();
+        let number_arr = phone_num.split(" ");
+        phoneNumber = number_arr[0] + " " + number_arr[1] + "-" + number_arr[2] + "-" + number_arr[3];
+        return phoneNumber;
+      } else if (number.length === 10) {
+        phone_number = parsePhoneNumber("+1" + number);
+        let phone_num = phone_number.formatInternational();
+        let number_arr = phone_num.split(" ");
+        phoneNumber = number_arr[0] + " " + number_arr[1] + "-" + number_arr[2] + "-" + number_arr[3];
+        return phoneNumber;
+      } else {
+        return number;
+      }
     }
-    phone_number = parsePhoneNumber(number)
-    let phone_num = phone_number.formatInternational();
-    let number_arr = phone_num.split(" ");
-    var phoneNumber = number_arr[0]+" "+number_arr[1]+"-"+number_arr[2]+"-"+number_arr[3];
-    return phoneNumber;
+    else{
+      phone_number = parsePhoneNumber(number)
+      let phone_num = phone_number.formatInternational();
+      let number_arr = phone_num.split(" ");
+      phoneNumber = number_arr[0] + " " + number_arr[1] + "-" + number_arr[2] + "-" + number_arr[3];
+      return phoneNumber;
+    }
   }
+
   onChageNumber = (number) =>{
     this.setState({selected_num: number})
   }
@@ -109,7 +127,6 @@ export class Numbers extends React.Component {
             }
           </div>
         </div>
-        {/* <div className="view-all" onClick={()=>this.props.history.push("/devices")}>{i18n.t('viewall.label', { lng })}</div> */}
       </div>
     )
   }

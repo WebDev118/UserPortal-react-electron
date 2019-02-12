@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import i18n from './i18n';
-import { getallnotification } from '../../Actions/notification.action'
 import { SidebarLink } from './SidebarLink'
 import { withRouter } from 'react-router-dom'
 import './Sidebar.css'
@@ -17,10 +16,10 @@ class Sidebar extends React.Component {
     }
   }
   componentWillMount () {
-    // this.props.getallnotification();
+
   }
   componentDidMount () {
-  // !this.props.notification.loading ? this.props.getallnotification() : null;
+
   }
   render () {
     let {allnotifications}  = this.props.notification;
@@ -56,7 +55,5 @@ class Sidebar extends React.Component {
   }
 }
 const mapStateToProps =  state => ({notification:state.notification, language: state.language})
-const mapDispatchToProps = (dispatch) => ({
-  getallnotification: () => dispatch(getallnotification())
-})
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(authenticate(Sidebar)))
+
+export default withRouter(connect(mapStateToProps)(authenticate(Sidebar)))

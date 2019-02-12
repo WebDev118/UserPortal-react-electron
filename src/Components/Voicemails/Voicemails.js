@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Topbar from '../Common/Topbar';
-import VoicemailsTable from './VoicemailsTable';
 import './Voicemails.css';
 import { getallvmboxes } from '../../Actions/voicemails.action';
 import VoicemailBox from './VoicemailBox';
@@ -31,7 +30,7 @@ class Voicemails extends React.Component {
     this.props.getallvmboxes();
   }
   componentDidMount () {
-    !this.props.vmreducer.loading ? this.props.getallvmboxes() : null;
+
   }
 
   componentDidUpdate(preProps) {

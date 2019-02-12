@@ -16,13 +16,13 @@ export const getallnotification = () => {
     let today_from_timestamp = Math.round(new Date(year,month,date,0,0,0,0).getTime())/1000;
     let today_to_timestamp = Math.round(new Date(year,month,date,23,59,59,999).getTime())/1000;
 
-    const today_call_count = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}/cdrs?created_from=${today_from_timestamp}&created_to=${today_to_timestamp}`;
+    const today_call_count = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}/cdrs?created_from=${today_from_timestamp}&created_to=${today_to_timestamp}&paginate=false`;
     const devices = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}/devices`
     const device_num = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/callflows?filter_type=mainUserCallflow&filter_owner_id=${CONFIG.OWNER_ID}`
     const devive_state = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/devices/status`
-    const missedcall = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}/cdrs`;
-    const faxes_inbox = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/faxes/inbox`;
-    const faxes_outbox = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/faxes/outbox`;
+    const missedcall = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}/cdrs?paginate=false`;
+    const faxes_inbox = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/faxes/inbox?paginate=false`;
+    const faxes_outbox = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/faxes/outbox?paginate=false`;
     const faxesbox = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/faxboxes?filter_owner_id=${CONFIG.OWNER_ID}`;
     const vmbox = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/vmboxes?filter_owner_id=${CONFIG.OWNER_ID}`;
     const username = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}`;
@@ -43,7 +43,6 @@ export const getallnotification = () => {
       let alldevices = [];
       let promises = [];
       let today_data = today_call_count.data.data;
-      console.log(today_data)
       let calldata = missedcall.data.data;
       let faxes_inbox_data = faxes_inbox.data.data;
       let faxes_outbox_data  = faxes_outbox.data.data;
