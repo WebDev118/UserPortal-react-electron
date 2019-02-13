@@ -29,8 +29,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const { auth_token} = this.props.auth
-
+    const { auth_token} = this.props.auth;
     if(!auth_token) {
       this.authTokenGeneration();
     }

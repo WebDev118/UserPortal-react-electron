@@ -61,9 +61,7 @@ class FaxesPage extends React.Component {
   componentWillMount () {
     this.props.getallfaxes(this.state.startDate, this.state.endDate);
   }
-  componentDidMount () {
 
-  }
   componentDidUpdate(preProps) {
     const {allfaxes} = this.props.faxreducer;
     if(allfaxes !== preProps.faxreducer.allfaxes) {
@@ -100,7 +98,6 @@ class FaxesPage extends React.Component {
       dropdownOpen1: !this.state.dropdownOpen1
     });
 	}
-
   startDateChange = (date) => {
     this.setState({
       startDate: date,
@@ -112,9 +109,7 @@ class FaxesPage extends React.Component {
         });
       }
     });
-
   }
-
   endDateChange = (date) => {
     this.setState({
       endDate: date,

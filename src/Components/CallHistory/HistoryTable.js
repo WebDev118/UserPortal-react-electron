@@ -82,7 +82,7 @@ export class HistoryTable extends React.Component {
 
   formatDuration = (sec) => {
     var date = new Date(null);
-    date.setSeconds(sec); // specify value for SECONDS here
+    date.setSeconds(sec);
     var timeString = date.toISOString().substr(11, 8);
     timeString = timeString.split(':')[1] + ":" + timeString.split(':')[2];
     return timeString;

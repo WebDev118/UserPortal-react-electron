@@ -11,16 +11,10 @@ class Sidebar extends React.Component {
     super(props);
     this.state = {
       newmailscount: 0,
-      missedcount: 0,
-      lng: 'en'
+      missedcount: 0
     }
   }
-  componentWillMount () {
 
-  }
-  componentDidMount () {
-
-  }
   render () {
     let {allnotifications}  = this.props.notification;
     let newmailscount = 0;

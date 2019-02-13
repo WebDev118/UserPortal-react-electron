@@ -98,9 +98,10 @@ export default class CallHistory extends React.Component {
                             <svg className="calls-icon">
                               <use href="telicon-2.1.0.svg#phone-inbound"/>
                             </svg>
-                            : <svg className="missed-icon">
-                                <use href="telicon-2.1.0.svg#phone-missed"/>
-                              </svg>
+                            :
+                            <svg className="missed-icon">
+                              <use href="telicon-2.1.0.svg#phone-missed"/>
+                            </svg>
                           )
                           }
                         </div>

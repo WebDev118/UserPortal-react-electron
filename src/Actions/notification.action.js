@@ -8,17 +8,15 @@ export const getallnotification = () => {
     dispatch({ type: CONSTS.SENDING_API_REQUEST });
 
     let today = new Date();
-    let notifications;
     let year = today.getFullYear() + 1970;
     let month = today.getMonth();
     let date = today.getDate();
-
     let today_from_timestamp = Math.round(new Date(year,month,date,0,0,0,0).getTime())/1000;
     let today_to_timestamp = Math.round(new Date(year,month,date,23,59,59,999).getTime())/1000;
 
     const today_call_count = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}/cdrs?created_from=${today_from_timestamp}&created_to=${today_to_timestamp}&paginate=false`;
     const devices = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}/devices`
-    const device_num = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/callflows?filter_type=mainUserCallflow&filter_owner_id=${CONFIG.OWNER_ID}`
+    const device_num = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/callflows?filter_type=mainUserCallflow&filter_owner_id=${CONFIG.OWNER_ID}&paginate=false`
     const devive_state = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/devices/status`
     const missedcall = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}/cdrs?paginate=false`;
     const faxes_inbox = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/faxes/inbox?paginate=false`;

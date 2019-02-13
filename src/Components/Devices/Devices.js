@@ -78,11 +78,8 @@ export default class Devices extends React.Component {
               })
             }
           </div>
-
           <a className="next" onClick={this.scroll.bind(null,1)}>&#10095;</a>
         </div>
-
-        {/* <div className="view-all" onClick={()=>this.props.history.push("/devices")}>{i18n.t('viewall.label', { lng })}</div> */}
       </div>
     )
   }

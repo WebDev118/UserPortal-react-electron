@@ -10,6 +10,7 @@ export class SidebarLink extends React.Component {
   }
   render () {
     let lng = this.props.lng;
+    console.log(this.props.route,"----",this.props.history)
     return (
       <div>
         <NavLink exact to={this.props.route} activeClassName="Sidebar-active" >
@@ -31,7 +32,6 @@ export class SidebarLink extends React.Component {
           </div>
         </NavLink>
       </div>
-
     )
   }
 }

@@ -16,12 +16,10 @@ export const getallvmboxes = () => {
     ])
     .then(axios.spread((res, username ) => {
       let full_name = username.data.data.first_name +" "+ username.data.data.last_name;
-
       let promises = []
       const vmboxes = res.data.data
-
       vmboxes.forEach(function(vmbox) {
-        let url = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/vmboxes/${vmbox.id}/messages`
+        let url = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/vmboxes/${vmbox.id}/messages?paginate=false`
         promises.push(axios.get(url))
       });
       let allmessages = [];
@@ -32,15 +30,14 @@ export const getallvmboxes = () => {
           let newmsgs  = messages.filter(message => message.folder === "new");
           let vmbox_id = res.request.responseURL.split("/")[7];
           let vmbox =  _.find(vmboxes, box => box.id === vmbox_id);
+
           vmbox.newcount = newmsgs ? newmsgs.length : 0;
           vmbox.messages = messages.length;
           allmessages.push({vmbox, messages})
         })
-
         if(vmboxes.length === 0) {
           allmessages.push({vmbox: {newcount:0, messages:0}, messages: []})
         }
-
         let allmailsdata = {allmessages, full_name}
         dispatch({type: CONSTS.GET_ALL_MESSAGES_ON_AN_ACCOUNT_SUCCESS, payload: allmailsdata})
       })

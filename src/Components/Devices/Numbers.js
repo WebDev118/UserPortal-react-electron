@@ -120,7 +120,6 @@ export class Numbers extends React.Component {
                         <span className="grey">{element.today_count} {i18n.t('callcount.label', { lng })}</span>
                       </div>
                     </div>
-
                   </div>
                 )}
               })

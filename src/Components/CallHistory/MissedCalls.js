@@ -18,7 +18,6 @@ export class MissedCalls extends React.Component {
             <use href="telicon-2.1.0.svg#phone-missed"/>
           </svg>
         </span>
-
         <span className='text text-right'>
           <div className="text-count">{missedcount}</div>
           <div className="text-value">{i18n.t('missed.label', { lng })+" "+i18n.t('calls.label', { lng })}</div>

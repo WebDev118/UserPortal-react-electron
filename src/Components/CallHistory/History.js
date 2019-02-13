@@ -32,11 +32,6 @@ class History extends React.Component {
     this.prev = this.prev.bind(this);
     this.next = this.next.bind(this);
   }
-
-  componentDidMount () {
-
-  }
-
   componentWillMount() {
     this.props.getCallFlow(this.state.startDate, this.state.endDate);
   }
