@@ -21,8 +21,8 @@ export const getallfaxes = (from, to) => {
 
     const username = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/users/${CONFIG.OWNER_ID}`;
     const faxes_inbox = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/faxes/inbox?created_from=${from_timestamp}&created_to=${to_timestamp}&paginate=false`;
-    const faxes_outbox = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/faxes/outbox?created_from=${from_timestamp}&created_to=${to_timestamp}&paginate=false`;
-    const faxesbox = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/faxboxes?filter_owner_id=${CONFIG.OWNER_ID}?paginate=false`;
+    const faxes_outbox = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/faxes/outbox?created_from=${from_timestamp}&created_to=${to_timestamp}`;
+    const faxesbox = `${CONFIG.API_VERSION}/accounts/${CONFIG.ACCOUNT_ID}/faxboxes?filter_owner_id=${CONFIG.OWNER_ID}`;
     axios.all([
       axios.get(faxes_inbox),
       axios.get(faxes_outbox),
@@ -39,6 +39,7 @@ export const getallfaxes = (from, to) => {
       let faxes_outbox_data  = faxes_outbox.data.data;
       let allfaxes = {faxbox, faxes_inbox_data, faxes_outbox_data, full_name};
       dispatch({type: CONSTS.GET_ALL_FAXES_ON_AN_ACCOUNT_SUCCESS, payload: allfaxes});
+
     }))
     .catch((error) => {
       if(typeof error !== 'undefined' && typeof error.response !== 'undefined' && error.response.status === 401) {

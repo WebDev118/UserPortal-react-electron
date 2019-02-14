@@ -10,7 +10,6 @@ export class SidebarLink extends React.Component {
   }
   render () {
     let lng = this.props.lng;
-    console.log(this.props.route,"----",this.props.history)
     return (
       <div>
         <NavLink exact to={this.props.route} activeClassName="Sidebar-active" >
@@ -22,7 +21,7 @@ export class SidebarLink extends React.Component {
             { this.props.title === i18n.t('voicemails.label', { lng }) ? (this.props.newmails>0 &&
               <span className="notification text-right">
                 {this.props.newmails}
-              </span>):" "
+              </span>):""
             }
             { this.props.title === i18n.t('callhistory.label', { lng }) ? (this.props.missedcalls>0 &&
               <span className="notification text-right">
