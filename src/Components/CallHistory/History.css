@@ -1,9 +1,8 @@
 .history {
 	background: #F2F2F3;
 	display: inline-block;
-	padding-top: 16px;
 	width: 100%;
-	overflow: scroll;
+	overflow-y: scroll;
 	position: relative;
 }
 
@@ -123,20 +122,22 @@ td:last-child {
 	margin-bottom: 1rem;
 	margin-top: 1rem;
 	font-size: 12px;
+	display: flex;
+	align-items: center;
 }
 
 .bottom-nav select {
 	width: 3rem;
-	margin-left: 0.5rem;
+	height: 25px;
 }
 .bottom-nav label {
-	margin-left: 0.5rem;
+	margin: 0 10px;
 }
 .call-search-text{
 	position: absolute;
 	bottom: 0px;
 	right:0px;
-	width: 15rem;
+	width: 15rem !important;
 	background: url('../../assets/images/magnifying-glass.png') no-repeat scroll;
 	background-position: 95% 50%;
 	background-color: white;

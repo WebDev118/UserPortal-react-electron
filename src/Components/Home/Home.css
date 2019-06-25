@@ -11,10 +11,9 @@
 .home {
   background: #F2F2F3;
   display: inline-block;
-  padding-top: 16px;
   width: 100%;
-  overflow: scroll;
-  position: relative;
+	overflow-y: scroll;
+	position: relative;
 }
 /* .main > div:nth-of-type(2) {
   margin: 1rem;
@@ -22,7 +21,7 @@
 #missed-calls,
 #new-voicemails,
 #new-fax,
-#new-messages, {
+#new-messages {
   min-width: 12rem;
   vertical-align: middle;
 }
@@ -85,7 +84,6 @@
 }
 
 #new-voicemails {
-
   border-top: 2px solid #2DCB1A;
 }
 

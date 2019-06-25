@@ -1,9 +1,8 @@
 .voicemails {
 	background: #F2F2F3;
   display: inline-block;
-  padding-top: 16px;
   width: 100%;
-  overflow: scroll;
+	overflow-y: scroll;
 	position: relative;
 }
 .voicemails td {
@@ -76,9 +75,9 @@
 	cursor: pointer;
 	color: grey;
 }
-.dropdown-menu {
+.direction-down .dropdown-menu {
 	top: 12px !important;
-	left: -60px !important;
+	left: -56px !important;
 }
 #voicemail-search {
 	display: block;
@@ -212,17 +211,6 @@
 	background: #D3D3D6;
 	color: black;
 }
-
-.bottom-nav select {
-	width: 10rem;
-	height: 2rem;
-  border: 1px solid grey;
-  padding: 1rem 3rem 1rem 0;
-  color: black;
-  font-size: 0.7rem;
-  font-weight: 400;
-}
-
 .voicemail-content{
 	background-color: #2DCB1A;
 	padding: 4px 11px;

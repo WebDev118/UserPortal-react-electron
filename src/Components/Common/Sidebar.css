@@ -2,8 +2,11 @@
 	position: relative;
 	float: left;
 	width: 100%;
-	height: 100vh;
 	background: #222225;
+	height: 100%;
+}
+.sidebar-blank{
+	background: #F2F2F3;
 }
 .kazoo-logo {
 	padding-top: 1rem;
@@ -11,6 +14,7 @@
 	font-size: 1.8rem;
 	color:#008df1;
 	border-bottom: solid 1px #151517;
+	text-align: center;
 }
 
 .Sidebar a {
