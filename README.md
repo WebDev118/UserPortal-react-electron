@@ -14,7 +14,7 @@ Frontend:
 
 Quick start options:
 
-+ Clone the repo: `git clone https://github.com/whitetiger713/UserPortal-KazooAPI-react.git`.
++ Clone the repo.
 
 ## Getting Started
 
